@@ -1,0 +1,6 @@
+# Minimal docker-compose skeleton
+# TODO: Define services (frontend, backend, database, etc.) once architecture is finalized.
+version: '3.8'
+services:
+  # placeholder-service:
+  #   image: placeholder-image

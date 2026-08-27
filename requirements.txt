@@ -1,0 +1,2 @@
+# Dependencies will be finalized after architecture decisions.
+# TODO: Add common project dependencies once finalized.
