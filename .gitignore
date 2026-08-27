@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# PyTorch
+*.pth
+*.pt
+*.ckpt
+
+# Datasets
+data/
+*.zip
+*.tar.gz
+*.csv
+
+# ML Checkpoints
+checkpoints/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+*.ipynb
+
+# Node/React
+node_modules/
+build/
+dist/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Docker
+.docker/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Environment
+.env
+.venv
+env/
+venv/
