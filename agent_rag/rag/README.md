@@ -1,0 +1,14 @@
+# Rag
+
+This folder contains components related to `rag` for the `agent_rag` module.
+
+**What belongs here**:
+- Source code, scripts, or configurations specific to rag.
+
+**What should NOT be stored here**:
+- Large datasets.
+- Model weights or large checkpoint files.
+- Compiled binaries.
+
+**TODO**:
+- [ ] Populate rag with necessary implementations.
