@@ -10,7 +10,6 @@ __pycache__/
 *.ckpt
 
 # Datasets
-data/
 *.zip
 *.tar.gz
 *.csv
