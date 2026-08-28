@@ -8,7 +8,7 @@ export default function LoadingState({ label = 'Running AI vision-language analy
         <Loader2 size={64} strokeWidth={1.5} className="text-cyan-accent animate-spin" />
         <ScanLine size={20} strokeWidth={1.5} className="absolute inset-0 m-auto text-cyan-soft" />
       </div>
-      <p className="text-sm font-medium text-slate-200">{label}</p>
+      <p className="text-sm font-medium text-slate-800">{label}</p>
       <p className="text-xs text-slate-500 mt-1 font-mono">Detecting objects · Classifying land cover · Computing confidence</p>
     </div>
   )
