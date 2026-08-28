@@ -1,17 +1,29 @@
+import { Milestone, Leaf, Droplet, GitCompare } from 'lucide-react'
 import { suggestedQueries } from '../data/mockData'
+
+const icons = {
+  road: Milestone,
+  vegetation: Leaf,
+  water: Droplet,
+  compare: GitCompare,
+}
 
 export default function SuggestedQueries({ onSelect }) {
   return (
-    <div className="flex flex-wrap gap-1.5 px-4 pb-2.5">
-      {suggestedQueries.map((q) => (
-        <button
-          key={q}
-          onClick={() => onSelect(q)}
-          className="px-2.5 py-1 rounded-full border border-white/[0.09] text-[11px] text-slate-400 hover:text-cyan-soft hover:border-cyan-accent/30 hover:bg-cyan-accent/[0.06] transition-colors"
-        >
-          {q}
-        </button>
-      ))}
+    <div className="space-y-1.5 px-3.5 pb-3">
+      {suggestedQueries.map((q) => {
+        const Icon = icons[q.type] || Milestone
+        return (
+          <button
+            key={q.text}
+            onClick={() => onSelect(q.text)}
+            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors text-left shadow-xs"
+          >
+            <Icon size={14} className="text-slate-500 shrink-0" strokeWidth={1.8} />
+            <span className="truncate">{q.text}</span>
+          </button>
+        )
+      })}
     </div>
   )
 }
