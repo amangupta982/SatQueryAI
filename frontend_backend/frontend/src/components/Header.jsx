@@ -1,83 +1,150 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Menu, ChevronDown, Plus, Wifi } from 'lucide-react'
-import { datasets, activeImage, userProfile } from '../data/mockData'
+import { NavLink, useNavigate } from 'react-router-dom'
+import {
+  Home,
+  BarChart2,
+  History as HistoryIcon,
+  Box,
+  Sprout,
+  Plus,
+  Bell,
+  Menu,
+  X,
+} from 'lucide-react'
 
-export default function Header({ title, status, onOpenMobileNav }) {
-  const [dataset, setDataset] = useState(datasets[0])
-  const [datasetOpen, setDatasetOpen] = useState(false)
+const navLinks = [
+  { to: '/', label: 'Overview', icon: Home, end: true },
+  { to: '/new-analysis', label: 'Analyses', icon: BarChart2 },
+  { to: '/history', label: 'History', icon: HistoryIcon },
+  { to: '/detection', label: 'Object Detection', icon: Box },
+  { to: '/land-cover', label: 'Land Cover', icon: Sprout },
+]
+
+export default function Header() {
   const navigate = useNavigate()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="h-16 shrink-0 flex items-center gap-3 px-4 lg:px-6 border-b border-white/[0.06] bg-base-900/70 glass sticky top-0 z-30">
-      <button
-        onClick={onOpenMobileNav}
-        className="lg:hidden flex items-center justify-center w-8 h-8 rounded-md text-slate-400 hover:text-slate-100 hover:bg-white/[0.06]"
-      >
-        <Menu size={18} />
-      </button>
+    <header className="h-[68px] shrink-0 bg-[#050c1a] border-b border-slate-800/80 sticky top-0 z-40 select-none">
+      <div className="h-full px-4 lg:px-6 flex items-center justify-between gap-3">
+        {/* Left: Brand Identity */}
+        <div
+          className="flex items-center gap-3 cursor-pointer group shrink-0"
+          onClick={() => navigate('/')}
+        >
+          {/* Blue clover logo */}
+          <div className="text-blue-500 flex items-center justify-center">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-[#2b6cee]"
+            >
+              <path d="M12 2a4 4 0 0 0-4 4c0 2.5 4 6 4 6s4-3.5 4-6a4 4 0 0 0-4-4Z" />
+              <path d="M12 22a4 4 0 0 0 4-4c0-2.5-4-6-4-6s-4 3.5-4 6a4 4 0 0 0 4 4Z" />
+              <path d="M2 12a4 4 0 0 0 4 4c2.5 0 6-4 6-4s-3.5-4-6-4a4 4 0 0 0-4 4Z" />
+              <path d="M22 12a4 4 0 0 0-4-4c-2.5 0-6 4-6 4s3.5 4 6 4a4 4 0 0 0 4 4Z" />
+            </svg>
+          </div>
+          <div>
+            <span className="font-display font-bold text-white text-base tracking-tight leading-none block">
+              SatQuery AI
+            </span>
+            <p className="text-[11px] text-slate-400 font-normal leading-tight mt-0.5">
+              Satellite Intelligence
+            </p>
+          </div>
+        </div>
 
-      <div className="min-w-0">
-        <h1 className="font-display font-semibold text-[15px] text-slate-100 leading-tight truncate">{title}</h1>
-        <div className="flex items-center gap-1.5 mt-0.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-signal-lime animate-pulseSlow" />
-          <p className="text-[11px] text-slate-500 truncate">{status}</p>
+        {/* Center Navigation Pill Bar (Desktop - Mathematically Centered) */}
+        <nav className="hidden xl:flex items-center absolute left-1/2 -translate-x-1/2 bg-[#0c1836] border border-blue-950/80 p-1 rounded-full gap-1 z-10 shadow-md shadow-black/20">
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.label}
+              to={link.to}
+              end={link.end}
+              className={({ isActive }) =>
+                `flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 ${
+                  isActive
+                    ? 'bg-[#1d61f2] text-white shadow-sm'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                }`
+              }
+            >
+              <link.icon size={14} strokeWidth={2} />
+              <span>{link.label}</span>
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* Right Actions */}
+        <div className="flex items-center gap-3.5">
+          {/* AI Engine Status */}
+          <div className="hidden md:flex items-center gap-2 text-xs font-medium text-slate-200">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+            <span>AI Engine Online</span>
+          </div>
+
+          {/* + New Analysis Button */}
+          <button
+            onClick={() => navigate('/new-analysis')}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1d61f2] hover:bg-blue-600 text-white text-xs font-semibold shadow-md shadow-blue-500/20 transition-colors"
+          >
+            <Plus size={14} strokeWidth={2.5} />
+            <span>New Analysis</span>
+          </button>
+
+          {/* Notification Bell */}
+          <button
+            title="Notifications"
+            className="hidden sm:flex w-9 h-9 rounded-full bg-[#0a152e] border border-slate-800 text-slate-300 hover:text-white items-center justify-center transition-colors"
+          >
+            <Bell size={15} strokeWidth={1.8} />
+          </button>
+
+          {/* AS User Avatar */}
+          <div className="w-9 h-9 rounded-full bg-[#1e4db7] border border-blue-400/30 text-white flex items-center justify-center text-xs font-bold shrink-0">
+            AS
+          </div>
+
+          {/* Mobile menu toggle */}
+          <button
+            onClick={() => setMobileMenuOpen((v) => !v)}
+            className="xl:hidden p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800"
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </div>
 
-      <div className="flex-1" />
-
-      {/* Dataset selector - hidden on small screens */}
-      <div className="hidden md:block relative">
-        <button
-          onClick={() => setDatasetOpen((v) => !v)}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06] text-xs text-slate-300"
-        >
-          <span className="text-slate-500">Dataset</span>
-          <span className="font-medium text-slate-200">{dataset.name}</span>
-          <ChevronDown size={13} className="text-slate-500" />
-        </button>
-        {datasetOpen && (
-          <div className="absolute right-0 mt-1.5 w-56 rounded-lg border border-white/[0.08] bg-base-850 shadow-panel py-1 z-40">
-            {datasets.map((d) => (
-              <button
-                key={d.id}
-                onClick={() => {
-                  setDataset(d)
-                  setDatasetOpen(false)
-                }}
-                className={`w-full text-left px-3 py-2 text-xs hover:bg-white/[0.05] ${
-                  d.id === dataset.id ? 'text-cyan-soft' : 'text-slate-300'
-                }`}
-              >
-                {d.name}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="hidden xl:flex items-center gap-4 px-3 border-x border-white/[0.06] text-[11px] text-slate-500 font-mono">
-        <span>{activeImage.acquisitionDate}</span>
-        <span>{activeImage.coordinates}</span>
-      </div>
-
-      <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-signal-lime/25 bg-signal-lime/[0.06] text-[11px] text-signal-lime">
-        <Wifi size={12} />
-        AI Engine Online
-      </div>
-
-      <button
-        onClick={() => navigate('/new-analysis')}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-accent text-base-950 text-xs font-semibold hover:bg-cyan-soft transition-colors shrink-0"
-      >
-        <Plus size={14} strokeWidth={2.5} />
-        <span className="hidden sm:inline">New Analysis</span>
-      </button>
-
-      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-accent/40 to-base-600 border border-cyan-accent/30 flex items-center justify-center text-[11px] font-semibold text-cyan-soft shrink-0">
-        {userProfile.avatarInitials}
-      </div>
+      {/* Mobile Top Navigation Dropdown */}
+      {mobileMenuOpen && (
+        <div className="xl:hidden bg-[#071126] border-b border-slate-800 px-4 py-3 space-y-1 shadow-2xl animate-fadeUp">
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.label}
+              to={link.to}
+              end={link.end}
+              onClick={() => setMobileMenuOpen(false)}
+              className={({ isActive }) =>
+                `flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
+                  isActive
+                    ? 'bg-[#1d61f2] text-white'
+                    : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+                }`
+              }
+            >
+              <link.icon size={16} strokeWidth={1.8} />
+              <span>{link.label}</span>
+            </NavLink>
+          ))}
+        </div>
+      )}
     </header>
   )
 }
