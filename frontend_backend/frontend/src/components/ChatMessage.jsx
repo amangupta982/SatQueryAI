@@ -1,4 +1,4 @@
-import { Satellite, Tag } from 'lucide-react'
+import { Sparkles, Building2, CheckCheck } from 'lucide-react'
 
 export default function ChatMessage({ message }) {
   const isUser = message.role === 'user'
@@ -6,58 +6,50 @@ export default function ChatMessage({ message }) {
   if (isUser) {
     return (
       <div className="flex justify-end animate-fadeUp">
-        <div className="max-w-[85%]">
-          <div className="bg-cyan-accent/12 border border-cyan-accent/20 rounded-2xl rounded-br-sm px-3.5 py-2.5">
-            <p className="text-[13px] text-slate-100 leading-snug">{message.text}</p>
+        <div className="max-w-[88%] bg-[#eff6ff] border border-blue-100 rounded-2xl rounded-tr-xs p-3.5 shadow-xs">
+          <p className="text-xs text-slate-800 leading-relaxed font-normal">{message.text}</p>
+          <div className="flex items-center justify-end gap-1 mt-1 text-[10px] text-slate-400">
+            <span>{message.time}</span>
+            <CheckCheck size={13} className="text-blue-500" />
           </div>
-          <p className="text-[10px] text-slate-600 mt-1 text-right font-mono">{message.time}</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex gap-2 animate-fadeUp">
-      <div className="w-6 h-6 rounded-full bg-cyan-accent/15 border border-cyan-accent/25 flex items-center justify-center shrink-0 mt-0.5">
-        <Satellite size={11} className="text-cyan-accent" />
+    <div className="flex gap-2.5 animate-fadeUp">
+      <div className="w-6 h-6 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center shrink-0 mt-0.5 text-blue-600">
+        <Sparkles size={13} />
       </div>
-      <div className="max-w-[88%] min-w-0">
-        <div className="bg-white/[0.035] border border-white/[0.07] rounded-2xl rounded-tl-sm px-3.5 py-2.5">
-          <p className="text-[13px] text-slate-300 leading-snug">{message.text}</p>
 
-          {message.highlight && (
-            <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-cyan-accent/10 border border-cyan-accent/20">
-              <span className="text-[10.5px] text-slate-400">{message.highlight.label}</span>
-              <span className="text-[12px] font-mono font-semibold text-cyan-soft">{message.highlight.value}</span>
+      <div className="flex-1 min-w-0 space-y-2">
+        <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 shadow-xs text-xs text-slate-800">
+          <div className="whitespace-pre-line leading-relaxed">{message.text}</div>
+          <p className="text-[10px] text-slate-400 text-right mt-1.5 font-mono">{message.time}</p>
+        </div>
+
+        {/* Structured Card like 'Buildings Near River' in screenshot */}
+        {message.card && (
+          <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs space-y-2.5">
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
+              <div className="w-5 h-5 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center">
+                <Building2 size={13} />
+              </div>
+              <span>{message.card.title}</span>
             </div>
-          )}
 
-          {message.stats && (
-            <div className="mt-2 grid grid-cols-2 gap-1.5">
-              {message.stats.map((s) => (
-                <div key={s.label} className="rounded-md bg-white/[0.03] border border-white/[0.06] px-2 py-1.5">
-                  <p className="text-[10px] text-slate-500">{s.label}</p>
-                  <p className="text-[12.5px] font-mono font-semibold text-slate-200">{s.value}</p>
+            <div className="space-y-1.5 pt-1 text-xs">
+              {message.card.stats.map((item) => (
+                <div key={item.label} className="flex items-center justify-between">
+                  <span className="text-slate-500">{item.label}</span>
+                  <span className="font-semibold text-slate-900">{item.value}</span>
                 </div>
               ))}
             </div>
-          )}
-
-          {message.detectionRefs && (
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {message.detectionRefs.map((ref) => (
-                <span
-                  key={ref}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-[10.5px] text-slate-400"
-                >
-                  <Tag size={9} />
-                  {ref}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-        <p className="text-[10px] text-slate-600 mt-1 font-mono">{message.time}</p>
+            <p className="text-[10px] text-slate-400 text-right pt-0.5 font-mono">{message.time}</p>
+          </div>
+        )}
       </div>
     </div>
   )

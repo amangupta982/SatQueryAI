@@ -8,23 +8,20 @@ const faqs = [
   { icon: GitCompare, q: 'How does Change Detection work?', a: 'Select two scenes of the same region captured at different times and run change detection to surface new structures, vegetation loss and road changes.' },
 ]
 
-export default function Help({ onOpenMobileNav }) {
+export default function Help() {
   return (
-    <div className="flex flex-col h-full min-h-0">
-      <Header title="Help & Documentation" status="Guides for SatQuery AI" onOpenMobileNav={onOpenMobileNav} />
-      <div className="flex-1 overflow-y-auto p-4 lg:p-6 max-w-2xl space-y-3">
+    <div className="flex-1 overflow-y-auto p-4 lg:p-6 max-w-2xl space-y-3 bg-[#f8f9fb]">
         {faqs.map((f) => (
-          <div key={f.q} className="glass rounded-xl p-4 flex gap-3.5">
-            <div className="w-9 h-9 rounded-lg bg-cyan-accent/10 border border-cyan-accent/25 flex items-center justify-center shrink-0">
+          <div key={f.q} className="glass rounded-xl p-4 flex gap-3.5 bg-white border border-slate-200 shadow-sm">
+            <div className="w-9 h-9 rounded-lg bg-sky-100 border border-sky-200 flex items-center justify-center shrink-0">
               <f.icon size={16} className="text-cyan-accent" strokeWidth={1.8} />
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-200">{f.q}</p>
-              <p className="text-[12.5px] text-slate-500 mt-1 leading-relaxed">{f.a}</p>
+              <p className="text-sm font-medium text-slate-800">{f.q}</p>
+              <p className="text-[12.5px] text-slate-600 mt-1 leading-relaxed">{f.a}</p>
             </div>
           </div>
         ))}
       </div>
-    </div>
   )
 }

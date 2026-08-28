@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Mic, Paperclip, SendHorizontal, Satellite } from 'lucide-react'
+import { Send, Sparkles, Paperclip } from 'lucide-react'
 import ChatMessage from './ChatMessage'
 import SuggestedQueries from './SuggestedQueries'
 import { initialChatMessages, getMockAIResponse } from '../data/mockData'
@@ -22,7 +22,7 @@ export default function ChatPanel({ onLayerSuggestion, className = '' }) {
     const value = text ?? input
     if (!value.trim()) return
 
-    const userMsg = { id: crypto.randomUUID(), role: 'user', text: value, time: now() }
+    const userMsg = { id: crypto.randomUUID(), role: 'user', text: value, time: now(), delivered: true }
     setMessages((m) => [...m, userMsg])
     setInput('')
     setTyping(true)
@@ -40,69 +40,77 @@ export default function ChatPanel({ onLayerSuggestion, className = '' }) {
       setMessages((m) => [...m, aiMsg])
       setTyping(false)
       if (res.activateLayer) onLayerSuggestion?.(res.activateLayer)
-    }, 1100)
+    }, 1000)
   }
 
   return (
-    <div className={`flex flex-col h-full bg-base-900/60 ${className}`}>
-      <div className="h-16 shrink-0 flex items-center gap-2.5 px-4 border-b border-white/[0.06]">
-        <div className="w-8 h-8 rounded-lg bg-cyan-accent/10 border border-cyan-accent/25 flex items-center justify-center">
-          <Satellite size={15} className="text-cyan-accent" />
+    <div className={`flex flex-col h-full bg-white rounded-2xl border border-slate-200 shadow-xs ${className}`}>
+      {/* Header matching screenshot */}
+      <div className="h-16 shrink-0 flex items-center justify-between px-4 border-b border-slate-150">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+            <Sparkles size={16} />
+          </div>
+          <div>
+            <h2 className="text-xs font-bold text-slate-900 leading-tight">SatQuery AI</h2>
+            <p className="text-[10.5px] text-slate-400 leading-tight">Your Satellite Copilot</p>
+          </div>
         </div>
-        <div className="min-w-0">
-          <p className="text-sm font-semibold text-slate-100 flex items-center gap-1.5">
-            SatQuery AI
-            <span className="flex items-center gap-1 text-[10.5px] font-normal text-signal-lime">
-              <span className="w-1.5 h-1.5 rounded-full bg-signal-lime animate-pulseSlow" /> Online
-            </span>
-          </p>
-          <p className="text-[11px] text-slate-500 truncate">Ask questions about your satellite image</p>
+
+        <div className="flex items-center gap-1.5 text-xs font-medium text-slate-700">
+          <span className="w-2 h-2 rounded-full bg-emerald-500" />
+          <span>Online</span>
         </div>
       </div>
 
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+      {/* Message List */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3.5">
         {messages.map((m) => (
           <ChatMessage key={m.id} message={m} />
         ))}
         {typing && (
-          <div className="flex gap-2 animate-fadeUp">
-            <div className="w-6 h-6 rounded-full bg-cyan-accent/15 border border-cyan-accent/25 flex items-center justify-center shrink-0">
-              <Satellite size={11} className="text-cyan-accent" />
+          <div className="flex gap-2.5 animate-fadeUp">
+            <div className="w-6 h-6 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center shrink-0 mt-0.5 text-blue-600">
+              <Sparkles size={13} />
             </div>
-            <div className="bg-white/[0.035] border border-white/[0.07] rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-500 animate-bounce [animation-delay:-0.3s]" />
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-500 animate-bounce [animation-delay:-0.15s]" />
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-500 animate-bounce" />
+            <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce [animation-delay:-0.3s]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce [animation-delay:-0.15s]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" />
             </div>
           </div>
         )}
       </div>
 
-      <SuggestedQueries onSelect={(q) => setInput(q)} />
+      {/* Suggested Queries */}
+      <SuggestedQueries onSelect={(q) => sendMessage(q)} />
 
-      <div className="px-3 pb-3 pt-1 border-t border-white/[0.06] shrink-0">
-        <div className="flex items-center gap-1.5 rounded-xl border border-white/[0.09] bg-white/[0.02] px-2 py-1.5 focus-within:border-cyan-accent/40">
-          <button className="w-7 h-7 flex items-center justify-center text-slate-500 hover:text-slate-200 shrink-0">
+      {/* Input Box & Disclaimer */}
+      <div className="p-3 border-t border-slate-150">
+        <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/80 px-2.5 py-1.5 focus-within:border-blue-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-100 transition-all">
+          <button
+            type="button"
+            title="Attach file"
+            className="p-1 text-slate-400 hover:text-slate-600 transition-colors shrink-0"
+          >
             <Paperclip size={15} />
           </button>
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-            placeholder="Ask anything about this satellite image..."
-            className="flex-1 min-w-0 bg-transparent text-[13px] text-slate-200 placeholder:text-slate-600 outline-none"
+            placeholder="Ask anything about this image..."
+            className="flex-1 min-w-0 bg-transparent text-xs text-slate-800 placeholder:text-slate-400 outline-none"
           />
-          <button className="w-7 h-7 flex items-center justify-center text-slate-500 hover:text-slate-200 shrink-0">
-            <Mic size={15} />
-          </button>
           <button
             onClick={() => sendMessage()}
             disabled={!input.trim()}
-            className="w-7 h-7 flex items-center justify-center rounded-lg bg-cyan-accent text-base-950 disabled:opacity-30 disabled:bg-slate-600 shrink-0 hover:bg-cyan-soft transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-xl bg-[#1d61f2] text-white disabled:opacity-40 hover:bg-blue-600 transition-colors shrink-0 shadow-xs"
           >
-            <SendHorizontal size={14} />
+            <Send size={13} />
           </button>
         </div>
+        <p className="text-[10px] text-slate-400 text-center mt-2">AI responses may not be 100% accurate.</p>
       </div>
     </div>
   )

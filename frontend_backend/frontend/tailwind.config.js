@@ -5,23 +5,23 @@ export default {
     extend: {
       colors: {
         base: {
-          950: '#050a12',
-          900: '#080f1a',
-          850: '#0b1420',
-          800: '#0f1b2a',
-          700: '#152438',
-          600: '#1c3049',
-          500: '#25405f',
+          950: '#f8fafc',
+          900: '#ffffff',
+          850: '#f8fafc',
+          800: '#f1f5f9',
+          700: '#e2e8f0',
+          600: '#cbd5e1',
+          500: '#94a3b8',
         },
         cyan: {
-          accent: '#3fd4d0',
-          soft: '#7be6e2',
-          dim: '#1f8a86',
+          accent: '#0284c7',
+          soft: '#0369a1',
+          dim: '#0284c7',
         },
         signal: {
-          amber: '#e8a94f',
-          rose: '#e8637a',
-          lime: '#7fd88f',
+          amber: '#d97706',
+          rose: '#e11d48',
+          lime: '#16a34a',
         },
       },
       fontFamily: {
@@ -30,11 +30,11 @@ export default {
         mono: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
       },
       boxShadow: {
-        panel: '0 1px 0 0 rgba(255,255,255,0.03) inset, 0 20px 40px -20px rgba(0,0,0,0.6)',
-        glow: '0 0 0 1px rgba(63,212,208,0.15), 0 0 24px -4px rgba(63,212,208,0.25)',
+        panel: '0 1px 3px 0 rgba(0,0,0,0.06), 0 4px 12px -2px rgba(0,0,0,0.04)',
+        glow: '0 0 0 1px rgba(2,132,199,0.2), 0 0 20px -2px rgba(2,132,199,0.15)',
       },
       backgroundImage: {
-        'grid-faint': 'linear-gradient(rgba(63,212,208,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(63,212,208,0.05) 1px, transparent 1px)',
+        'grid-faint': 'linear-gradient(rgba(2,132,199,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(2,132,199,0.05) 1px, transparent 1px)',
       },
       animation: {
         scan: 'scan 2.4s linear infinite',

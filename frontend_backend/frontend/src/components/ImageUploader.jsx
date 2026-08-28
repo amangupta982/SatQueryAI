@@ -1,22 +1,28 @@
 import { useCallback, useRef, useState } from 'react'
-import { UploadCloud, ImageIcon, X, Sparkles, Loader2 } from 'lucide-react'
+import { UploadCloud, ImageIcon, X, Sparkles, Loader2, Plus, GitCompare, FileImage } from 'lucide-react'
 
-const ACCEPTED = ['image/jpeg', 'image/png', 'image/tiff', 'image/tif']
-
-export default function ImageUploader({ onAnalyze }) {
+export default function ImageUploader({ onAnalyze, isCompareMode, onToggleCompareMode }) {
   const inputRef = useRef(null)
+  const addMoreRef = useRef(null)
   const [dragOver, setDragOver] = useState(false)
-  const [file, setFile] = useState(null)
-  const [preview, setPreview] = useState(null)
-  const [progress, setProgress] = useState(0)
+  const [files, setFiles] = useState([])
   const [uploading, setUploading] = useState(false)
+  const [progress, setProgress] = useState(0)
   const [analyzing, setAnalyzing] = useState(false)
 
-  const handleFiles = useCallback((files) => {
-    const f = files?.[0]
-    if (!f) return
-    setFile(f)
-    setPreview(URL.createObjectURL(f))
+  const processFiles = useCallback((newFilesList) => {
+    if (!newFilesList || newFilesList.length === 0) return
+
+    const incoming = Array.from(newFilesList).map((f) => ({
+      id: crypto.randomUUID(),
+      file: f,
+      name: f.name,
+      sizeMb: (f.size / (1024 * 1024)).toFixed(1),
+      preview: URL.createObjectURL(f),
+      dims: '4096 × 4096 px',
+    }))
+
+    setFiles((prev) => [...prev, ...incoming])
     simulateUpload()
   }, [])
 
@@ -25,127 +31,188 @@ export default function ImageUploader({ onAnalyze }) {
     setProgress(0)
     let p = 0
     const interval = setInterval(() => {
-      p += Math.random() * 22 + 10
+      p += Math.random() * 25 + 15
       if (p >= 100) {
         p = 100
         clearInterval(interval)
         setUploading(false)
       }
       setProgress(Math.round(p))
-    }, 180)
+    }, 120)
+  }
+
+  const removeFile = (id) => {
+    setFiles((prev) => prev.filter((f) => f.id !== id))
   }
 
   const handleAnalyze = () => {
     setAnalyzing(true)
     setTimeout(() => {
       setAnalyzing(false)
-      onAnalyze?.(file)
+      onAnalyze?.(files, isCompareMode)
     }, 1800)
   }
 
-  const removeFile = () => {
-    setFile(null)
-    setPreview(null)
-    setProgress(0)
-  }
-
-  const dims = file ? '4096 × 4096 px' : null
-  const sizeMb = file ? (file.size / (1024 * 1024)).toFixed(1) : null
-
-  if (!file) {
-    return (
-      <div
-        onDragOver={(e) => {
-          e.preventDefault()
-          setDragOver(true)
-        }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={(e) => {
-          e.preventDefault()
-          setDragOver(false)
-          handleFiles(e.dataTransfer.files)
-        }}
-        className={`relative flex flex-col items-center justify-center text-center rounded-xl border-2 border-dashed p-10 transition-colors cursor-pointer ${
-          dragOver ? 'border-cyan-accent bg-cyan-accent/[0.04]' : 'border-white/[0.12] hover:border-white/[0.2] bg-white/[0.015]'
-        }`}
-        onClick={() => inputRef.current?.click()}
-      >
-        <input
-          ref={inputRef}
-          type="file"
-          accept=".jpg,.jpeg,.png,.tif,.tiff"
-          className="hidden"
-          onChange={(e) => handleFiles(e.target.files)}
-        />
-        <div className="w-14 h-14 rounded-full bg-cyan-accent/10 border border-cyan-accent/25 flex items-center justify-center mb-4">
-          <UploadCloud size={24} className="text-cyan-accent" strokeWidth={1.6} />
-        </div>
-        <h3 className="font-display font-semibold text-slate-100 text-base mb-1">Upload Remote Sensing Image</h3>
-        <p className="text-sm text-slate-500">Drag & drop your satellite image here</p>
-        <p className="text-sm text-slate-600 mb-4">
-          or <span className="text-cyan-soft font-medium">browse from your computer</span>
-        </p>
-        <div className="flex items-center gap-2 text-[11px] text-slate-600 font-mono">
-          <span className="px-2 py-0.5 rounded border border-white/[0.08]">JPG</span>
-          <span className="px-2 py-0.5 rounded border border-white/[0.08]">PNG</span>
-          <span className="px-2 py-0.5 rounded border border-white/[0.08]">TIFF</span>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="rounded-xl border border-white/[0.08] bg-white/[0.015] p-4">
-      <div className="flex gap-4">
-        <div className="w-20 h-20 rounded-lg overflow-hidden border border-white/[0.08] shrink-0 bg-base-800">
-          <img src={preview} alt="Preview" className="w-full h-full object-cover" />
+    <div className="space-y-4">
+      {/* Hidden file inputs */}
+      <input
+        ref={inputRef}
+        type="file"
+        multiple
+        accept=".jpg,.jpeg,.png,.tif,.tiff"
+        className="hidden"
+        onChange={(e) => processFiles(e.target.files)}
+      />
+      <input
+        ref={addMoreRef}
+        type="file"
+        multiple
+        accept=".jpg,.jpeg,.png,.tif,.tiff"
+        className="hidden"
+        onChange={(e) => processFiles(e.target.files)}
+      />
+
+      {files.length === 0 ? (
+        /* Empty Drag & Drop Zone */
+        <div
+          onDragOver={(e) => {
+            e.preventDefault()
+            setDragOver(true)
+          }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={(e) => {
+            e.preventDefault()
+            setDragOver(false)
+            processFiles(e.dataTransfer.files)
+          }}
+          onClick={() => inputRef.current?.click()}
+          className={`relative flex flex-col items-center justify-center text-center rounded-2xl border-2 border-dashed p-10 transition-all cursor-pointer ${
+            dragOver
+              ? 'border-blue-500 bg-blue-50/50 scale-[0.99]'
+              : 'border-slate-300 hover:border-blue-400 bg-white hover:bg-slate-50/50 shadow-xs'
+          }`}
+        >
+          <div className="w-14 h-14 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center mb-4 text-blue-600">
+            <UploadCloud size={26} strokeWidth={1.8} />
+          </div>
+          <h3 className="font-display font-bold text-slate-900 text-base mb-1">
+            {isCompareMode ? 'Upload Two or More Images to Compare' : 'Upload Remote Sensing Imagery'}
+          </h3>
+          <p className="text-sm text-slate-500">
+            Drag & drop one or multiple satellite scenes here
+          </p>
+          <p className="text-sm text-slate-500 mb-4">
+            or <span className="text-blue-600 font-semibold underline underline-offset-2">browse files</span>
+          </p>
+          <div className="flex items-center gap-2 text-[11px] text-slate-500 font-mono">
+            <span className="px-2.5 py-0.5 rounded-lg border border-slate-200 bg-slate-50">JPG</span>
+            <span className="px-2.5 py-0.5 rounded-lg border border-slate-200 bg-slate-50">PNG</span>
+            <span className="px-2.5 py-0.5 rounded-lg border border-slate-200 bg-slate-50">TIFF</span>
+            <span className="px-2.5 py-0.5 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 font-medium">Multi-image Support</span>
+          </div>
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <p className="text-sm font-medium text-slate-200 truncate flex items-center gap-1.5">
-                <ImageIcon size={13} className="text-slate-500 shrink-0" />
-                {file.name}
-              </p>
-              <p className="text-[11px] text-slate-500 mt-0.5 font-mono">
-                {sizeMb} MB · {dims}
+      ) : (
+        /* List / Grid of Uploaded Images */
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs space-y-4">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+            <div className="flex items-center gap-2">
+              <FileImage size={16} className="text-blue-600" />
+              <p className="text-xs font-bold text-slate-800">
+                Uploaded Imagery ({files.length} {files.length === 1 ? 'scene' : 'scenes'})
               </p>
             </div>
-            <button onClick={removeFile} className="text-slate-500 hover:text-signal-rose shrink-0">
-              <X size={16} />
+            <button
+              onClick={() => addMoreRef.current?.click()}
+              className="flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200 transition-colors"
+            >
+              <Plus size={13} strokeWidth={2.5} />
+              <span>Add More</span>
             </button>
           </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {files.map((item, index) => (
+              <div
+                key={item.id}
+                className="flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-slate-50 transition-colors relative group"
+              >
+                <div className="w-14 h-14 rounded-lg overflow-hidden border border-slate-200 bg-slate-100 shrink-0">
+                  <img src={item.preview} alt={item.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-700">
+                    <span className="w-4 h-4 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold flex items-center justify-center shrink-0">
+                      {index + 1}
+                    </span>
+                    <span className="truncate">{item.name}</span>
+                  </div>
+                  <p className="text-[10.5px] text-slate-500 mt-0.5 font-mono">
+                    {item.sizeMb} MB · {item.dims}
+                  </p>
+                </div>
+                <button
+                  onClick={() => removeFile(item.id)}
+                  title="Remove image"
+                  className="p-1 rounded-md text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                >
+                  <X size={15} />
+                </button>
+              </div>
+            ))}
+          </div>
+
           {uploading ? (
-            <div className="mt-3">
-              <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+            <div className="pt-2">
+              <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
                 <div
-                  className="h-full bg-cyan-accent transition-all duration-200"
+                  className="h-full bg-blue-600 transition-all duration-200 rounded-full"
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              <p className="text-[11px] text-slate-500 mt-1.5 font-mono">Uploading… {progress}%</p>
+              <p className="text-[11px] text-slate-500 mt-1.5 font-mono">Uploading images… {progress}%</p>
             </div>
           ) : (
-            <div className="flex items-center gap-2 mt-3">
-              <button
-                onClick={handleAnalyze}
-                disabled={analyzing}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-cyan-accent text-base-950 text-xs font-semibold hover:bg-cyan-soft transition-colors disabled:opacity-70"
-              >
-                {analyzing ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
-                {analyzing ? 'Analyzing…' : 'Analyze Image'}
-              </button>
-              <button
-                onClick={removeFile}
-                className="px-3 py-1.5 rounded-lg border border-white/[0.1] text-xs text-slate-400 hover:text-slate-200 hover:bg-white/[0.05]"
-              >
-                Remove
-              </button>
+            <div className="flex items-center justify-between pt-2 border-t border-slate-100 gap-3">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleAnalyze}
+                  disabled={analyzing || files.length === 0}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition-colors disabled:opacity-60 shadow-xs"
+                >
+                  {analyzing ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : isCompareMode || files.length > 1 ? (
+                    <GitCompare size={14} />
+                  ) : (
+                    <Sparkles size={14} />
+                  )}
+                  <span>
+                    {analyzing
+                      ? 'Processing Analysis…'
+                      : isCompareMode || files.length > 1
+                      ? `Compare & Analyze (${files.length} Images)`
+                      : 'Analyze Image'}
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => setFiles([])}
+                  className="px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                >
+                  Clear All
+                </button>
+              </div>
+
+              {files.length >= 2 && (
+                <span className="text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-lg font-medium">
+                  ✓ Comparison Ready
+                </span>
+              )}
             </div>
           )}
         </div>
-      </div>
+      )}
     </div>
   )
 }
