@@ -12,15 +12,14 @@ export const activeImage = {
   acquisitionDate: '24 Aug 2026',
   satellite: 'Cartosat-3',
   coordinates: '13.0827° N, 77.5946° E',
-  thumbnail:
-    'https://images.unsplash.com/photo-1451187863213-d1bcbaae3fa3?q=80&w=1600&auto=format&fit=crop',
+  thumbnail: '/satellite_scene.jpg',
 }
 
 export const datasets = [
-  { id: 'ds1', name: 'Cartosat-3 · Urban India' },
-  { id: 'ds2', name: 'Sentinel-2 · Land Cover' },
-  { id: 'ds3', name: 'ResourceSat-2 · Agriculture' },
-  { id: 'ds4', name: 'RISAT-1 · SAR Composite' },
+  { id: 'ds1', name: 'Cartosat-3 - Urban India' },
+  { id: 'ds2', name: 'Sentinel-2 - Land Cover' },
+  { id: 'ds3', name: 'ResourceSat-2 - Agriculture' },
+  { id: 'ds4', name: 'RISAT-1 - SAR Composite' },
 ]
 
 export const analysisStats = {
@@ -31,16 +30,16 @@ export const analysisStats = {
   vegetationAreas: 9,
   vegetationCoverage: 34,
   urbanCoverage: 41,
-  waterCoverage: 12,
-  bareLandCoverage: 13,
-  confidence: 92.4,
+  waterCoverage: 8,
+  otherCoverage: 17,
+  confidence: 92,
 }
 
 export const landCoverage = [
-  { label: 'Vegetation', value: 34, color: '#7fd88f' },
-  { label: 'Urban Area', value: 41, color: '#3fd4d0' },
-  { label: 'Water', value: 12, color: '#5fb7e8' },
-  { label: 'Bare Land', value: 13, color: '#e8a94f' },
+  { label: 'Urban Area', value: 41, color: '#2563eb' },
+  { label: 'Vegetation', value: 34, color: '#22c55e' },
+  { label: 'Water', value: 8, color: '#60a5fa' },
+  { label: 'Other', value: 17, color: '#cbd5e1' },
 ]
 
 export const aiInsights = [
@@ -70,62 +69,33 @@ export const detectionLegend = [
 ]
 
 export const suggestedQueries = [
-  'Detect buildings',
-  'Find water bodies',
-  'Analyze vegetation',
-  'Detect roads',
-  'Compare regions',
+  { text: 'Detect roads in this area', type: 'road' },
+  { text: 'Show vegetation density', type: 'vegetation' },
+  { text: 'Find water bodies', type: 'water' },
+  { text: 'Compare with another region', type: 'compare' },
 ]
 
 export const initialChatMessages = [
   {
     id: 'm1',
-    role: 'assistant',
-    text: "Image loaded — Bengaluru_Sector_14.tif. Ask me anything about what's in this scene.",
-    time: '09:41',
+    role: 'user',
+    text: 'Are there any buildings near the river in this area?',
+    time: '09:43',
+    delivered: true,
   },
   {
     id: 'm2',
-    role: 'user',
-    text: 'What objects are visible in this image?',
-    time: '09:41',
-  },
-  {
-    id: 'm3',
     role: 'assistant',
-    text: 'I detected several urban structures, road networks, vegetation areas and a small water body.',
-    stats: [
-      { label: 'Buildings', value: '18' },
-      { label: 'Roads', value: '12' },
-      { label: 'Water Bodies', value: '3' },
-    ],
-    time: '09:42',
-  },
-  {
-    id: 'm4',
-    role: 'user',
-    text: 'Identify the areas covered by vegetation.',
+    text: 'Yes. I detected several building structures within ~80 meters of the river on the western side.\n\nI found a total of 6 buildings close to the water body.',
     time: '09:43',
-  },
-  {
-    id: 'm5',
-    role: 'assistant',
-    text: 'Approximately 34% of the analyzed region appears to contain vegetation, concentrated mostly in the western section of the scene.',
-    highlight: { label: 'Vegetation Coverage', value: '34%' },
-    time: '09:43',
-  },
-  {
-    id: 'm6',
-    role: 'user',
-    text: 'Are there any buildings near the river?',
-    time: '09:44',
-  },
-  {
-    id: 'm7',
-    role: 'assistant',
-    text: 'Yes. Several building structures are visible within the vicinity of the detected water body, roughly 40–80 m from the shoreline.',
-    detectionRefs: ['Building #1', 'Building #2', 'Water Body #1'],
-    time: '09:44',
+    card: {
+      title: 'Buildings Near River',
+      stats: [
+        { label: 'Detected Buildings', value: '6' },
+        { label: 'Avg. Distance', value: '~80 m' },
+        { label: 'Confidence', value: '92%' },
+      ],
+    },
   },
 ]
 
