@@ -23,10 +23,10 @@ export default function Detection() {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-4 bg-[#f8f9fb]">
+    <div className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-4 bg-[#fafaf8] text-[#162721] selection:bg-[#dce7e1] selection:text-[#162721]">
       <SceneMetaBar />
-        <div className="glass rounded-xl p-4 bg-white border border-slate-200 shadow-sm">
-          <p className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase mb-3">Detection Type</p>
+        <div className="glass rounded-xl p-4 bg-white border border-[#e5ebe7] shadow-sm">
+          <p className="text-[11px] font-semibold tracking-wider text-[#5f7168] uppercase mb-3">Detection Type</p>
           <div className="flex flex-wrap gap-2 mb-4">
             {detectionTypes.map((t) => (
               <button
@@ -34,8 +34,8 @@ export default function Detection() {
                 onClick={() => toggle(t)}
                 className={`px-3 py-1.5 rounded-lg border text-xs transition-colors shadow-sm ${
                   selected.includes(t)
-                    ? 'border-sky-300 bg-sky-50 text-cyan-soft font-semibold'
-                    : 'border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    ? 'border-[#c8d4ce] bg-[#e2eae5] text-[#234238] font-semibold'
+                    : 'border-[#d8e0dc] bg-white text-slate-600 hover:text-[#162721] hover:bg-[#f2f6f4]'
                 }`}
               >
                 {t}
@@ -45,7 +45,7 @@ export default function Detection() {
           <button
             onClick={run}
             disabled={running}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-accent text-white text-sm font-semibold hover:bg-sky-700 transition-colors disabled:opacity-70 shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#234238] text-white text-sm font-semibold hover:bg-[#1a342c] transition-colors disabled:opacity-70 shadow-sm"
           >
             {running ? <Loader2 size={15} className="animate-spin" /> : <Play size={15} />}
             {running ? 'Running Detection…' : 'Run Detection'}
@@ -57,7 +57,7 @@ export default function Detection() {
         </div>
 
         {ran && (
-          <div className="glass rounded-xl p-4 animate-fadeUp bg-white border border-slate-200 shadow-sm">
+          <div className="glass rounded-xl p-4 animate-fadeUp bg-white border border-[#e5ebe7] shadow-sm">
             <p className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase mb-3">Detected Objects</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
               {detectionBoxes.map((b) => (

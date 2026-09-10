@@ -4,8 +4,8 @@ import {
   Home,
   BarChart2,
   History as HistoryIcon,
-  Box,
-  Sprout,
+  Database,
+  HelpCircle,
   Plus,
   Bell,
   Menu,
@@ -16,8 +16,8 @@ const navLinks = [
   { to: '/', label: 'Overview', icon: Home, end: true },
   { to: '/new-analysis', label: 'Analyses', icon: BarChart2 },
   { to: '/history', label: 'History', icon: HistoryIcon },
-  { to: '/detection', label: 'Object Detection', icon: Box },
-  { to: '/land-cover', label: 'Land Cover', icon: Sprout },
+  { to: '/datasets', label: 'Datasets', icon: Database },
+  { to: '/help', label: 'Help', icon: HelpCircle },
 ]
 
 export default function Header() {
@@ -25,25 +25,25 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="h-[68px] shrink-0 bg-[#050c1a] border-b border-slate-800/80 sticky top-0 z-40 select-none">
-      <div className="h-full px-4 lg:px-6 flex items-center justify-between gap-3">
+    <header className="h-[68px] shrink-0 bg-[#fafaf8] border-b border-[#e5ebe7] sticky top-0 z-40 select-none">
+      <div className="h-full px-4 lg:px-8 flex items-center justify-between gap-4">
         {/* Left: Brand Identity */}
         <div
           className="flex items-center gap-3 cursor-pointer group shrink-0"
           onClick={() => navigate('/')}
         >
-          {/* Blue clover logo */}
-          <div className="text-blue-500 flex items-center justify-center">
+          {/* Earth/clover logo in Forest Green */}
+          <div className="text-[#234238] flex items-center justify-center">
             <svg
-              width="28"
-              height="28"
+              width="26"
+              height="26"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="2.2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="text-[#2b6cee]"
+              className="text-[#234238]"
             >
               <path d="M12 2a4 4 0 0 0-4 4c0 2.5 4 6 4 6s4-3.5 4-6a4 4 0 0 0-4-4Z" />
               <path d="M12 22a4 4 0 0 0 4-4c0-2.5-4-6-4-6s-4 3.5-4 6a4 4 0 0 0 4 4Z" />
@@ -52,31 +52,30 @@ export default function Header() {
             </svg>
           </div>
           <div>
-            <span className="font-display font-bold text-white text-base tracking-tight leading-none block">
+            <span className="font-display font-bold text-[#162721] text-[15px] tracking-tight leading-none block">
               SatQuery AI
             </span>
-            <p className="text-[11px] text-slate-400 font-normal leading-tight mt-0.5">
-              Satellite Intelligence
+            <p className="text-[11px] text-[#6b7c73] font-normal leading-tight mt-0.5">
+              Satellite Intelligence for Earth Observation
             </p>
           </div>
         </div>
 
-        {/* Center Navigation Pill Bar (Desktop - Mathematically Centered) */}
-        <nav className="hidden xl:flex items-center absolute left-1/2 -translate-x-1/2 bg-[#0c1836] border border-blue-950/80 p-1 rounded-full gap-1 z-10 shadow-md shadow-black/20">
+        {/* Center Navigation Links (Desktop - Centered clean text links) */}
+        <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2 z-10">
           {navLinks.map((link) => (
             <NavLink
               key={link.label}
               to={link.to}
               end={link.end}
               className={({ isActive }) =>
-                `flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 ${
+                `text-[13.5px] font-medium transition-all py-1 ${
                   isActive
-                    ? 'bg-[#1d61f2] text-white shadow-sm'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800/40'
+                    ? 'text-[#162721] font-bold border-b-2 border-[#234238]'
+                    : 'text-[#5d6f66] hover:text-[#162721]'
                 }`
               }
             >
-              <link.icon size={14} strokeWidth={2} />
               <span>{link.label}</span>
             </NavLink>
           ))}
@@ -85,15 +84,15 @@ export default function Header() {
         {/* Right Actions */}
         <div className="flex items-center gap-3.5">
           {/* AI Engine Status */}
-          <div className="hidden md:flex items-center gap-2 text-xs font-medium text-slate-200">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+          <div className="hidden md:flex items-center gap-2 text-xs font-medium text-[#2d4239]">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]" />
             <span>AI Engine Online</span>
           </div>
 
-          {/* + New Analysis Button */}
+          {/* + New Analysis Button in Deep Forest Green */}
           <button
             onClick={() => navigate('/new-analysis')}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1d61f2] hover:bg-blue-600 text-white text-xs font-semibold shadow-md shadow-blue-500/20 transition-colors"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#234238] hover:bg-[#1b342c] text-white text-xs font-semibold shadow-sm transition-all cursor-pointer"
           >
             <Plus size={14} strokeWidth={2.5} />
             <span>New Analysis</span>
@@ -102,20 +101,20 @@ export default function Header() {
           {/* Notification Bell */}
           <button
             title="Notifications"
-            className="hidden sm:flex w-9 h-9 rounded-full bg-[#0a152e] border border-slate-800 text-slate-300 hover:text-white items-center justify-center transition-colors"
+            className="hidden sm:flex w-9 h-9 rounded-full bg-white border border-[#d8e0dc] hover:border-[#b8c6c0] text-[#5d6f66] hover:text-[#162721] items-center justify-center transition-colors shadow-2xs"
           >
             <Bell size={15} strokeWidth={1.8} />
           </button>
 
-          {/* AS User Avatar */}
-          <div className="w-9 h-9 rounded-full bg-[#1e4db7] border border-blue-400/30 text-white flex items-center justify-center text-xs font-bold shrink-0">
+          {/* AS User Avatar in Deep Forest Green */}
+          <div className="w-9 h-9 rounded-full bg-[#234238] text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-2xs">
             AS
           </div>
 
           {/* Mobile menu toggle */}
           <button
             onClick={() => setMobileMenuOpen((v) => !v)}
-            className="xl:hidden p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800"
+            className="lg:hidden p-2 rounded-xl text-[#5d6f66] hover:text-[#162721] hover:bg-[#edf2ef]"
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -124,7 +123,7 @@ export default function Header() {
 
       {/* Mobile Top Navigation Dropdown */}
       {mobileMenuOpen && (
-        <div className="xl:hidden bg-[#071126] border-b border-slate-800 px-4 py-3 space-y-1 shadow-2xl animate-fadeUp">
+        <div className="lg:hidden bg-[#fafaf8] border-b border-[#e5ebe7] px-4 py-3 space-y-1 shadow-lg animate-fadeUp">
           {navLinks.map((link) => (
             <NavLink
               key={link.label}
@@ -134,12 +133,11 @@ export default function Header() {
               className={({ isActive }) =>
                 `flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
                   isActive
-                    ? 'bg-[#1d61f2] text-white'
-                    : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+                    ? 'bg-[#e5ede8] text-[#234238]'
+                    : 'text-[#5d6f66] hover:bg-[#f2f6f3]'
                 }`
               }
             >
-              <link.icon size={16} strokeWidth={1.8} />
               <span>{link.label}</span>
             </NavLink>
           ))}
