@@ -8,7 +8,7 @@ export default function LandCover() {
   const toggleLayer = (key) => setLayers((prev) => (prev.includes(key) ? prev.filter((l) => l !== key) : [...prev, key]))
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-4 bg-[#f8f9fb]">
+    <div className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-4 bg-[#fafaf8] text-[#162721] selection:bg-[#dce7e1] selection:text-[#162721]">
       <SceneMetaBar />
       <div className="h-[420px]">
         <SatelliteViewer layers={layers} onToggleLayer={toggleLayer} />

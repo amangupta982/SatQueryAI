@@ -10,11 +10,11 @@ const faqs = [
 
 export default function Help() {
   return (
-    <div className="flex-1 overflow-y-auto p-4 lg:p-6 max-w-2xl space-y-3 bg-[#f8f9fb]">
+    <div className="flex-1 overflow-y-auto p-4 lg:p-6 max-w-2xl space-y-3 bg-[#fafaf8] text-[#162721] selection:bg-[#dce7e1] selection:text-[#162721]">
         {faqs.map((f) => (
-          <div key={f.q} className="glass rounded-xl p-4 flex gap-3.5 bg-white border border-slate-200 shadow-sm">
-            <div className="w-9 h-9 rounded-lg bg-sky-100 border border-sky-200 flex items-center justify-center shrink-0">
-              <f.icon size={16} className="text-cyan-accent" strokeWidth={1.8} />
+          <div key={f.q} className="glass rounded-xl p-4 flex gap-3.5 bg-white border border-[#e5ebe7] shadow-sm">
+            <div className="w-9 h-9 rounded-lg bg-[#e2eae5] border border-[#c8d4ce] flex items-center justify-center shrink-0">
+              <f.icon size={16} className="text-[#234238]" strokeWidth={1.8} />
             </div>
             <div>
               <p className="text-sm font-medium text-slate-800">{f.q}</p>
