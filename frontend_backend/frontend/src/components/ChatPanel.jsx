@@ -87,7 +87,7 @@ export default function ChatPanel({ onLayerSuggestion, className = '' }) {
 
       {/* Input Box & Disclaimer */}
       <div className="p-3 border-t border-slate-150">
-        <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/80 px-2.5 py-1.5 focus-within:border-blue-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-100 transition-all">
+        <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/80 px-2.5 py-1.5 focus-within:border-[#234238] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#234238]/15 transition-all">
           <button
             type="button"
             title="Attach file"
@@ -105,7 +105,7 @@ export default function ChatPanel({ onLayerSuggestion, className = '' }) {
           <button
             onClick={() => sendMessage()}
             disabled={!input.trim()}
-            className="w-8 h-8 flex items-center justify-center rounded-xl bg-[#1d61f2] text-white disabled:opacity-40 hover:bg-blue-600 transition-colors shrink-0 shadow-xs"
+            className="w-8 h-8 flex items-center justify-center rounded-xl bg-[#234238] text-white disabled:opacity-40 hover:bg-[#1a342c] transition-colors shrink-0 shadow-xs"
           >
             <Send size={13} />
           </button>
