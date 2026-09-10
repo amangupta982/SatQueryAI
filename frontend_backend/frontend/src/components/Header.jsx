@@ -5,7 +5,7 @@ import {
   BarChart2,
   History as HistoryIcon,
   Database,
-  HelpCircle,
+  Globe,
   Plus,
   Bell,
   Menu,
@@ -17,7 +17,7 @@ const navLinks = [
   { to: '/new-analysis', label: 'Analyses', icon: BarChart2 },
   { to: '/history', label: 'History', icon: HistoryIcon },
   { to: '/datasets', label: 'Datasets', icon: Database },
-  { to: '/help', label: 'Help', icon: HelpCircle },
+  { to: '/3d-view', label: '3D View', icon: Globe },
 ]
 
 export default function Header() {
