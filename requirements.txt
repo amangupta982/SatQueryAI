@@ -1,2 +1,25 @@
-# Dependencies will be finalized after architecture decisions.
-# TODO: Add common project dependencies once finalized.
+# SatQuery AI Core Dependencies
+torch>=2.0.0
+torchvision>=0.15.0
+transformers>=4.40.0
+peft>=0.10.0
+accelerate>=0.28.0
+numpy>=1.24.0
+pillow>=9.5.0
+pydantic>=2.5.0
+fastapi>=0.110.0
+uvicorn>=0.28.0
+python-multipart>=0.0.9
+pyyaml>=6.0
+pytest>=7.4.0
+tqdm>=4.66.0
+requests>=2.31.0
+scipy>=1.10.0
+opencv-python>=4.7.0
+scikit-image>=0.21.0
+geojson>=3.0.0
+shapely>=2.0.0
+pyproj>=3.6.0
+pandas>=2.0.0
+qdrant-client>=1.8.0
+sentence-transformers>=2.5.0

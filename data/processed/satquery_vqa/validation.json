@@ -1,0 +1,2942 @@
+[
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_73_69_vqa_44007",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_73_69",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/004773.png",
+    "sar_path": null,
+    "question": "What directional relationship exists between the coniferous forest and the industrial or commercial units? a) to the bottom, b) to the top-left, c) to the top-right, d) to the left",
+    "answer": "a",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_73_37_vqa_43371",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_73_37",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/011172.png",
+    "sar_path": null,
+    "question": "Does the image capture agro-forestry areas?",
+    "answer": "no",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_56_55_vqa_22635",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_56_55",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003241.png",
+    "sar_path": null,
+    "question": "Identify the season, in which the satellite image was taken: a) Winter, b) Summer, c) Spring, d) Autumn",
+    "answer": "b",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_11_60_vqa_78601",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_11_60",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/004334.png",
+    "sar_path": null,
+    "question": "Identify the season when the satellite image was captured: a) Autumn, b) Spring, c) Summer, d) Winter",
+    "answer": "c",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, cold summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_37_61_vqa_3771",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_37_61",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008933.png",
+    "sar_path": null,
+    "question": "Count the number of regions covered by complex cultivation patterns in the image: a) 5, b) 0, c) 2, d) 1",
+    "answer": "d",
+    "task": "count",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_22_75_vqa_88818",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_22_75",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009131.png",
+    "sar_path": null,
+    "question": "Which season is depicted in the satelltite image? a) Winter, b) Autumn, c) Summer, d) Spring",
+    "answer": "c",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_27_41_vqa_92716",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_27_41",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009119.png",
+    "sar_path": null,
+    "question": "Which land cover class appears in this satellite image? a) Land principally occupied by agriculture, with significant areas of natural vegetation, b) Marine waters, c) Coastal wetlands, d) Inland waters",
+    "answer": "b",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_50_57_vqa_16244",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_50_57",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/005996.png",
+    "sar_path": null,
+    "question": "Using the pastures as the reference, how would you describe the position of the coniferous forest? a) to the right, b) to the top, c) to the left, d) to the bottom",
+    "answer": "c",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_41_78_vqa_107925",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_41_78",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/004560.png",
+    "sar_path": null,
+    "question": "Which pair of classes are touching in the image? a) Arable land and Urban fabric, b) Land principally occupied by agriculture, with significant areas of natural vegetation and Marine waters, c) Beaches, dunes, sands and Urban fabric, d) Agro-forestry areas and Coastal wetlands",
+    "answer": "b",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_48_64_vqa_14156",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_48_64",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/001634.png",
+    "sar_path": null,
+    "question": "In which of the following seasons was this satellite image captured? a) Summer, b) Autumn, c) Spring, d) Winter",
+    "answer": "a",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_54_68_vqa_20815",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_54_68",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/010376.png",
+    "sar_path": null,
+    "question": "From the options below, pick the land cover class visible in the image: a) Marine waters, b) Agro-forestry areas, c) Natural grassland and sparsely vegetated areas, d) Land principally occupied by agriculture, with significant areas of natural vegetation",
+    "answer": "d",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_31_75_vqa_97307",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_31_75",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/002807.png",
+    "sar_path": null,
+    "question": "What is the total area of transitional woodlands or shrubs in the image? a) 0 to 10%, b) 50 to 90%, c) 40 to 50%, d) 20 to 30%",
+    "answer": "a",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_60_56_vqa_26768",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_60_56",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/004773.png",
+    "sar_path": null,
+    "question": "In relation to the pastures, where is the arable land located in the image? a) to the left, b) to the bottom, c) to the top-right, d) to the bottom-left",
+    "answer": "c",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_55_75_vqa_22003",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_55_75",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009028.png",
+    "sar_path": null,
+    "question": "Are inland waters observed in more than two connected regions in the image?",
+    "answer": "no",
+    "task": "count",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_88_78_vqa_66779",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_88_78",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009131.png",
+    "sar_path": null,
+    "question": "Do pastures cover at least 20% of the image?",
+    "answer": "yes",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_21_81_vqa_87988",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_21_81",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/010967.png",
+    "sar_path": null,
+    "question": "Are marine waters present in at least three distinct continuous regions within the image?",
+    "answer": "yes",
+    "task": "count",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_68_74_vqa_36320",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_68_74",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009458.png",
+    "sar_path": null,
+    "question": "Select the season shown in this satellite image: a) Winter, b) Autumn, c) Summer, d) Spring",
+    "answer": "c",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_05_66_vqa_73596",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_05_66",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003976.png",
+    "sar_path": null,
+    "question": "How much area do marine waters occupy? a) 10 to 20%, b) 0 to 10%, c) 30 to 70%, d) 80 to 90%",
+    "answer": "a",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_70_28_vqa_38312",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_70_28",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003677.png",
+    "sar_path": null,
+    "question": "Is any instance of land principally occupied by agriculture with significant areas of natural vegetation directly adjacent to urban fabrics in this image?",
+    "answer": "yes",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Temperate, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_83_38_vqa_59057",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_83_38",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003103.png",
+    "sar_path": null,
+    "question": "Do mixed forests cover the entire image?",
+    "answer": "no",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_88_79_vqa_66824",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_88_79",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009226.png",
+    "sar_path": null,
+    "question": "How is the broad-leaved forest positioned with respect to the coniferous forest? a) to the top-right, b) to the top, c) to the bottom, d) to the left",
+    "answer": "d",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_76_17_vqa_47688",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_76_17",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/002118.png",
+    "sar_path": null,
+    "question": "How would you describe the relative location of the complex cultivation patterns to the arable land? a) to the bottom-left, b) to the right, c) to the top, d) to the left",
+    "answer": "b",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_80_90_vqa_55427",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_80_90",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008629.png",
+    "sar_path": null,
+    "question": "Can you detect any mixed forest in the image?",
+    "answer": "yes",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_51_73_vqa_121238",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_51_73",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/005026.png",
+    "sar_path": null,
+    "question": "How does the position of the transitional woodlands or shrubs compare spatially to the land principally occupied by agriculture with significant areas of natural vegetation? a) to the bottom, b) to the bottom-left, c) to the right, d) to the left",
+    "answer": "c",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_43_65_vqa_8950",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_43_65",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003778.png",
+    "sar_path": null,
+    "question": "Identify how many patches of mixed forest exist in the image: a) 0, b) 1, c) 4, d) More than five",
+    "answer": "b",
+    "task": "count",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_61_52_vqa_27808",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_61_52",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003103.png",
+    "sar_path": null,
+    "question": "Is there evidence that any instance of pastures and urban fabrics are touching in the scene?",
+    "answer": "yes",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_78_30_vqa_51036",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_78_30",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/005988.png",
+    "sar_path": null,
+    "question": "How does the position of the pastures compare spatially to the urban fabric? a) to the top, b) to the bottom-right, c) to the bottom, d) to the right",
+    "answer": "a",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_23_78_vqa_89768",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_23_78",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009131.png",
+    "sar_path": null,
+    "question": "Is the area of coniferous forests smaller than 1008000 m^2?",
+    "answer": "yes",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_74_51_vqa_45325",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_74_51",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/004334.png",
+    "sar_path": null,
+    "question": "Can any permanent crops be observed in this image?",
+    "answer": "no",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_39_80_vqa_105572",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_39_80",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/002807.png",
+    "sar_path": null,
+    "question": "Is there only one continuous patch of transitional woodlands or shrubs in the image?",
+    "answer": "no",
+    "task": "count",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_16_49_vqa_83006",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_16_49",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008920.png",
+    "sar_path": null,
+    "question": "In which season was this satellite image taken? a) Winter, b) Spring, c) Autumn, d) Summer",
+    "answer": "d",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, cold summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_59_78_vqa_26157",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_59_78",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/010680.png",
+    "sar_path": null,
+    "question": "In which of the following seasons was the satellite image taken? a) Winter, b) Summer, c) Autumn, d) Spring",
+    "answer": "b",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_78_84_vqa_52222",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_78_84",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/004560.png",
+    "sar_path": null,
+    "question": "Which classes are in contact in this scene? a) Land principally occupied by agriculture, with significant areas of natural vegetation and Permanent crops, b) Coniferous forest and Mixed forest, c) Moors, heathland and sclerophyllous vegetation and Transitional woodland, shrub, d) Mixed forest and Moors, heathland and sclerophyllous vegetation",
+    "answer": "b",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_42_37_vqa_108409",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_42_37",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009804.png",
+    "sar_path": null,
+    "question": "Identify the class present in the scene: a) Inland waters, b) Transitional woodland, shrub, c) Marine waters, d) Mixed forest",
+    "answer": "c",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_11_82_vqa_79019",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_11_82",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008920.png",
+    "sar_path": null,
+    "question": "Does the image capture inland waters?",
+    "answer": "no",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_82_55_vqa_57966",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_82_55",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/005026.png",
+    "sar_path": null,
+    "question": "Are mixed forests occupying 288000 m^2 or more of the image?",
+    "answer": "yes",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_59_54_vqa_25669",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_59_54",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/005996.png",
+    "sar_path": null,
+    "question": "Does this scene feature permanent crops?",
+    "answer": "no",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_73_41_vqa_43466",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_73_41",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/000174.png",
+    "sar_path": null,
+    "question": "From the options below, select the climate zone shown in the image: a) Cold, no dry season, warm summer, b) Cold, dry summer, warm summer, c) Arid, steppe, cold, d) Temperate, no dry season, warm summer",
+    "answer": "d",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Temperate, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_83_41_vqa_59117",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_83_41",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003390.png",
+    "sar_path": null,
+    "question": "Is the area of lands principally occupied by agriculture with significant areas of natural vegetation less than 1152000 sqm?",
+    "answer": "yes",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Temperate, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_71_71_vqa_40987",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_71_71",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003103.png",
+    "sar_path": null,
+    "question": "Are coniferous forests present in fewer than two continuous regions here?",
+    "answer": "no",
+    "task": "count",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_41_48_vqa_107358",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_41_48",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/010376.png",
+    "sar_path": null,
+    "question": "From the options below, select the season shown in the satellite image: a) Winter, b) Spring, c) Autumn, d) Summer",
+    "answer": "d",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_53_47_vqa_19247",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_53_47",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008920.png",
+    "sar_path": null,
+    "question": "Count the number of continuous regions of coniferous forest: a) 4, b) 5, c) 1, d) 2",
+    "answer": "c",
+    "task": "count",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_72_74_vqa_42578",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_72_74",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003994.png",
+    "sar_path": null,
+    "question": "Identify the climate zone shown in the image: a) Cold, no dry season, warm summer, b) Cold, no dry season, hot summer, c) Polar, tundra, d) Cold, no dry season, cold summer",
+    "answer": "a",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_58_76_vqa_25027",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_58_76",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/001183.png",
+    "sar_path": null,
+    "question": "Which of the following climate zones does this image represent? a) Temperate, dry summer, hot summer, b) Temperate, no dry season, cold summer, c) Cold, no dry season, warm summer, d) Cold, dry summer, warm summer",
+    "answer": "c",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_28_47_vqa_93740",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_28_47",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009226.png",
+    "sar_path": null,
+    "question": "Does the satellite view capture marine waters?",
+    "answer": "yes",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_63_45_vqa_29865",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_63_45",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009028.png",
+    "sar_path": null,
+    "question": "Identify the classes that border each other: a) Coastal wetlands and Permanent crops, b) Pastures and Urban fabric, c) Arable land and Inland wetlands, d) Arable land and Urban fabric",
+    "answer": "d",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_67_35_vqa_34158",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_67_35",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003226.png",
+    "sar_path": null,
+    "question": "Do broad-leaved forests cover at least 864000 m^2 of the image?",
+    "answer": "no",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Temperate, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_88_43_vqa_66146",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_88_43",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/004334.png",
+    "sar_path": null,
+    "question": "Is there any instance of complex cultivation patterns and industrial or commercial units directly connected in the scene?",
+    "answer": "no",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_67_78_vqa_35069",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_67_78",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/010967.png",
+    "sar_path": null,
+    "question": "Is there any arable land and a mixed forest positioned next to each other in the scene?",
+    "answer": "no",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_39_66_vqa_5286",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_39_66",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009028.png",
+    "sar_path": null,
+    "question": "What is the spatial direction from the inland wetlands to the land principally occupied by agriculture with significant areas of natural vegetation? a) to the top-left, b) to the top, c) to the right, d) to the bottom",
+    "answer": "d",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_29_67_vqa_95079",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_29_67",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/001634.png",
+    "sar_path": null,
+    "question": "Identify the climate zone depicted in the satellite image: a) Temperate, dry summer, warm summer, b) Temperate, no dry season, warm summer, c) Cold, no dry season, warm summer, d) Cold, no dry season, cold summer",
+    "answer": "c",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_59_43_vqa_25420",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_59_43",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/004334.png",
+    "sar_path": null,
+    "question": "How many continuous areas covered by complex cultivation patterns exist? a) 4, b) 1, c) 3, d) 5",
+    "answer": "b",
+    "task": "count",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Temperate, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_72_51_vqa_42102",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_72_51",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/000174.png",
+    "sar_path": null,
+    "question": "Choose the land cover class present in the image: a) Urban fabric, b) Marine waters, c) Mixed forest, d) Industrial or commercial units",
+    "answer": "a",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_16_67_vqa_83303",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_16_67",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/000393.png",
+    "sar_path": null,
+    "question": "Identify the season depicted in the image: a) Summer, b) Spring, c) Autumn, d) Winter",
+    "answer": "a",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_10_78_vqa_78094",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_10_78",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009119.png",
+    "sar_path": null,
+    "question": "In which season was the satellite image captured? a) Summer, b) Spring, c) Autumn, d) Winter",
+    "answer": "a",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_41_49_vqa_6553",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_41_49",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008129.png",
+    "sar_path": null,
+    "question": "Which direction describes the spatial relationship of the mixed forest relative to the land principally occupied by agriculture with significant areas of natural vegetation? a) to the right, b) to the left, c) to the top, d) to the bottom",
+    "answer": "c",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Temperate, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_21_77_vqa_87920",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_21_77",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/010108.png",
+    "sar_path": null,
+    "question": "Identify the climate zone depicted in the satellite image: a) Temperate, dry summer, hot summer, b) Temperate, no dry season, warm summer, c) Arid, steppe, cold, d) Cold, no dry season, warm summer",
+    "answer": "d",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_43_23_vqa_109452",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_43_23",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009119.png",
+    "sar_path": null,
+    "question": "How much of the image do marine waters cover? a) 90 to 100%, b) 70 to 90%, c) 30 to 70%, d) 0 to 10%",
+    "answer": "a",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_36_67_vqa_3412",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_36_67",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/005172.png",
+    "sar_path": null,
+    "question": "Relative to the urban fabric, where does the land principally occupied by agriculture with significant areas of natural vegetation appear in the scene? a) to the bottom-left, b) to the right, c) to the bottom, d) to the left",
+    "answer": "b",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_67_68_vqa_34885",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_67_68",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009028.png",
+    "sar_path": null,
+    "question": "Do parts of the image correspond to mixed forest?",
+    "answer": "no",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_43_60_vqa_8813",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_43_60",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003241.png",
+    "sar_path": null,
+    "question": "Is the image fully covered by arable lands?",
+    "answer": "no",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_35_58_vqa_2723",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_35_58",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/010680.png",
+    "sar_path": null,
+    "question": "Does any coniferous forest make contact with a mixed forest in the image?",
+    "answer": "no",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_51_53_vqa_17250",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_51_53",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003677.png",
+    "sar_path": null,
+    "question": "Select the climate zone captured in the image: a) Cold, dry summer, warm summer, b) Temperate, no dry season, cold summer, c) Temperate, no dry season, warm summer, d) Cold, no dry season, warm summer",
+    "answer": "d",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_78_58_vqa_51691",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_78_58",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/011447.png",
+    "sar_path": null,
+    "question": "Which climate zone is depicted in this image? a) Temperate, no dry season, hot summer, b) Temperate, dry summer, hot summer, c) Cold, no dry season, warm summer, d) Cold, no dry season, hot summer",
+    "answer": "c",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_58_81_vqa_25128",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_58_81",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/002388.png",
+    "sar_path": null,
+    "question": "From the options below, select the climate zone shown in the image: a) Temperate, no dry season, cold summer, b) Temperate, no dry season, warm summer, c) Cold, no dry season, cold summer, d) Cold, no dry season, warm summer",
+    "answer": "d",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_73_88_vqa_44421",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_73_88",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008775.png",
+    "sar_path": null,
+    "question": "Which climate zone does the satellite image capture? a) Temperate, dry summer, warm summer, b) Temperate, dry summer, hot summer, c) Cold, no dry season, warm summer, d) Temperate, no dry season, warm summer",
+    "answer": "c",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_10_67_vqa_77850",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_10_67",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/007210.png",
+    "sar_path": null,
+    "question": "Are there regions of inland waters in the satellite image?",
+    "answer": "no",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_67_75_vqa_35031",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_67_75",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/010376.png",
+    "sar_path": null,
+    "question": "Which pair of classes share a boundary? a) Mixed forest and Transitional woodland, shrub, b) Mixed forest and Pastures, c) Industrial or commercial units and Inland wetlands, d) Broad-leaved forest and Mixed forest",
+    "answer": "b",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_58_63_vqa_24793",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_58_63",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/010376.png",
+    "sar_path": null,
+    "question": "Identify the adjacent classes: a) Coniferous forest and Transitional woodland, shrub, b) Broad-leaved forest and Transitional woodland, shrub, c) Arable land and Inland waters, d) Agro-forestry areas and Urban fabric",
+    "answer": "a",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_64_55_vqa_31197",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_64_55",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009131.png",
+    "sar_path": null,
+    "question": "Which season is shown in the satellite image? a) Spring, b) Summer, c) Autumn, d) Winter",
+    "answer": "b",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_04_62_vqa_72774",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_04_62",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/005172.png",
+    "sar_path": null,
+    "question": "Is any broad-leaved forest and marine waters neighbouring each other in the image?",
+    "answer": "no",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, cold summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_77_50_vqa_49848",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_77_50",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008658.png",
+    "sar_path": null,
+    "question": "Does any arable land directly border pastures in this scene?",
+    "answer": "yes",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_41_59_vqa_6794",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_41_59",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009131.png",
+    "sar_path": null,
+    "question": "Count the separate regions of pastures: a) 5, b) 4, c) 1, d) 0",
+    "answer": "c",
+    "task": "count",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_10_52_vqa_77595",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_10_52",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003994.png",
+    "sar_path": null,
+    "question": "Identify the season when the satellite image was captured: a) Spring, b) Summer, c) Winter, d) Autumn",
+    "answer": "b",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, cold summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_64_47_vqa_30991",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_64_47",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008502.png",
+    "sar_path": null,
+    "question": "Do lands principally occupied by agriculture with significant areas of natural vegetation cover between 144000 m^2 and 720000 m^2 of the image?",
+    "answer": "yes",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "bench",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_45_29_vqa_112076",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_45_29",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/004334.png",
+    "sar_path": null,
+    "question": "Does any inland water come into contact with marine waters in the image?",
+    "answer": "no",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_15_79_vqa_82616",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_15_79",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003677.png",
+    "sar_path": null,
+    "question": "Identify how many separate regions of mixed forest are present: a) 4, b) 1, c) More than five, d) 5",
+    "answer": "b",
+    "task": "count",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_35_54_vqa_2658",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_35_54",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009804.png",
+    "sar_path": null,
+    "question": "Which of these climate zones is represented in the satellite image? a) Temperate, no dry season, hot summer, b) Cold, dry summer, warm summer, c) Cold, no dry season, cold summer, d) Temperate, no dry season, warm summer",
+    "answer": "d",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Temperate, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_15_78_vqa_82597",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_15_78",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003593.png",
+    "sar_path": null,
+    "question": "From the options provided, identify the climate zone shown in the image: a) Temperate, dry summer, warm summer, b) Cold, no dry season, warm summer, c) Cold, no dry season, cold summer, d) Cold, dry summer, warm summer",
+    "answer": "b",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_38_77_vqa_104366",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_38_77",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/000393.png",
+    "sar_path": null,
+    "question": "Pick the coverage for arable lands: a) 70 to 90%, b) 10 to 40%, c) 40 to 60%, d) 60 to 70%",
+    "answer": "b",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_41_50_vqa_6570",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_41_50",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008434.png",
+    "sar_path": null,
+    "question": "Which of the following countries is captured in the image? a) Lithuania, b) Kosovo, c) Finland, d) Austria",
+    "answer": "d",
+    "task": "country",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Temperate, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_61_40_vqa_27558",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_61_40",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/011447.png",
+    "sar_path": null,
+    "question": "Which climate zone does the satellite image capture? a) Temperate, no dry season, warm summer, b) Cold, no dry season, cold summer, c) Temperate, no dry season, hot summer, d) Temperate, dry summer, hot summer",
+    "answer": "a",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Temperate, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_90_46_vqa_69012",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_90_46",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/004773.png",
+    "sar_path": null,
+    "question": "Can industrial or commercial units be detected in the satellite image?",
+    "answer": "no",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Temperate, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_59_73_vqa_26048",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_59_73",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009458.png",
+    "sar_path": null,
+    "question": "Which option best describes where the coniferous forest is located compared to the land principally occupied by agriculture with significant areas of natural vegetation? a) to the bottom, b) to the top-right, c) to the bottom-right, d) to the top-left",
+    "answer": "d",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_51_86_vqa_121541",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_51_86",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008129.png",
+    "sar_path": null,
+    "question": "In relation to the transitional woodlands or shrubs, where is the arable land located in the image? a) to the bottom-right, b) to the left, c) to the right, d) to the top",
+    "answer": "b",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_49_76_vqa_15578",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_49_76",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/001183.png",
+    "sar_path": null,
+    "question": "What directional relationship exists between the urban fabric and the coniferous forest? a) to the bottom, b) to the right, c) to the top-left, d) to the top",
+    "answer": "a",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_22_33_vqa_88208",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_22_33",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/001655.png",
+    "sar_path": null,
+    "question": "Choose the season shown in the image: a) Spring, b) Winter, c) Summer, d) Autumn",
+    "answer": "c",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_15_76_vqa_82565",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_15_76",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003390.png",
+    "sar_path": null,
+    "question": "Select the season depicted in the satellite image: a) Autumn, b) Summer, c) Spring, d) Winter",
+    "answer": "b",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_42_48_vqa_7552",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_42_48",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003778.png",
+    "sar_path": null,
+    "question": "How are the complex cultivation patterns positioned with respect to the arable land? a) to the top-right, b) to the top, c) to the top-left, d) to the bottom",
+    "answer": "d",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Temperate, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_73_89_vqa_44427",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_73_89",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008920.png",
+    "sar_path": null,
+    "question": "Is any region of the image not part of the class mixed forests?",
+    "answer": "no",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_39_59_vqa_105139",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_39_59",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009226.png",
+    "sar_path": null,
+    "question": "Is the surface of marine waters no more than 100%?",
+    "answer": "yes",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_34_50_vqa_2076",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_34_50",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/004773.png",
+    "sar_path": null,
+    "question": "Relative to the pastures, where does the coniferous forest appear in the scene? a) to the top-left, b) to the right, c) to the bottom, d) to the top-right",
+    "answer": "c",
+    "task": "relative pos",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Temperate, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_34_50_vqa_2049",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_34_50",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/004773.png",
+    "sar_path": null,
+    "question": "Would you say that any inland water lies next to pastures in the image?",
+    "answer": "yes",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Temperate, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_43_49_vqa_8549",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_43_49",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/000771.png",
+    "sar_path": null,
+    "question": "Would you classify part of this image as agro-forestry areas?",
+    "answer": "no",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Temperate, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_61_90_vqa_28641",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_61_90",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/009131.png",
+    "sar_path": null,
+    "question": "Which of the following countries is captured in the image? a) Portugal, b) Austria, c) Switzerland, d) Luxembourg",
+    "answer": "b",
+    "task": "country",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_29_77_vqa_95245",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_29_77",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003390.png",
+    "sar_path": null,
+    "question": "Are arable lands present in fewer than two continuous regions here?",
+    "answer": "no",
+    "task": "count",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_48_29_vqa_116206",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_48_29",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/004773.png",
+    "sar_path": null,
+    "question": "Which class is depicted in the satellite image? a) Inland wetlands, b) Marine waters, c) Coastal wetlands, d) Inland waters",
+    "answer": "b",
+    "task": "presence",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_38_47_vqa_103854",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_38_47",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/005988.png",
+    "sar_path": null,
+    "question": "Which of the following climate zones does this image represent? a) Cold, no dry season, warm summer, b) Temperate, dry summer, warm summer, c) Temperate, no dry season, warm summer, d) Arid, steppe, cold",
+    "answer": "a",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_82_74_vqa_58292",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_82_74",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008129.png",
+    "sar_path": null,
+    "question": "Identify the number of continuous areas of arable land: a) 0, b) 4, c) 1, d) 2",
+    "answer": "d",
+    "task": "count",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_75_26_vqa_46400",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_75_26",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/002807.png",
+    "sar_path": null,
+    "question": "Do arable lands cover between 40% and 60% of the image?",
+    "answer": "yes",
+    "task": "area",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "validation",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_34_58_vqa_99890",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_34_58",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008502.png",
+    "sar_path": null,
+    "question": "Is there any inland water located alongside marine waters in the image?",
+    "answer": "no",
+    "task": "adjacency",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "test",
+      "source": "BigEarthNet.txt",
+      "format_type": "binary",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_56_84_vqa_23246",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_56_84",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/008775.png",
+    "sar_path": null,
+    "question": "Which of the following climate zones does this image represent? a) Cold, no dry season, warm summer, b) Cold, no dry season, cold summer, c) Temperate, dry summer, warm summer, d) Cold, no dry season, hot summer",
+    "answer": "a",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_41_85_vqa_7410",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_41_85",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003226.png",
+    "sar_path": null,
+    "question": "In which season was this satellite image taken? a) Summer, b) Spring, c) Winter, d) Autumn",
+    "answer": "a",
+    "task": "season",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_29_84_vqa_95430",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T34VER_29_84",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/004334.png",
+    "sar_path": null,
+    "question": "Identify the country depicted in the satellite image: a) Luxembourg, b) Finland, c) Switzerland, d) Kosovo",
+    "answer": "b",
+    "task": "country",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Finland",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  },
+  {
+    "sample_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_80_54_vqa_54844",
+    "patch_id": "S2A_MSIL2A_20170613T101031_N9999_R022_T33UUP_80_54",
+    "image_path": "/Users/rohan/Desktop/SatQueryAI/data/images/003241.png",
+    "sar_path": null,
+    "question": "Identify the climate zone depicted in the satellite image: a) Cold, no dry season, cold summer, b) Arid, steppe, cold, c) Cold, no dry season, warm summer, d) Polar, tundra",
+    "answer": "c",
+    "task": "climate zone",
+    "sensor": "Sentinel-2",
+    "metadata": {
+      "country": "Austria",
+      "season": "Summer",
+      "climate_zone": "Cold, no dry season, warm summer",
+      "lulc_classes": [],
+      "split": "train",
+      "source": "BigEarthNet.txt",
+      "format_type": "mcq",
+      "choices": null
+    },
+    "evidence": {
+      "bounding_boxes": [],
+      "coverage_tier": null,
+      "approx_area_m2": null,
+      "detected_regions_count": null,
+      "sensor_bands_used": [],
+      "raw_metadata": {}
+    }
+  }
+]

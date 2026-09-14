@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Send, Sparkles, Paperclip } from 'lucide-react'
 import ChatMessage from './ChatMessage'
 import SuggestedQueries from './SuggestedQueries'
-import { initialChatMessages, getMockAIResponse } from '../data/mockData'
+import { initialChatMessages } from '../data/mockData'
 
 function now() {
   return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -12,13 +12,15 @@ export default function ChatPanel({ onLayerSuggestion, className = '' }) {
   const [messages, setMessages] = useState(initialChatMessages)
   const [input, setInput] = useState('')
   const [typing, setTyping] = useState(false)
+  const [attachedFile, setAttachedFile] = useState(null)
   const scrollRef = useRef(null)
+  const fileInputRef = useRef(null)
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
   }, [messages, typing])
 
-  const sendMessage = (text) => {
+  const sendMessage = async (text) => {
     const value = text ?? input
     if (!value.trim()) return
 
@@ -27,20 +29,65 @@ export default function ChatPanel({ onLayerSuggestion, className = '' }) {
     setInput('')
     setTyping(true)
 
-    setTimeout(() => {
-      const res = getMockAIResponse(value)
-      const aiMsg = {
+    // Attempt live SatQuery-VQA backend call
+    try {
+      const formData = new FormData()
+      formData.append('question', value)
+      formData.append('sensor', 'Sentinel-2')
+
+      if (attachedFile) {
+        formData.append('image', attachedFile)
+      } else {
+        // Fallback default 1x1 base64 pixel for backend processing when no file uploaded
+        formData.append('image_b64', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==')
+      }
+
+      const res = await fetch('/api/v1/vqa', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        const stats = []
+        if (data.task) stats.push({ label: 'Task', value: data.task })
+        if (data.model) stats.push({ label: 'Model', value: data.model })
+        if (data.confidence !== null && data.confidence !== undefined) {
+          stats.push({ label: 'Confidence', value: `${(data.confidence * 100).toFixed(1)}%` })
+        }
+        if (data.evidence?.bounding_boxes?.length) {
+          stats.push({ label: 'Evidence Boxes', value: `${data.evidence.bounding_boxes.length}` })
+        }
+
+        const aiMsg = {
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          text: data.answer,
+          card: stats.length > 0 ? {
+            title: `${data.model || 'SatQuery-VQA'} Analysis`,
+            stats: stats,
+          } : null,
+          time: now(),
+        }
+        setMessages((m) => [...m, aiMsg])
+        setTyping(false)
+        return
+      } else {
+        const errorData = await res.json().catch(() => ({ detail: 'Inference request failed' }))
+        throw new Error(errorData.detail || `Server error (status ${res.status})`)
+      }
+    } catch (err) {
+      console.error('[VQA Error]', err)
+      const errorMsg = {
         id: crypto.randomUUID(),
         role: 'assistant',
-        text: res.text,
-        stats: res.stats,
-        highlight: res.highlight,
+        text: `Error: Unable to complete SatQuery-VQA inference (${err.message}). The system strictly operates using authentic vision-language model generation and does not provide simulated or mock fallbacks.`,
+        isError: true,
         time: now(),
       }
-      setMessages((m) => [...m, aiMsg])
+      setMessages((m) => [...m, errorMsg])
       setTyping(false)
-      if (res.activateLayer) onLayerSuggestion?.(res.activateLayer)
-    }, 1000)
+    }
   }
 
   return (
@@ -87,11 +134,32 @@ export default function ChatPanel({ onLayerSuggestion, className = '' }) {
 
       {/* Input Box & Disclaimer */}
       <div className="p-3 border-t border-slate-150">
+        {attachedFile && (
+          <div className="flex items-center justify-between bg-blue-50 text-blue-700 text-[10px] px-2 py-1 rounded-lg mb-1.5 border border-blue-100">
+            <span className="truncate font-medium">📷 Attached: {attachedFile.name}</span>
+            <button
+              onClick={() => setAttachedFile(null)}
+              className="ml-1.5 text-blue-500 hover:text-blue-800 font-bold"
+              title="Remove attached image"
+            >
+              ×
+            </button>
+          </div>
+        )}
+
         <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/80 px-2.5 py-1.5 focus-within:border-[#234238] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#234238]/15 transition-all">
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={(e) => setAttachedFile(e.target.files?.[0] || null)}
+            className="hidden"
+            accept="image/*"
+          />
           <button
             type="button"
-            title="Attach file"
-            className="p-1 text-slate-400 hover:text-slate-600 transition-colors shrink-0"
+            title={attachedFile ? `Attached: ${attachedFile.name}` : "Attach satellite image"}
+            onClick={() => fileInputRef.current?.click()}
+            className={`p-1 transition-colors shrink-0 ${attachedFile ? 'text-blue-600' : 'text-slate-400 hover:text-slate-600'}`}
           >
             <Paperclip size={15} />
           </button>
