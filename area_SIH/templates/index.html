@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area Measurement | Agentic RS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Google Fonts: Outfit for premium look -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header glass-panel">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h1>Agentic RS <span>Analysis Suite</span></h1>
+            </div>
+            <div class="nav-tabs" style="display: flex; gap: 10px; margin-left: auto; margin-right: 20px;">
+                <button class="btn primary-btn" id="tab-area" onclick="switchTab('area')">Area Measurement</button>
+                <button class="btn secondary-btn" id="tab-grounding" onclick="switchTab('grounding')">Object Grounding</button>
+            </div>
+            <div class="reference-badge">Ref: BigEarthNet.txt (arXiv:2603.29630)</div>
+        </header>
+
+        <main class="main-content">
+            <!-- Area View -->
+            <div id="area-view">
+            <!-- Upload Section -->
+            <section id="upload-section" class="upload-section glass-panel">
+                <div class="upload-header">
+                    <h2>Upload Satellite Imagery</h2>
+                    <p>Select an image to analyze land-cover area (Supports RGB, GeoTIFF, Sentinel data)</p>
+                </div>
+                
+                <form id="upload-form" class="upload-form">
+                    <div class="file-drop-area" id="drop-area">
+                        <div class="drop-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <span class="file-msg">Drag & drop image here or click to browse</span>
+                        <input class="file-input" type="file" id="image-input" name="image" accept=".jpg,.jpeg,.png,.tif,.tiff,.bmp,.webp" required>
+                    </div>
+
+                    <div class="options-area">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="satellite-mode" name="satellite_mode">
+                            <span class="slider round"></span>
+                            <span class="toggle-label">Satellite Mode (HSV analysis fallback)</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn primary-btn" id="analyze-btn" disabled>
+                        <span>Analyze Area</span>
+                        <div class="loader-spinner" style="display: none;"></div>
+                    </button>
+                </form>
+
+                <div id="error-message" class="error-message" style="display: none;"></div>
+            </section>
+
+            <!-- Loading State -->
+            <section id="loading-section" class="loading-section glass-panel" style="display: none;">
+                <div class="loader-container">
+                    <div class="radar-scanner"></div>
+                    <h3>Analyzing Land Cover...</h3>
+                    <p id="loading-text">Running semantic segmentation</p>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results-section" class="results-section" style="display: none;">
+                <div class="results-header glass-panel">
+                    <h2>Analysis Results</h2>
+                    <div class="action-buttons">
+                        <button id="new-analysis-btn" class="btn secondary-btn">New Analysis</button>
+                        <a href="/download" id="download-btn" class="btn primary-btn download-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Download Annotated Image
+                        </a>
+                    </div>
+                </div>
+
+                <div class="image-comparison">
+                    <div class="image-card glass-panel">
+                        <div class="card-header">
+                            <h3>Original Image</h3>
+                        </div>
+                        <div class="image-wrapper">
+                            <img id="original-img" src="" alt="Original Image">
+                        </div>
+                    </div>
+                    
+                    <div class="image-card glass-panel annotated-card">
+                        <div class="card-header">
+                            <h3>Area Annotation</h3>
+                            <span id="model-badge" class="badge">DeepLabV3</span>
+                        </div>
+                        <div class="image-wrapper">
+                            <img id="annotated-img" src="" alt="Annotated Image">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card glass-panel">
+                        <div class="stat-label">Total Valid Area</div>
+                        <div class="stat-value" id="stat-total-coverage">--%</div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-label">Detected Classes</div>
+                        <div class="stat-value" id="stat-classes-count">--</div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-label">Processing Time</div>
+                        <div class="stat-value" id="stat-time">--s</div>
+                    </div>
+                    <div class="stat-card glass-panel">
+                        <div class="stat-label">Spatial Resolution</div>
+                        <div class="stat-value" id="stat-resolution">N/A</div>
+                    </div>
+                </div>
+
+                <!-- Detailed Table -->
+                <div class="table-container glass-panel">
+                    <div class="table-header">
+                        <h3>Land Cover Summary</h3>
+                        <p id="table-note" class="table-note"></p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="results-table">
+                            <thead>
+                                <tr>
+                                    <th>Class</th>
+                                    <th>Pixel Area</th>
+                                    <th>Coverage</th>
+                                    <th class="physical-col">Physical Area</th>
+                                    <th>Tier</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        
+            </div> <!-- End Area View -->
+            
+            <!-- Grounding View -->
+            <div id="grounding-view" style="display: none;">
+                <section id="upload-section-grounding" class="upload-section glass-panel">
+                    <div class="upload-header">
+                        <h2>Upload & Detect Objects</h2>
+                        <p>Upload a satellite image and type what you want to find using natural language.</p>
+                    </div>
+                    
+                    <form id="upload-form-grounding" class="upload-form">
+                        <div class="file-drop-area" id="drop-area-grounding">
+                            <span class="file-msg-grounding">Drag & drop image here or click to browse</span>
+                            <input class="file-input" type="file" id="image-input-grounding" name="image" accept=".jpg,.jpeg,.png,.tif,.tiff,.bmp,.webp" required>
+                        </div>
+
+                        <div class="options-area" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+                            <div style="display: flex; flex-direction: column; text-align: left;">
+                                <label for="query" style="font-weight: 500; margin-bottom: 5px;">What do you want to find?</label>
+                                <input type="text" id="query" name="query" placeholder="e.g., 'Where are the buildings?'" required style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-family: inherit;">
+                            </div>
+                            
+                            <div style="display: flex; flex-direction: column; text-align: left;">
+                                <label for="box_threshold" style="font-weight: 500; margin-bottom: 5px;">Confidence Threshold: <span id="threshold-val">0.20</span></label>
+                                <input type="range" id="box_threshold" name="box_threshold" min="0.05" max="0.8" step="0.05" value="0.20">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn primary-btn" id="analyze-btn-grounding" disabled style="margin-top: 20px;">
+                            <span>Detect / Ground</span>
+                            <div class="loader-spinner-grounding" style="display: none;"></div>
+                        </button>
+                    </form>
+
+                    <div id="error-message-grounding" class="error-message" style="display: none;"></div>
+                </section>
+
+                <!-- Grounding Loading State -->
+                <section id="loading-section-grounding" class="loading-section glass-panel" style="display: none;">
+                    <div class="loader-container">
+                        <div class="radar-scanner"></div>
+                        <h3>Detecting Objects...</h3>
+                        <p>Running Zero-Shot Vision-Language Model</p>
+                    </div>
+                </section>
+
+                <!-- Grounding Results Section -->
+                <section id="results-section-grounding" class="results-section" style="display: none;">
+                    <div class="results-header glass-panel">
+                        <h2>Detection Results</h2>
+                        <div class="action-buttons">
+                            <button id="new-analysis-btn-grounding" class="btn secondary-btn">New Query</button>
+                        </div>
+                    </div>
+
+                    <!-- Query Summary Cards -->
+                    <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+                        <div class="stat-card glass-panel" style="flex: 2;">
+                            <div class="stat-value" id="query-summary" style="font-size: 1.5rem; text-transform: capitalize;"></div>
+                            <div class="stat-label">Visual Target</div>
+                        </div>
+                        <div class="stat-card glass-panel" style="flex: 1;">
+                            <div class="stat-value" id="detection-count">0</div>
+                            <div class="stat-label">Objects Detected</div>
+                        </div>
+                        <div class="stat-card glass-panel" style="flex: 1;">
+                            <div class="stat-value" id="processing-time-grounding">0s</div>
+                            <div class="stat-label">Processing Time</div>
+                        </div>
+                        <div class="stat-card glass-panel" style="flex: 1;">
+                            <div class="stat-value" style="font-size: 1.2rem;" id="pipeline-info-badge">Tiled inference</div>
+                            <div class="stat-label">Model Pipeline</div>
+                        </div>
+                    </div>
+
+                    <div class="image-comparison">
+                        <div class="image-card glass-panel">
+                            <div class="card-header">
+                                <h3>Original Image</h3>
+                            </div>
+                            <div class="image-wrapper">
+                                <img id="original-img-grounding" src="" alt="Original Image">
+                            </div>
+                        </div>
+                        
+                        <div class="image-card glass-panel annotated-card">
+                            <div class="card-header">
+                                <h3>Grounded Image</h3>
+                                <span id="model-badge-grounding" class="badge">Grounding DINO</span>
+                            </div>
+                            <div class="image-wrapper">
+                                <img id="annotated-img-grounding" src="" alt="Annotated Image">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detection Table -->
+                    <div class="table-container glass-panel" style="margin-top: 20px;">
+                        <div class="table-header">
+                            <h3>Detection Details</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table" id="results-table-grounding">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Object Label</th>
+                                        <th>Color</th>
+                                        <th>Confidence</th>
+                                        <th>Bounding Box (x1, y1, x2, y2)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            const areaView = document.getElementById('area-view');
+            const groundingView = document.getElementById('grounding-view');
+            const tabArea = document.getElementById('tab-area');
+            const tabGrounding = document.getElementById('tab-grounding');
+            
+            if (tab === 'area') {
+                if (areaView) areaView.style.display = 'block';
+                if (groundingView) groundingView.style.display = 'none';
+                if (tabArea) tabArea.className = 'btn primary-btn';
+                if (tabGrounding) tabGrounding.className = 'btn secondary-btn';
+            } else {
+                if (areaView) areaView.style.display = 'none';
+                if (groundingView) groundingView.style.display = 'block';
+                if (tabArea) tabArea.className = 'btn secondary-btn';
+                if (tabGrounding) tabGrounding.className = 'btn primary-btn';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabAreaBtn = document.getElementById('tab-area');
+            const tabGroundingBtn = document.getElementById('tab-grounding');
+
+            if (tabAreaBtn) {
+                tabAreaBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchTab('area');
+                });
+            }
+            if (tabGroundingBtn) {
+                tabGroundingBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchTab('grounding');
+                });
+            }
+
+            const dropArea = document.getElementById('drop-area');
+            const fileInput = document.getElementById('image-input');
+            const fileMsg = document.querySelector('.file-msg');
+            const uploadForm = document.getElementById('upload-form');
+            const analyzeBtn = document.getElementById('analyze-btn');
+            const errorMsg = document.getElementById('error-message');
+            
+            const uploadSection = document.getElementById('upload-section');
+            const loadingSection = document.getElementById('loading-section');
+            const resultsSection = document.getElementById('results-section');
+            const newAnalysisBtn = document.getElementById('new-analysis-btn');
+
+            // File selection handling
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            // Drag and drop handling
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
+            });
+
+            dropArea.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files.length) {
+                    fileInput.files = files;
+                    handleFileSelect();
+                }
+            });
+
+            function handleFileSelect() {
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    fileMsg.textContent = file.name;
+                    analyzeBtn.disabled = false;
+                    errorMsg.style.display = 'none';
+                } else {
+                    fileMsg.textContent = 'Drag & drop image here or click to browse';
+                    analyzeBtn.disabled = true;
+                }
+            }
+
+            
+            // GROUNDING LOGIC
+            const uploadFormG = document.getElementById('upload-form-grounding');
+            const dropAreaG = document.getElementById('drop-area-grounding');
+            const fileInputG = document.getElementById('image-input-grounding');
+            const fileMsgG = document.querySelector('.file-msg-grounding');
+            const analyzeBtnG = document.getElementById('analyze-btn-grounding');
+            const errorMsgG = document.getElementById('error-message-grounding');
+            
+            const uploadSectionG = document.getElementById('upload-section-grounding');
+            const loadingSectionG = document.getElementById('loading-section-grounding');
+            const resultsSectionG = document.getElementById('results-section-grounding');
+            const newAnalysisBtnG = document.getElementById('new-analysis-btn-grounding');
+            
+            const threshInput = document.getElementById('box_threshold');
+            const threshVal = document.getElementById('threshold-val');
+            
+            threshInput.addEventListener('input', (e) => {
+                threshVal.textContent = parseFloat(e.target.value).toFixed(2);
+            });
+
+            // Grounding drag & drop
+            if (dropAreaG) {
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropAreaG.addEventListener(eventName, preventDefaults, false);
+                });
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropAreaG.addEventListener(eventName, () => dropAreaG.classList.add('highlight'), false);
+                });
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropAreaG.addEventListener(eventName, () => dropAreaG.classList.remove('highlight'), false);
+                });
+                dropAreaG.addEventListener('drop', (e) => {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    if (files.length) {
+                        fileInputG.files = files;
+                        handleFileSelectG();
+                    }
+                });
+            }
+
+            function handleFileSelectG() {
+                if (fileInputG.files.length > 0) {
+                    fileMsgG.textContent = fileInputG.files[0].name;
+                    analyzeBtnG.disabled = false;
+                    errorMsgG.style.display = 'none';
+                } else {
+                    fileMsgG.textContent = 'Drag & drop image here or click to browse';
+                    analyzeBtnG.disabled = true;
+                }
+            }
+
+            fileInputG.addEventListener('change', handleFileSelectG);
+
+            newAnalysisBtnG.addEventListener('click', () => {
+                resultsSectionG.style.display = 'none';
+                uploadSectionG.style.display = 'block';
+            });
+
+            uploadFormG.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (fileInputG.files.length === 0) return;
+
+                const formData = new FormData(uploadFormG);
+                
+                uploadSectionG.style.display = 'none';
+                errorMsgG.style.display = 'none';
+                loadingSectionG.style.display = 'flex';
+
+                try {
+                    const response = await fetch('/ground', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (!response.ok || !data.success) {
+                        throw new Error(data.error || 'Grounding failed');
+                    }
+
+                    document.getElementById('original-img-grounding').src = `data:image/png;base64,${data.original_image}`;
+                    document.getElementById('annotated-img-grounding').src = `data:image/png;base64,${data.annotated_image}`;
+                    
+                    // Update stats cards
+                    document.getElementById('query-summary').textContent = data.target_label || data.query;
+                    document.getElementById('detection-count').textContent = data.count || data.detections.length;
+                    document.getElementById('processing-time-grounding').textContent = `${data.processing_time.toFixed(1)}s`;
+                    
+                    const pipelineInfo = data.pipeline_info || {};
+                    if (pipelineInfo.tiling_used) {
+                        document.getElementById('pipeline-info-badge').innerHTML = 
+                            `Tiled inference <span style="font-size: 0.8rem; color: var(--text-secondary);"><br>(${pipelineInfo.tile_count} tiles)</span>`;
+                    } else {
+                        document.getElementById('pipeline-info-badge').textContent = 'Whole-image pass';
+                    }
+                    
+                    const tbody = document.querySelector('#results-table-grounding tbody');
+                    tbody.innerHTML = '';
+                    
+                    if (data.detections.length === 0) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `<td colspan="4" style="text-align: center; color: #ffb703; padding: 20px; font-weight: 500;">
+                            No objects detected above threshold. Try lowering the threshold slider (e.g. to 0.10 or 0.15) or using target terms (e.g., <em>building, water, road, bridge, forest</em>).
+                        </td>`;
+                        tbody.appendChild(tr);
+                    } else {
+                        data.detections.forEach((det, idx) => {
+                            const tr = document.createElement('tr');
+                            const box = det.box;
+                            const color = det.color || '#000000';
+                            tr.innerHTML = `
+                                <td>${idx+1}</td>
+                                <td>${det.label.toUpperCase()}</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span style="display: inline-block; width: 18px; height: 18px; background-color: ${color}; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3);"></span>
+                                        <span style="font-family: monospace; font-size: 0.85em; color: var(--text-secondary);">${color}</span>
+                                    </div>
+                                </td>
+                                <td>${(det.score * 100).toFixed(1)}%</td>
+                                <td>(${box.xmin}, ${box.ymin}, ${box.xmax}, ${box.ymax})</td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    }
+
+                    loadingSectionG.style.display = 'none';
+                    resultsSectionG.style.display = 'block';
+                    resultsSectionG.scrollIntoView({ behavior: 'smooth' });
+
+                } catch (error) {
+                    loadingSectionG.style.display = 'none';
+                    uploadSectionG.style.display = 'block';
+                    errorMsgG.textContent = error.message;
+                    errorMsgG.style.display = 'block';
+                }
+            });
+
+            // New analysis button
+            newAnalysisBtn.addEventListener('click', () => {
+                resultsSection.style.display = 'none';
+                uploadSection.style.display = 'block';
+                fileInput.value = '';
+                handleFileSelect();
+            });
+
+            // Form submission
+            uploadForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                if (fileInput.files.length === 0) return;
+
+                const formData = new FormData(uploadForm);
+                
+                // UI transition
+                uploadSection.style.display = 'none';
+                errorMsg.style.display = 'none';
+                loadingSection.style.display = 'flex';
+                
+                // Animation text
+                const loadingText = document.getElementById('loading-text');
+                const texts = ['Preprocessing image...', 'Running segmentation model...', 'Calculating region areas...', 'Generating visualization...'];
+                let t = 0;
+                const interval = setInterval(() => {
+                    t = (t + 1) % texts.length;
+                    loadingText.textContent = texts[t];
+                }, 2000);
+
+                try {
+                    const response = await fetch('/analyze', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    clearInterval(interval);
+                    
+                    const data = await response.json();
+                    
+                    if (!response.ok || !data.success) {
+                        throw new Error(data.error || 'Analysis failed');
+                    }
+
+                    displayResults(data);
+
+                } catch (error) {
+                    clearInterval(interval);
+                    loadingSection.style.display = 'none';
+                    uploadSection.style.display = 'block';
+                    errorMsg.textContent = error.message;
+                    errorMsg.style.display = 'block';
+                }
+            });
+
+            function displayResults(data) {
+                // Set images
+                document.getElementById('original-img').src = `data:image/png;base64,${data.original_image}`;
+                document.getElementById('annotated-img').src = `data:image/png;base64,${data.annotated_image}`;
+                
+                // Set stats
+                document.getElementById('stat-total-coverage').textContent = `${data.total_coverage_percent}%`;
+                document.getElementById('stat-classes-count').textContent = data.classes.length;
+                document.getElementById('stat-time').textContent = `${data.processing_time_seconds}s`;
+                
+                const resEl = document.getElementById('stat-resolution');
+                if (data.spatial_resolution_m) {
+                    resEl.textContent = `${data.spatial_resolution_m.toFixed(1)} m/px`;
+                    resEl.classList.add('active');
+                } else {
+                    resEl.textContent = 'N/A';
+                    resEl.classList.remove('active');
+                }
+
+                document.getElementById('model-badge').textContent = data.model_used.split(' ')[0];
+
+                // Set table note
+                const noteEl = document.getElementById('table-note');
+                if (data.physical_area_note) {
+                    noteEl.textContent = `* ${data.physical_area_note}`;
+                    noteEl.style.display = 'block';
+                } else {
+                    noteEl.style.display = 'none';
+                }
+
+                // Populate table
+                const tbody = document.querySelector('#results-table tbody');
+                tbody.innerHTML = '';
+                
+                // Hide/show physical column based on availability
+                const physicalCols = document.querySelectorAll('.physical-col');
+                physicalCols.forEach(col => {
+                    col.style.display = data.has_physical_area ? 'table-cell' : 'none';
+                });
+
+                data.classes.forEach(cls => {
+                    const tr = document.createElement('tr');
+                    
+                    // RGB to hex for swatch
+                    const r = cls.color_rgb[0], g = cls.color_rgb[1], b = cls.color_rgb[2];
+                    const bgStyle = `background-color: rgb(${r}, ${g}, ${b})`;
+                    
+                    let physicalHtml = '';
+                    if (data.has_physical_area) {
+                        physicalHtml = `<td class="physical-col">
+                            ${cls.area_hectares.toFixed(2)} ha <br>
+                            <small class="text-muted">${cls.area_m2.toLocaleString()} m²</small>
+                        </td>`;
+                    } else {
+                        physicalHtml = `<td class="physical-col" style="display:none;">-</td>`;
+                    }
+
+                    tr.innerHTML = `
+                        <td>
+                            <div class="class-name-cell">
+                                <div class="color-swatch" style="${bgStyle}"></div>
+                                ${cls.class_name}
+                            </div>
+                        </td>
+                        <td class="font-mono">${cls.pixel_area.toLocaleString()}</td>
+                        <td>
+                            <div class="coverage-bar-container">
+                                <span class="coverage-text">${cls.coverage_percent.toFixed(2)}%</span>
+                                <div class="coverage-bar">
+                                    <div class="coverage-fill" style="width: ${cls.coverage_percent}%; ${bgStyle}"></div>
+                                </div>
+                            </div>
+                        </td>
+                        ${physicalHtml}
+                        <td><span class="tier-badge tier-${cls.coverage_tier}">${cls.coverage_tier}</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                // Show results
+                loadingSection.style.display = 'none';
+                resultsSection.style.display = 'block';
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>

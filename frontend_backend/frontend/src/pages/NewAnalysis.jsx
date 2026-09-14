@@ -25,6 +25,7 @@ import {
   Info,
 } from 'lucide-react'
 import { samplePresetDatasets, recentAnalyses, structuredAnalysisResults } from '../data/mockData'
+import RAGKnowledgeCard from '../components/RAGKnowledgeCard'
 
 export default function NewAnalysis() {
   const navigate = useNavigate()
@@ -46,6 +47,19 @@ export default function NewAnalysis() {
       setQueryText(location.state.presetQuery)
     }
   }, [location.state])
+
+  // Smooth scroll to RAG section if hash is #rag-knowledge
+  useEffect(() => {
+    if (location.hash === '#rag-knowledge') {
+      const timer = setTimeout(() => {
+        const el = document.getElementById('rag-knowledge')
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }, 150)
+      return () => clearTimeout(timer)
+    }
+  }, [location.hash])
 
   // Accordion state for Optional Analysis Options
   const [optionsOpen, setOptionsOpen] = useState(false)
@@ -830,6 +844,11 @@ export default function NewAnalysis() {
             </div>
           </div>
         </div>
+
+        {/* ============================================================ */}
+        {/* RAG / REMOTE SENSING DOMAIN KNOWLEDGE SECTION                */}
+        {/* ============================================================ */}
+        <RAGKnowledgeCard />
 
         {/* ============================================================ */}
         {/* FOOTER                                                        */}

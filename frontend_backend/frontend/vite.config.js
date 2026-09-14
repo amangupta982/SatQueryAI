@@ -7,6 +7,11 @@ export default defineConfig({
     host: true,
     port: 5173,
     proxy: {
+      // Forward API requests to FastAPI backend
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
       // Forward requests to the existing 3D View Vite dev server
       '/3d-view-app': {
         target: 'http://localhost:4173',

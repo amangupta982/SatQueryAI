@@ -1,0 +1,28 @@
+{
+  "model_name": "SatQuery-VQA",
+  "foundation_model": "Qwen/Qwen2.5-VL-3B-Instruct",
+  "peft_method": "PEFT LoRA",
+  "device": "mps",
+  "lora_r": 8,
+  "lora_alpha": 16,
+  "target_modules": [
+    "q_proj",
+    "v_proj",
+    "k_proj",
+    "o_proj"
+  ],
+  "trainable_parameters": 3686400,
+  "total_parameters": 3758309376,
+  "trainable_percentage": 0.0981,
+  "initial_loss": 12.3977,
+  "final_loss": 8.3354,
+  "parameter_delta_norm": 49.330169,
+  "updated_tensors_count": 288,
+  "training_samples_count": 25,
+  "training_time_seconds": 16.77,
+  "dataset_source": "BigEarthNet.txt (arXiv:2603.29630)",
+  "imagery_source": "Sentinel-2 MSI 10m L2A",
+  "saved_checkpoint_path": "/Users/rohan/Desktop/SatQueryAI/models/satquery-vqa/adapter",
+  "status": "trained",
+  "training_completed_at": "2026-09-11T21:07:05.005262"
+}

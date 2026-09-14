@@ -10,6 +10,10 @@ import LandCover from './pages/LandCover'
 import Settings from './pages/Settings'
 import Help from './pages/Help'
 import ThreeDView from './pages/ThreeDView'
+import VQAWorkspace from './pages/VQAWorkspace'
+import AreaMeasurement from './pages/AreaMeasurement'
+import ChangeAnalysis from './pages/ChangeAnalysis'
+import OpticalSARAnalysis from './pages/OpticalSARAnalysis'
 
 export default function App() {
   return (
@@ -20,7 +24,13 @@ export default function App() {
       <main className="flex-1 min-w-0 h-full overflow-hidden flex flex-col">
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/vqa" element={<VQAWorkspace />} />
           <Route path="/new-analysis" element={<NewAnalysis />} />
+          <Route path="/area-measurement" element={<AreaMeasurement />} />
+          <Route path="/change-analysis" element={<ChangeAnalysis />} />
+          <Route path="/change-intelligence" element={<ChangeAnalysis />} />
+          <Route path="/optical-sar" element={<OpticalSARAnalysis />} />
+          <Route path="/rag" element={<Navigate to="/new-analysis#rag-knowledge" replace />} />
           <Route path="/analyses" element={<Navigate to="/new-analysis" replace />} />
           <Route path="/analyses/:analysisId" element={<AnalysisResults />} />
           <Route path="/datasets" element={<Datasets />} />
@@ -35,3 +45,4 @@ export default function App() {
     </div>
   )
 }
+

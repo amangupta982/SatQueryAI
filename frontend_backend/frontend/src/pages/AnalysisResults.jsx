@@ -30,6 +30,7 @@ import {
   Droplets,
 } from 'lucide-react'
 import { structuredAnalysisResults, recentAnalyses } from '../data/mockData'
+import DownloadReportButton from '../components/DownloadReportButton'
 
 export default function AnalysisResults() {
   const { analysisId } = useParams()
@@ -169,12 +170,41 @@ export default function AnalysisResults() {
                 <span>Share</span>
               </button>
 
+              <DownloadReportButton
+                variant="primary"
+                reportData={{
+                  title: `${activeResult.title} Report`,
+                  analysisType: activeResult.task || 'Earth Observation Analysis',
+                  query: activeResult.query,
+                  modelUsed: activeResult.modelName,
+                  prediction: activeResult.interpretation,
+                  confidence: activeResult.confidence,
+                  sceneDetails: {
+                    'Analysis ID': activeResult.id,
+                    'Constellation': activeResult.sensor || 'Sentinel Multispectral',
+                    'Processing Latency': activeResult.executionTime,
+                    'Timestamp': activeResult.timestamp,
+                  },
+                  statistics: Object.entries(activeResult.metrics || {}).map(([k, v]) => ({
+                    label: k.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase()),
+                    value: typeof v === 'number' ? (v > 100 ? v.toLocaleString() : v) : String(v),
+                  })),
+                  evidenceImages: [
+                    ...(activeResult.images?.result ? [{ title: 'Analysis Result Layer', src: activeResult.images.result }] : []),
+                    ...(activeResult.images?.before ? [{ title: 'Baseline T1 Scene', src: activeResult.images.before }] : []),
+                    ...(activeResult.images?.after ? [{ title: 'Post-event T2 Scene', src: activeResult.images.after }] : []),
+                  ],
+                  limitations: activeResult.limitations || null,
+                }}
+              />
+
               <button
                 onClick={handleExportReport}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-[#f2f6f4] border border-[#d8e0dc] text-[#234238] rounded-lg text-xs font-semibold shadow-sm transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#f2f6f4] border border-[#d8e0dc] text-[#234238] rounded-lg text-xs font-semibold shadow-2xs transition-all"
+                title="Export raw JSON structured data"
               >
                 <Download size={13} className="text-[#234238]" />
-                <span>Export Report</span>
+                <span>JSON</span>
               </button>
 
               <button

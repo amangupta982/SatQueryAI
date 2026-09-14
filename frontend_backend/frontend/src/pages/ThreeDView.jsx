@@ -13,19 +13,43 @@ const THREED_VIEW_URL =
 export default function ThreeDView() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
+  const [iframeUrl, setIframeUrl] = useState('http://localhost:4173')
 
   useEffect(() => {
     let unmounted = false
-    fetch(THREED_VIEW_URL, { mode: 'no-cors' })
-      .then(() => {
-        if (!unmounted) setError(false)
-      })
-      .catch(() => {
+
+    const checkServers = async () => {
+      // 1. Try default port 4173
+      try {
+        await fetch('http://localhost:4173', { mode: 'no-cors' })
+        if (!unmounted) {
+          setIframeUrl('http://localhost:4173')
+          setError(false)
+          return
+        }
+      } catch {
+        // Fall through to try 4174
+      }
+
+      // 2. Try secondary port 4174
+      try {
+        await fetch('http://localhost:4174', { mode: 'no-cors' })
+        if (!unmounted) {
+          setIframeUrl('http://localhost:4174')
+          setError(false)
+          return
+        }
+      } catch {
+        // Both failed
         if (!unmounted) {
           setError(true)
           setLoading(false)
         }
-      })
+      }
+    }
+
+    checkServers()
+
     return () => {
       unmounted = true
     }
@@ -66,7 +90,7 @@ export default function ThreeDView() {
 
       {/* Iframe embedding the existing 3D View application */}
       <iframe
-        src={THREED_VIEW_URL}
+        src={iframeUrl}
         title="3D View"
         className="w-full h-full border-0"
         style={{ display: error ? 'none' : 'block' }}

@@ -9,10 +9,14 @@ __pycache__/
 *.pt
 *.ckpt
 
-# Datasets
+# Datasets and Outputs
 *.zip
 *.tar.gz
 *.csv
+*.parquet
+datasets/
+outputs/
+data/qdrant_storage/
 
 # ML Checkpoints
 checkpoints/
@@ -48,8 +52,16 @@ pinokio/.installed
 # macOS
 .DS_Store
 
+# Logs
+*.log
+.backend.log
+
+# Embedded Clones / Duplicate Folders
+SIH project/
+
 # Environment
 .env
 .venv
 env/
 venv/
+
