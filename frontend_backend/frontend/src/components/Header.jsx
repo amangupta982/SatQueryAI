@@ -124,38 +124,37 @@ export default function Header() {
   }, [])
 
   return (
-    <header className="h-[68px] shrink-0 bg-[#fafaf8] border-b border-[#e5ebe7] sticky top-0 z-40 select-none">
+    <header className="h-[68px] shrink-0 sticky top-0 z-40 select-none bg-[#fafaf8] border-b border-[#e5ebe7] text-[#162721]">
       <div className="h-full px-4 lg:px-8 flex items-center justify-between gap-4">
         {/* Left: Brand Identity */}
         <div
           className="flex items-center gap-3 cursor-pointer group shrink-0"
           onClick={() => navigate('/')}
         >
-          {/* Earth/clover logo in Forest Green */}
-          <div className="text-[#234238] flex items-center justify-center">
+          {/* Orbit planetary ring logo */}
+          <div className="flex items-center justify-center text-[#1e3932]">
             <svg
               width="26"
               height="26"
-              viewBox="0 0 24 24"
+              viewBox="0 0 32 32"
               fill="none"
-              stroke="currentColor"
+              stroke="#1e3932"
               strokeWidth="2.2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="text-[#234238]"
+              className="text-[#1e3932]"
             >
-              <path d="M12 2a4 4 0 0 0-4 4c0 2.5 4 6 4 6s4-3.5 4-6a4 4 0 0 0-4-4Z" />
-              <path d="M12 22a4 4 0 0 0 4-4c0-2.5-4-6-4-6s-4 3.5-4 6a4 4 0 0 0 4 4Z" />
-              <path d="M2 12a4 4 0 0 0 4 4c2.5 0 6-4 6-4s-3.5-4-6-4a4 4 0 0 0-4 4Z" />
-              <path d="M22 12a4 4 0 0 0-4-4c-2.5 0-6 4-6 4s3.5 4 6 4a4 4 0 0 0 4 4Z" />
+              <ellipse cx="16" cy="16" rx="14" ry="5.5" transform="rotate(-28 16 16)" />
+              <ellipse cx="16" cy="16" rx="14" ry="5.5" transform="rotate(28 16 16)" />
+              <circle cx="16" cy="16" r="2.2" fill="#1e3932" />
             </svg>
           </div>
           <div>
-            <span className="font-display font-bold text-[#162721] text-[15px] tracking-tight leading-none block">
+            <span className="font-display font-bold text-[15px] tracking-tight leading-none block text-[#162721]">
               SatQuery AI
             </span>
-            <p className="text-[11px] text-[#6b7c73] font-normal leading-tight mt-0.5">
-              Satellite Intelligence for Earth Observation
+            <p className="text-[11px] font-normal leading-tight mt-0.5 text-[#6b7c73]">
+              Satellite Intelligence for a Smarter Planet
             </p>
           </div>
         </div>
@@ -211,7 +210,7 @@ export default function Header() {
                 className="absolute top-full left-1/2 -translate-x-1/2 pt-1.5 -mt-1 w-56 z-50 animate-fadeIn"
                 role="menu"
               >
-                <div className="bg-[#fafaf8] border border-[#dce7e1] rounded-2xl shadow-xl p-1.5 space-y-0.5">
+                <div className="bg-[#fafaf8] border border-[#dce7e1] rounded-2xl shadow-xl p-1.5 space-y-0.5 text-[#162721]">
                   {analysisItems.map((item) => {
                     const isItemActive = item.to.includes('#')
                       ? location.pathname + location.hash === item.to
@@ -294,41 +293,30 @@ export default function Header() {
         </nav>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-3.5">
-          {/* AI Model Status */}
-          <div className="hidden md:flex items-center gap-2 text-xs font-medium text-[#2d4239]">
+        <div className="flex items-center gap-3">
+          {/* AI Ready Pill */}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#d8e0dc] bg-white/95 text-[#1e3932] shadow-2xs">
             <span
               className={`w-2 h-2 rounded-full ${
-                modelStatus.status === 'loaded'
+                modelStatus.status === 'loaded' || modelStatus.status === 'checking'
                   ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]'
-                  : modelStatus.status === 'loading'
-                  ? 'bg-amber-500 animate-pulse'
-                  : 'bg-rose-500'
+                  : 'bg-emerald-500'
               }`}
             />
-            <span className="font-mono text-[11px] font-semibold">{modelStatus.label}</span>
+            <span className="text-xs font-semibold">AI Ready</span>
           </div>
-
-          {/* + New Analysis Button in Deep Forest Green */}
-          <button
-            onClick={() => navigate('/new-analysis')}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#234238] hover:bg-[#1b342c] text-white text-xs font-semibold shadow-sm transition-all cursor-pointer"
-          >
-            <Plus size={14} strokeWidth={2.5} />
-            <span>New Analysis</span>
-          </button>
 
           {/* Notification Bell */}
           <button
             title="Notifications"
-            className="hidden sm:flex w-9 h-9 rounded-full bg-white border border-[#d8e0dc] hover:border-[#b8c6c0] text-[#5d6f66] hover:text-[#162721] items-center justify-center transition-colors shadow-2xs"
+            className="w-9 h-9 rounded-full border border-[#d8e0dc] bg-white hover:border-[#b8c6c0] text-[#5d6f66] hover:text-[#162721] flex items-center justify-center transition-colors shadow-2xs cursor-pointer"
           >
-            <Bell size={15} strokeWidth={1.8} />
+            <Bell size={16} strokeWidth={1.8} />
           </button>
 
-          {/* AS User Avatar in Deep Forest Green */}
-          <div className="w-9 h-9 rounded-full bg-[#234238] text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-2xs">
-            AS
+          {/* RM User Avatar in Navy */}
+          <div className="w-9 h-9 rounded-full bg-[#0a2738] text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-2xs tracking-wider">
+            RM
           </div>
 
           {/* Mobile menu toggle */}
