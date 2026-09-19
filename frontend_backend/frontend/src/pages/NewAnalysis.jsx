@@ -179,25 +179,64 @@ export default function NewAnalysis() {
     setTimeout(() => setToastMessage(null), 3000)
   }
 
+  // Helper to sanitize history for localStorage (avoid quota limit on large base64s)
+  const sanitizeHistoryForStorage = (historyList) => {
+    return (historyList || []).slice(0, 30).map((item) => {
+      const safeMessages = (item.messages || []).map((msg) => {
+        if (!msg.imageEvidence) return msg
+        const safeEvidence = msg.imageEvidence.map((ev) => {
+          if (ev.url_or_b64 && ev.url_or_b64.startsWith('data:') && ev.url_or_b64.length > 50000) {
+            return { ...ev, url_or_b64: '' }
+          }
+          return ev
+        })
+        return { ...msg, imageEvidence: safeEvidence }
+      })
+
+      let safeThumb = item.thumb
+      if (safeThumb && safeThumb.startsWith('data:') && safeThumb.length > 50000) {
+        safeThumb = '/satellite_scene.jpg'
+      }
+
+      return {
+        ...item,
+        thumb: safeThumb,
+        messages: safeMessages,
+      }
+    })
+  }
+
   // ==========================================
   // STATE: RECENT ANALYSES HISTORY (PIN, EDIT, DELETE)
   // ==========================================
   const [analysesHistory, setAnalysesHistory] = useState(() => {
     try {
       const saved = localStorage.getItem('satquery_analyses_history')
-      if (saved) return JSON.parse(saved)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed
+        }
+      }
     } catch (e) {
       console.warn('Failed to parse saved history:', e)
     }
     return defaultRecentAnalyses
   })
 
-  // Persist history changes to localStorage
+  // Persist history changes to localStorage safely
   useEffect(() => {
     try {
-      localStorage.setItem('satquery_analyses_history', JSON.stringify(analysesHistory))
+      const sanitized = sanitizeHistoryForStorage(analysesHistory)
+      localStorage.setItem('satquery_analyses_history', JSON.stringify(sanitized))
     } catch (e) {
       console.warn('Failed to save history to localStorage:', e)
+      try {
+        const lightweight = analysesHistory.map(({ messages, ...rest }) => rest)
+        localStorage.setItem('satquery_analyses_history', JSON.stringify(lightweight))
+      } catch (err2) {
+        console.warn('Failed fallback history save:', err2)
+      }
     }
   }, [analysesHistory])
 
@@ -408,6 +447,27 @@ export default function NewAnalysis() {
     showToast('Ready for new analysis')
   }
 
+  const handleLoadAnalysis = (item) => {
+    if (item.messages && item.messages.length > 0) {
+      setMessages(item.messages)
+      if (item.uploadedScenes && item.uploadedScenes.length > 0) {
+        setUploadedScenes(item.uploadedScenes)
+      } else if (item.presetKey && samplePresetDatasets[item.presetKey]) {
+        setUploadedScenes(samplePresetDatasets[item.presetKey].scenes)
+      }
+      if (item.presetKey) {
+        setActivePresetKey(item.presetKey)
+      }
+      showToast(`Loaded: ${item.title}`)
+    } else {
+      if (item.presetKey) {
+        handleSelectPreset(item.presetKey)
+      }
+      handleSendMessage(item.query, item.presetKey)
+      showToast(`Running: ${item.title}`)
+    }
+  }
+
   const handleClearChat = () => {
     setMessages([])
     showToast('Conversation cleared')
@@ -530,6 +590,41 @@ export default function NewAnalysis() {
       }
 
       setMessages((prev) => [...prev, assistantMsg])
+
+      // 3. Automatically save/update this analysis session in Recent Analyses history
+      const historyTitle =
+        data.intent || (q.length > 32 ? q.slice(0, 32) + '...' : q)
+
+      let historyThumb = '/satellite_scene.jpg'
+      if (data.image_evidence && data.image_evidence.length > 0) {
+        const evWithImg = data.image_evidence.find((ev) => ev.url_or_b64)
+        if (evWithImg) historyThumb = evWithImg.url_or_b64
+      } else if (currentScenes.length > 0 && currentScenes[0].preview) {
+        historyThumb = currentScenes[0].preview
+      } else if (currentPreset && samplePresetDatasets[currentPreset]?.scenes[0]?.thumbnail) {
+        historyThumb = samplePresetDatasets[currentPreset].scenes[0].thumbnail
+      }
+
+      const newHistoryItem = {
+        id: `analysis-${Date.now()}`,
+        title: historyTitle,
+        query: q,
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        thumb: historyThumb,
+        presetKey: currentPreset || null,
+        isPinned: false,
+        messages: [...messages, userMsg, assistantMsg],
+        uploadedScenes: currentScenes.length > 0 ? currentScenes : uploadedScenes,
+        intent: data.intent,
+      }
+
+      setAnalysesHistory((prev) => {
+        // Filter out any existing item with same id
+        const filtered = prev.filter((item) => item.id !== newHistoryItem.id)
+        const pinned = filtered.filter((item) => item.isPinned)
+        const unpinned = filtered.filter((item) => !item.isPinned)
+        return [...pinned, newHistoryItem, ...unpinned]
+      })
     } catch (err) {
       console.error('Orchestrator call error:', err)
       const errorMsg = {
@@ -609,14 +704,10 @@ export default function NewAnalysis() {
                     : 'bg-transparent hover:bg-slate-800/50 border-transparent hover:border-cyan-500/20'
                 }`}
               >
-                {/* Clickable thumbnail to load preset */}
+                {/* Clickable thumbnail to load preset or saved chat */}
                 <button
                   type="button"
-                  onClick={() => {
-                    handleSelectPreset(item.presetKey)
-                    handleSendMessage(item.query, item.presetKey)
-                    showToast(`Loaded: ${item.title}`)
-                  }}
+                  onClick={() => handleLoadAnalysis(item)}
                   className="shrink-0 cursor-pointer focus:outline-none"
                   title={`Open ${item.title}`}
                 >
@@ -664,11 +755,7 @@ export default function NewAnalysis() {
                   ) : (
                     <button
                       type="button"
-                      onClick={() => {
-                        handleSelectPreset(item.presetKey)
-                        handleSendMessage(item.query, item.presetKey)
-                        showToast(`Loaded: ${item.title}`)
-                      }}
+                      onClick={() => handleLoadAnalysis(item)}
                       className="w-full text-left focus:outline-none cursor-pointer"
                     >
                       <div className="flex items-center gap-1">
