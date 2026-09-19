@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { ZoomIn, ZoomOut, RotateCcw, Split, Columns } from 'lucide-react'
+import { ZoomIn, ZoomOut, RotateCcw, Split, Columns, Maximize2, Minimize2 } from 'lucide-react'
 
 export default function ChangeViewer({
   t1Url,
@@ -10,6 +10,8 @@ export default function ChangeViewer({
   activeCategories = new Set(),
   activeLayer = 'overlay', // 'overlay', 'heatmap', 'mask', 'diff', 't2_only'
   onChangeLayer,
+  onToggleFullscreen,
+  isFullscreen = false,
   evidenceUrls = {},
   palette = {},
 }) {
@@ -112,6 +114,18 @@ export default function ChangeViewer({
           <button onClick={handleReset} className="p-1.5 rounded hover:bg-[#1f362c] text-[#a4baa9]" title="Reset View">
             <RotateCcw size={14} />
           </button>
+          {onToggleFullscreen && (
+            <>
+              <div className="h-4 w-px bg-[#2a3d34] mx-0.5" />
+              <button
+                onClick={onToggleFullscreen}
+                className="p-1.5 rounded hover:bg-[#1f362c] text-cyan-300 hover:text-white transition cursor-pointer"
+                title={isFullscreen ? 'Exit Fullscreen (Esc)' : 'Expand to Fullscreen'}
+              >
+                {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+              </button>
+            </>
+          )}
         </div>
       </div>
 
