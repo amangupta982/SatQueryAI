@@ -46,6 +46,15 @@ def test_scenario_2_grounding():
     assert "Object Grounding" in plan.intent
 
 
+def test_user_grounding_variations():
+    """TEST 2b: Natural queries like 'where are building', 'how many buildings are visible?' -> Grounding Agent"""
+    for q in ["where are building", "where is building", "where are the buildings", "how many buildings are visible?", "count vehicles"]:
+        plan = QueryPlanner.plan(q, image_count=1)
+        assert not plan.is_ambiguous, f"Failed for {q}"
+        assert plan.selected_agents == [AgentType.GROUNDING], f"Failed for {q}, got {plan.selected_agents}"
+        assert "Object Grounding" in plan.intent
+
+
 def test_scenario_3_change_detection():
     """TEST 3: 'What changed between 2022 and 2026?' -> Change Detection Agent"""
     plan = QueryPlanner.plan("What changed between 2022 and 2026?", image_count=2, has_temporal_metadata=True)
@@ -81,6 +90,25 @@ def test_scenario_5_area_management():
     assert not plan.is_ambiguous
     assert plan.selected_agents == [AgentType.AREA_MANAGEMENT]
     assert "Area" in plan.intent
+
+
+def test_user_area_variations():
+    """TEST 5b: Natural queries like 'What percentage is water?', 'Analyze land cover', 'area measurement' -> Area Management"""
+    for q in ["What percentage is water?", "Analyze land cover", "calculate area of water", "measure area", "area measurement", "how much area is forest"]:
+        plan = QueryPlanner.plan(q, image_count=1)
+        assert not plan.is_ambiguous, f"Failed for {q}"
+        assert plan.selected_agents == [AgentType.AREA_MANAGEMENT], f"Failed for {q}, got {plan.selected_agents}"
+        assert "Area" in plan.intent
+
+
+def test_scenario_grounding_plus_area():
+    """TEST: 'find buildings and calculate their area' -> Grounding + Area Management"""
+    plan = QueryPlanner.plan("find buildings and calculate their area", image_count=1)
+    assert not plan.is_ambiguous
+    assert AgentType.GROUNDING in plan.selected_agents
+    assert AgentType.AREA_MANAGEMENT in plan.selected_agents
+    assert len(plan.selected_agents) == 2
+    assert "Area" in plan.intent or "Grounding" in plan.intent
 
 
 def test_scenario_6_rag():

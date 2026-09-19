@@ -31,7 +31,7 @@ AMBIGUOUS_QUERIES = {
 
 RAG_KEYWORDS = [
     r"\bwhat is (sar|sentinel|ndvi|gsd|c-band|polaris|radar|cartosat|modis|landsat|lidar)\b",
-    r"\bwhy is sar useful\b",
+    r"\bwhy\s+(is\s+)?sar\s+(is\s+)?useful\b",
     r"\bexplain what sar is\b",
     r"\bwhat does sar mean\b",
     r"\bwhat is risat\b",
@@ -85,28 +85,61 @@ TEMPORAL_CHANGE_KEYWORDS = [
     r"\bdeforestation\b",
 ]
 
+OBJECT_TARGETS = (
+    r"(?:buildings?|structures?|houses?|roofs?|roofing|built[-\s]up|infrastructure|"
+    r"runways?|airports?|airstrips?|airfields?|taxiways?|helipads?|terminals?|hangars?|"
+    r"roads?|highways?|streets?|bridges?|flyovers?|interchanges?|railways?|railroads?|tracks?|"
+    r"vehicles?|cars?|trucks?|buses?|automobiles?|trains?|"
+    r"airplanes?|aircrafts?|planes?|jets?|"
+    r"ships?|boats?|vessels?|crafts?|ferries|tankers?|barges?|"
+    r"storage\s+tanks?|fuel\s+tanks?|tanks?|silos?|solar\s+panels?|solar\s+farms?|wind\s+turbines?|"
+    r"water\s+bodies?|waterbody|waterbodies|lakes?|ponds?|rivers?|canals?|reservoirs?|docks?|piers?|harbors?|ports?|"
+    r"stadiums?|fields?|parking(\s+lots?)?|tents?)"
+)
+
 GROUNDING_KEYWORDS = [
-    r"\bfind\s+(all\s+)?(buildings|runways|roads|structures|vehicles|ships|airplanes|tanks|bridges|houses)\b",
-    r"\blocate\s+(the\s+|all\s+)?(runways|buildings|roads|bridges|structures)\b",
-    r"\bshow\s+(all\s+)?(roads|buildings|runways|structures)\b",
-    r"\bhow\s+many\s+(buildings|structures|roads|runways|vehicles|houses)\s+(are\s+there|were|visible|detected)\b",
-    r"\bcount\s+(the\s+|all\s+)?(buildings|structures|vehicles|roads)\b",
-    r"\bdetect\s+(all\s+)?(buildings|structures|roads|runways)\b",
-    r"\bbounding\s+boxes\b",
+    rf"\bwhere\s+(is|are|were|can\s+i\s+find|can\s+we\s+see|located)?\b.*{OBJECT_TARGETS}",
+    rf"\bwhere\s+{OBJECT_TARGETS}\b",
+    rf"\bwhere\b.*{OBJECT_TARGETS}",
+    rf"\b(find|locate|detect|spot|identify|show|highlight|mark|point\s+out|outline|delineate|box|ground|search\s+for)\b.*{OBJECT_TARGETS}",
+    rf"\bhow\s+many\b.*{OBJECT_TARGETS}",
+    rf"\bcount\b.*{OBJECT_TARGETS}",
+    rf"\bnumber\s+of\b.*{OBJECT_TARGETS}",
+    r"\b(object\s+)?grounding\b",
+    r"\b(object\s+)?detection\b",
+    r"\bbounding\s+box(es)?\b",
+    r"\blocalization\b",
+    r"\bdelineat(e|ion)\b",
 ]
 
 AREA_KEYWORDS = [
-    r"\bpercentage\s+of\s+(the\s+area|this\s+area|land|water|vegetation|urban|forest)\b",
-    r"\bhow\s+much\s+area\b",
-    r"\bhow\s+much\s+land\b",
-    r"\bcalculate\s+.*area\b",
+    r"\barea\s+measurement\b",
+    r"\bmeasur(e|ing|ement)\s+(the\s+)?(area|coverage|surface|percentage|land)\b",
+    r"\bmeasur(e|ing|ement)\s+area\b",
+    r"\bcalculat(e|ing|ion)\s+.*(area|coverage|percentage|hectare|acres?|extent)\b",
+    r"\bestimat(e|ing|ion)\s+.*(area|coverage|percentage|extent)\b",
+    r"\bquantif(y|ication)\s+.*(area|coverage|extent)\b",
+    r"\bpercentage\s+(is|are|of)\b",
+    r"\bwhat\s+percentage\b",
+    r"\bwhat\s+(proportion|fraction|ratio)\s+(is|of)\b",
+    r"\bpercent\b",
+    r"\bhow\s+much\s+(area|land|water|vegetation|forest|surface|canopy|fabric|space)\b",
+    r"\bhow\s+(big|large)\s+is\b.*(area|lake|forest|water|region|zone)",
+    r"\bcovered\s+by\s+(water|buildings?|vegetation|forest|urban|trees?|grass)\b",
+    r"\bcoverage\s+of\b",
+    r"\bcoverage\s+percent(age)?\b",
+    r"\barea\s+of\s+(the\s+)?(changed\s+region|water|vegetation|buildings?|structures?|forest|land|lake)\b",
     r"\baffected\s+area\b",
     r"\bchanged\s+area\b",
-    r"\bestimate\s+(the\s+)?area\b",
-    r"\bcovered\s+by\s+(water|buildings|vegetation|forest|urban)\b",
-    r"\barea\s+of\s+(the\s+changed\s+region|water|vegetation|buildings|structures)\b",
-    r"\bland[-\s]cover\b",
-    r"\bhectares\b",
+    r"\bsurface\s+area\b",
+    r"\bland[-\s]?cover\b",
+    r"\bland[-\s]?use\b",
+    r"\blanduse\b",
+    r"\bhectares?\b",
+    r"\bacres?\b",
+    r"\bsq(uare)?\s*(km|kilometers?|m|meters?)\b",
+    r"\bkm2\b",
+    r"\bm2\b",
 ]
 
 
@@ -125,23 +158,7 @@ class QueryPlanner:
         """
         q_clean = query.strip().lower()
 
-        # ── 1. Check for Ambiguous Query ──
-        # If the query is an ultra-short generic inquiry ("analyze this")
-        normalized_q = re.sub(r"[^\w\s]", "", q_clean).strip()
-        if normalized_q in AMBIGUOUS_QUERIES or (
-            normalized_q.startswith("analyze") and len(normalized_q.split()) <= 3 and not any(k in normalized_q for k in ["sar", "change", "building", "area", "water", "road", "between"])
-        ):
-            return OrchestrationPlan(
-                intent="Ambiguous / General Analysis Request",
-                primary_goal="Provide interactive analysis options",
-                is_ambiguous=True,
-                clarification_message=CLARIFICATION_AMBIGUOUS_QUERY,
-                selected_agents=[],
-                execution_order=[],
-                selection_reasoning="The query is broad and ambiguous. Asking user for the intended analysis focus.",
-            )
-
-        # ── 2. Detect Component Intents ──
+        # ── 1. Detect Component Intents ──
         requires_temporal = False
         requires_grounding = False
         requires_change = False
@@ -217,6 +234,22 @@ class QueryPlanner:
             requires_rag = True
             requires_sar = False
 
+        # ── 2. Check for Ambiguous Query (Only when no specific task intent is identified) ──
+        if not (requires_temporal or requires_grounding or requires_change or requires_sar or requires_area or requires_rag):
+            normalized_q = re.sub(r"[^\w\s]", "", q_clean).strip()
+            if normalized_q in AMBIGUOUS_QUERIES or (
+                normalized_q.startswith("analyze") and len(normalized_q.split()) <= 3
+            ):
+                return OrchestrationPlan(
+                    intent="Ambiguous / General Analysis Request",
+                    primary_goal="Provide interactive analysis options",
+                    is_ambiguous=True,
+                    clarification_message=CLARIFICATION_AMBIGUOUS_QUERY,
+                    selected_agents=[],
+                    execution_order=[],
+                    selection_reasoning="The query is broad and ambiguous. Asking user for the intended analysis focus.",
+                )
+
         # ── 3. Combine Intents and Select Agents ──
         selected_agents: List[AgentType] = []
         execution_order: List[List[AgentType]] = []
@@ -263,6 +296,18 @@ class QueryPlanner:
                 "Area quantification requested -> Area Management AI",
             ]
 
+        # Multi-Agent: Grounding + Area (Single scene or no temporal change)
+        elif requires_grounding and requires_area:
+            intent = "Object Grounding & Area Measurement"
+            selected_agents = [AgentType.GROUNDING, AgentType.AREA_MANAGEMENT]
+            execution_order = [
+                [AgentType.GROUNDING, AgentType.AREA_MANAGEMENT],
+            ]
+            reasoning_parts = [
+                "Object localization requested -> Object Grounding Agent",
+                "Area measurement or coverage percentage requested -> Area Management AI",
+            ]
+
         # Multi-Agent: Optical-SAR + RAG
         elif requires_sar and requires_rag:
             intent = "Optical-SAR Multimodal Analysis & Domain Explanation"
@@ -272,7 +317,6 @@ class QueryPlanner:
             ]
             reasoning_parts = [
                 "Multimodal Optical and SAR imagery analysis requested -> Optical-SAR Agent",
-                "Domain knowledge explanation requested -> RAG Knowledge Agent",
             ]
 
         # Single Agent: Change Detection
