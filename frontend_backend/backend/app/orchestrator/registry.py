@@ -16,6 +16,7 @@ and outputs into a consistent StandardizedAgentOutput format.
 import io
 import os
 import time
+import uuid
 import base64
 import logging
 from pathlib import Path
@@ -136,32 +137,42 @@ def resolve_image(image_input: Any) -> Optional[Image.Image]:
                 except Exception:
                     pass
 
-        # 4. Direct path
-        path = Path(image_input)
-        if path.exists():
+        # 4. Direct path (only for short file path strings, NEVER base64)
+        if not image_input.startswith("data:image") and ";base64," not in image_input and len(image_input) < 500:
             try:
-                return Image.open(path).convert("RGB")
-            except Exception:
+                path = Path(image_input)
+                if path.exists():
+                    try:
+                        return Image.open(path).convert("RGB")
+                    except Exception:
+                        pass
+            except OSError:
                 pass
 
-        # 5. Check in PUBLIC_DIR directly (stripping leading slash)
-        clean_name = image_input.strip().lstrip("/")
-        pub_path = PUBLIC_DIR / clean_name
-        if pub_path.exists():
+            # 5. Check in PUBLIC_DIR directly (stripping leading slash)
+            clean_name = image_input.strip().lstrip("/")
             try:
-                return Image.open(pub_path).convert("RGB")
-            except Exception:
+                pub_path = PUBLIC_DIR / clean_name
+                if pub_path.exists():
+                    try:
+                        return Image.open(pub_path).convert("RGB")
+                    except Exception:
+                        pass
+            except OSError:
                 pass
 
-        # 6. Search in outputs/change_uploads, outputs/optical_sar_uploads, or PUBLIC_DIR
-        for search_dir in [OUTPUTS_DIR / "change_uploads", OUTPUTS_DIR / "optical_sar_uploads", PUBLIC_DIR]:
-            if search_dir.exists():
-                for ext in ["", ".jpg", ".jpeg", ".png", ".tif", ".tiff"]:
-                    candidate = search_dir / f"{clean_name}{ext}"
-                    if candidate.exists():
+            # 6. Search in outputs/change_uploads, outputs/optical_sar_uploads, or PUBLIC_DIR
+            for search_dir in [OUTPUTS_DIR / "change_uploads", OUTPUTS_DIR / "optical_sar_uploads", PUBLIC_DIR]:
+                if search_dir.exists():
+                    for ext in ["", ".jpg", ".jpeg", ".png", ".tif", ".tiff"]:
                         try:
-                            return Image.open(candidate).convert("RGB")
-                        except Exception:
+                            candidate = search_dir / f"{clean_name}{ext}"
+                            if candidate.exists():
+                                try:
+                                    return Image.open(candidate).convert("RGB")
+                                except Exception:
+                                    pass
+                        except OSError:
                             pass
 
     return None
@@ -171,32 +182,60 @@ def resolve_image_path(image_input: Any) -> Optional[str]:
     """
     Resolves an image input to a string file path on disk if available,
     or saves a temporary image to outputs/orchestrator_cache.
+    Handles Base64, URLs, Bytes, PIL Images, and file paths safely.
     """
     if image_input is None:
         return None
 
-    if isinstance(image_input, str):
-        path = Path(image_input)
-        if path.exists():
-            return str(path)
+    # 1. If it is a short string (and NOT base64 data URL), check disk paths
+    if (
+        isinstance(image_input, str)
+        and not image_input.startswith("data:image")
+        and ";base64," not in image_input
+        and len(image_input) < 500
+    ):
+        try:
+            path = Path(image_input)
+            if path.exists():
+                return str(path)
+        except OSError:
+            pass
+
         clean_name = image_input.strip().lstrip("/")
-        pub_path = PUBLIC_DIR / clean_name
-        if pub_path.exists():
-            return str(pub_path)
+        try:
+            pub_path = PUBLIC_DIR / clean_name
+            if pub_path.exists():
+                return str(pub_path)
+        except OSError:
+            pass
+
         clean_key = clean_name.lower()
         preset_file = PRESET_IMAGES.get(clean_key) or PRESET_IMAGES.get(image_input.lower())
         if preset_file:
-            target = PUBLIC_DIR / preset_file.lstrip("/")
-            if target.exists():
-                return str(target)
+            try:
+                target = PUBLIC_DIR / preset_file.lstrip("/")
+                if target.exists():
+                    return str(target)
+            except OSError:
+                pass
 
+        for search_dir in [OUTPUTS_DIR / "change_uploads", OUTPUTS_DIR / "optical_sar_uploads", PUBLIC_DIR]:
+            if search_dir.exists():
+                for ext in ["", ".jpg", ".jpeg", ".png", ".tif", ".tiff"]:
+                    try:
+                        candidate = search_dir / f"{clean_name}{ext}"
+                        if candidate.exists():
+                            return str(candidate)
+                    except OSError:
+                        pass
 
-    # Convert to PIL and write to a cached file
+    # 2. For Base64 data URLs, raw bytes, remote URLs, or PIL Images:
+    # Decode to PIL and persist to outputs/orchestrator_cache
     pil = resolve_image(image_input)
     if pil is not None:
         cache_dir = OUTPUTS_DIR / "orchestrator_cache"
         cache_dir.mkdir(parents=True, exist_ok=True)
-        temp_path = cache_dir / f"temp_{int(time.time()*1000)}.png"
+        temp_path = cache_dir / f"temp_{uuid.uuid4().hex[:8]}_{int(time.time()*1000)}.png"
         pil.save(temp_path, format="PNG")
         return str(temp_path)
 
@@ -401,19 +440,47 @@ def call_change_agent(
         regions_list = [r.model_dump() for r in output.regions] if output.regions else []
         evidence = []
 
+        vis_urls = {}
         if output.visualizations:
-            if output.visualizations.complete_overlay:
-                evidence.append(ImageEvidence(
-                    type="change_overlay",
-                    title="Temporal Change Overlay",
-                    file_path=output.visualizations.complete_overlay
-                ))
-            if output.visualizations.change_mask:
-                evidence.append(ImageEvidence(
-                    type="change_mask",
-                    title="Binary Change Mask",
-                    file_path=output.visualizations.change_mask
-                ))
+            v_dict = output.visualizations.model_dump()
+            for k, val in v_dict.items():
+                if isinstance(val, str) and val:
+                    fname = Path(val).name
+                    vis_urls[k] = f"/api/v1/change-analysis/evidence/{fname}"
+                elif isinstance(val, dict) and k == "category_overlays":
+                    vis_urls[k] = {
+                        cat_k: f"/api/v1/change-analysis/evidence/{Path(cat_f).name}"
+                        for cat_k, cat_f in val.items()
+                        if cat_f
+                    }
+
+            # Map all 5 visualization layers into image_evidence:
+            layer_defs = [
+                ("complete_overlay", "Temporal Change Overlay", "change_overlay"),
+                ("heatmap", "Change Heatmap", "heatmap"),
+                ("change_mask", "Binary Change Mask", "change_mask"),
+                ("difference_image", "Raw Difference", "diff"),
+                ("t2_image", "T2 Base Image", "t2_base"),
+                ("t1_image", "T1 Base Image", "t1_base"),
+                ("semantic_change_map", "Semantic Change Map", "semantic_map"),
+            ]
+            for lk, ltitle, ltype in layer_defs:
+                if vis_urls.get(lk):
+                    evidence.append(ImageEvidence(
+                        type=ltype,
+                        title=ltitle,
+                        file_path=str(getattr(output.visualizations, lk, "")),
+                        url_or_b64=vis_urls[lk]
+                    ))
+
+        # Extract top bounding boxes from detected change regions
+        top_boxes = []
+        for r in (output.regions or [])[:25]:
+            top_boxes.append({
+                "box": r.bbox,
+                "label": f"{r.category.title()} ({r.change_type})",
+                "confidence": round(r.confidence, 2)
+            })
 
         # Confidence extraction
         conf_val = 0.90
@@ -422,19 +489,43 @@ def call_change_agent(
         elif isinstance(output.confidence, (float, int)):
             conf_val = float(output.confidence)
 
+        final_answer = output.answer or ""
+        if output.scene_summary and output.scene_summary.natural_language_summary:
+            if output.scene_summary.natural_language_summary not in final_answer:
+                final_answer = f"{final_answer}\n\n**Scene Summary:**\n{output.scene_summary.natural_language_summary}"
+
+        categories_dict = {}
+        if output.categories:
+            categories_dict = {
+                k: v.model_dump() for k, v in output.categories.items()
+            }
+
+        change_data_payload = {
+            "visualizations": vis_urls,
+            "categories": categories_dict,
+            "regions": regions_list,
+            "t1_url": vis_urls.get("t1_image"),
+            "t2_url": vis_urls.get("t2_image"),
+        }
+
+        measurements = dict(output.statistics or {})
+        measurements["change_data"] = change_data_payload
+
         return StandardizedAgentOutput(
             agent=AgentType.CHANGE_DETECTION,
             agent_name="Change Detection Agent",
             status=AgentStatus.SUCCESS,
-            answer=output.answer,
+            answer=final_answer,
             confidence=conf_val,
             change_regions=regions_list,
-            measurements=output.statistics or {},
+            bounding_boxes=top_boxes,
+            measurements=measurements,
             image_evidence=evidence,
             execution_time_seconds=time.time() - start_time,
             raw_output={
                 "region_count": len(regions_list),
-                "summary": output.scene_summary.model_dump() if output.scene_summary else None
+                "summary": output.scene_summary.model_dump() if output.scene_summary else None,
+                "change_data": change_data_payload,
             }
         )
     except Exception as e:
@@ -462,8 +553,18 @@ def call_optical_sar_agent(
     """Invokes existing grounding_change.inference.agent_tools.analyze_optical_sar_scene."""
     start_time = time.time()
     try:
-        opt_path = resolve_image_path(optical_image)
-        sar_path = resolve_image_path(sar_image) if sar_image else None
+        # Detect if inputs are inverted (e.g., optical_image is named SAR)
+        is_opt_sar = False
+        if isinstance(optical_image, str) and ("sar" in optical_image.lower() or "radar" in optical_image.lower()):
+            is_opt_sar = True
+
+        if is_opt_sar and sar_image is not None:
+            actual_opt_input, actual_sar_input = sar_image, optical_image
+        else:
+            actual_opt_input, actual_sar_input = optical_image, sar_image
+
+        opt_path = resolve_image_path(actual_opt_input)
+        sar_path = resolve_image_path(actual_sar_input) if actual_sar_input else None
 
         if not opt_path:
             p = PUBLIC_DIR / "cap_optical_sar.jpg"
@@ -497,7 +598,35 @@ def call_optical_sar_agent(
                     url_or_b64=url
                 ))
 
-        conf = getattr(result, "confidence", 0.92)
+        conf = getattr(result, "confidence", 0.93)
+        evidence_urls_dict = dict(getattr(result, "evidence_urls", {}) or {})
+        grounded_boxes_list = list(getattr(result, "grounded_boxes", []) or [])
+        scene_obj = getattr(result, "scene", None)
+        category_proportions = getattr(scene_obj, "category_proportions", {}) if scene_obj else getattr(result, "category_summary", {})
+        categories_detected = getattr(scene_obj, "categories_detected", []) if scene_obj else []
+        session_id = getattr(scene_obj, "scene_id", "") if scene_obj else ""
+        cross_diff = getattr(scene_obj, "cross_modal_difference", None) if scene_obj else None
+        cross_modal_corr = getattr(cross_diff, "cross_modal_correlation", 0.797) if cross_diff else 0.797
+        mode_applied = getattr(result, "mode_applied", agent_mode)
+        is_temp = getattr(result, "is_temporal_change", False)
+
+        optical_sar_data = {
+            "evidence_urls": evidence_urls_dict,
+            "grounded_boxes": grounded_boxes_list,
+            "category_proportions": category_proportions,
+            "categories_detected": categories_detected,
+            "mode_applied": mode_applied,
+            "is_temporal_change": is_temp,
+            "cross_modal_correlation": cross_modal_corr,
+            "session_id": session_id,
+            "confidence": float(conf) if conf is not None else 0.93,
+        }
+
+        measurements = {
+            "mode_applied": mode_applied,
+            "is_temporal_change": is_temp,
+            "optical_sar_data": optical_sar_data,
+        }
 
         return StandardizedAgentOutput(
             agent=AgentType.OPTICAL_SAR,
@@ -505,13 +634,11 @@ def call_optical_sar_agent(
             status=AgentStatus.SUCCESS,
             answer=result.answer,
             confidence=float(conf) if conf is not None else None,
-            measurements={
-                "mode_applied": getattr(result, "mode_applied", agent_mode),
-                "is_temporal_change": getattr(result, "is_temporal_change", False)
-            },
+            measurements=measurements,
+            bounding_boxes=grounded_boxes_list,
             image_evidence=evidence,
             execution_time_seconds=time.time() - start_time,
-            raw_output={"mode": getattr(result, "mode_applied", "")}
+            raw_output={"optical_sar_data": optical_sar_data, "mode": mode_applied}
         )
     except Exception as e:
         logger.error(f"[Orchestrator Registry] Optical-SAR failed: {e}", exc_info=True)

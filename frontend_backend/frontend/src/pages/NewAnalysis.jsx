@@ -27,8 +27,11 @@ import {
   Pin,
   Pencil,
   X,
-  MoreVertical,
   Maximize2,
+  Minimize2,
+  ZoomIn,
+  ZoomOut,
+  Download,
   Info,
   ShieldCheck,
   Compass,
@@ -45,6 +48,8 @@ import {
 import { samplePresetDatasets } from '../data/mockData'
 import DownloadReportButton from '../components/DownloadReportButton'
 import EarthScene from '../components/EarthScene'
+import ChangeIntelligenceStudio from '../components/ChangeIntelligenceStudio'
+import MultimodalSensorStudio from '../components/MultimodalSensorStudio'
 
 // Suggested analysis cards on hero landing (Dark Glassmorphic Edition)
 const suggestedCards = [
@@ -175,31 +180,99 @@ export default function NewAnalysis() {
     setTimeout(() => setToastMessage(null), 3000)
   }
 
+  // Helper to sanitize history for localStorage (avoid quota limit on large base64s)
+  const sanitizeHistoryForStorage = (historyList) => {
+    return (historyList || []).slice(0, 30).map((item) => {
+      const safeMessages = (item.messages || []).map((msg) => {
+        if (!msg.imageEvidence) return msg
+        const safeEvidence = msg.imageEvidence.map((ev) => {
+          if (ev.url_or_b64 && ev.url_or_b64.startsWith('data:') && ev.url_or_b64.length > 50000) {
+            return { ...ev, url_or_b64: '' }
+          }
+          return ev
+        })
+        return { ...msg, imageEvidence: safeEvidence }
+      })
+
+      let safeThumb = item.thumb
+      if (safeThumb && safeThumb.startsWith('data:') && safeThumb.length > 50000) {
+        safeThumb = '/satellite_scene.jpg'
+      }
+
+      return {
+        ...item,
+        thumb: safeThumb,
+        messages: safeMessages,
+      }
+    })
+  }
+
   // ==========================================
   // STATE: RECENT ANALYSES HISTORY (PIN, EDIT, DELETE)
   // ==========================================
   const [analysesHistory, setAnalysesHistory] = useState(() => {
     try {
       const saved = localStorage.getItem('satquery_analyses_history')
-      if (saved) return JSON.parse(saved)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed
+        }
+      }
     } catch (e) {
       console.warn('Failed to parse saved history:', e)
     }
     return defaultRecentAnalyses
   })
 
-  // Persist history changes to localStorage
+  // Persist history changes to localStorage safely
   useEffect(() => {
     try {
-      localStorage.setItem('satquery_analyses_history', JSON.stringify(analysesHistory))
+      const sanitized = sanitizeHistoryForStorage(analysesHistory)
+      localStorage.setItem('satquery_analyses_history', JSON.stringify(sanitized))
     } catch (e) {
       console.warn('Failed to save history to localStorage:', e)
+      try {
+        const lightweight = analysesHistory.map(({ messages, ...rest }) => rest)
+        localStorage.setItem('satquery_analyses_history', JSON.stringify(lightweight))
+      } catch (err2) {
+        console.warn('Failed fallback history save:', err2)
+      }
     }
   }, [analysesHistory])
 
   // Renaming state
   const [editingId, setEditingId] = useState(null)
   const [editingTitle, setEditingTitle] = useState('')
+
+  // Fullscreen view states for outputs and image layers
+  const [fullscreenMsgId, setFullscreenMsgId] = useState(null)
+  const [fullscreenImage, setFullscreenImage] = useState(null) // { url, title, type }
+  const [imgZoom, setImgZoom] = useState(1)
+
+  // Escape key handler for fullscreen modal / lightbox
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (fullscreenImage) setFullscreenImage(null)
+        if (fullscreenMsgId) setFullscreenMsgId(null)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [fullscreenImage, fullscreenMsgId])
+
+  // Prevent background scrolling when fullscreen is active
+  useEffect(() => {
+    if (fullscreenMsgId || fullscreenImage) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [fullscreenMsgId, fullscreenImage])
 
   // Sorted list: Pinned items always appear at the top
   const sortedHistory = useMemo(() => {
@@ -375,6 +448,27 @@ export default function NewAnalysis() {
     showToast('Ready for new analysis')
   }
 
+  const handleLoadAnalysis = (item) => {
+    if (item.messages && item.messages.length > 0) {
+      setMessages(item.messages)
+      if (item.uploadedScenes && item.uploadedScenes.length > 0) {
+        setUploadedScenes(item.uploadedScenes)
+      } else if (item.presetKey && samplePresetDatasets[item.presetKey]) {
+        setUploadedScenes(samplePresetDatasets[item.presetKey].scenes)
+      }
+      if (item.presetKey) {
+        setActivePresetKey(item.presetKey)
+      }
+      showToast(`Loaded: ${item.title}`)
+    } else {
+      if (item.presetKey) {
+        handleSelectPreset(item.presetKey)
+      }
+      handleSendMessage(item.query, item.presetKey)
+      showToast(`Running: ${item.title}`)
+    }
+  }
+
   const handleClearChat = () => {
     setMessages([])
     showToast('Conversation cleared')
@@ -428,7 +522,7 @@ export default function NewAnalysis() {
       // Gather image identifiers and representations
       let finalImageIds = []
       if (currentScenes.length > 0) {
-        finalImageIds = currentScenes.map((s) => s.id || s.name)
+        finalImageIds = currentScenes.map((s) => s.fileObj?.name || s.name || s.id)
       } else if (currentPreset && samplePresetDatasets[currentPreset]) {
         finalImageIds = samplePresetDatasets[currentPreset].scenes.map((s) => s.id)
       } else if (currentPreset) {
@@ -437,8 +531,15 @@ export default function NewAnalysis() {
         finalImageIds = ['bengaluru']
       }
 
-      const timestamps = currentScenes.map((s) => s.date).filter(Boolean)
-      const hasSAR = currentScenes.some((s) => s.modality === 'SAR')
+      const hasSAR = currentScenes.some(
+        (s) =>
+          s.modality === 'SAR' ||
+          (s.name && (s.name.toLowerCase().includes('sar') || s.name.toLowerCase().includes('radar') || s.name.toLowerCase().includes('s1'))) ||
+          (s.fileObj && (s.fileObj.name.toLowerCase().includes('sar') || s.fileObj.name.toLowerCase().includes('radar') || s.fileObj.name.toLowerCase().includes('s1')))
+      )
+
+      const distinctDates = Array.from(new Set(currentScenes.map((s) => s.date).filter(Boolean)))
+      const timestamps = (!hasSAR && distinctDates.length >= 2) ? distinctDates : undefined
 
       // Extract Base64 or Data URLs from attached scenes
       const imageB64s = currentScenes
@@ -453,7 +554,7 @@ export default function NewAnalysis() {
         query: q,
         image_ids: finalImageIds,
         image_b64s: imageB64s.length > 0 ? imageB64s : undefined,
-        timestamps: timestamps.length >= 2 ? timestamps : undefined,
+        timestamps: timestamps,
         modality: hasSAR ? 'SAR' : 'Optical',
       }
 
@@ -487,9 +588,57 @@ export default function NewAnalysis() {
         clarificationOptions: data.clarification_options,
         rawOrchestratorData: data,
         structuredForUi: data.structured_for_ui,
+        changeData:
+          data.change_data ||
+          data.structured_for_ui?.changeData ||
+          data.measurements?.change_data ||
+          data.measurements?.change_detection_change_data ||
+          null,
+        opticalSarData:
+          data.optical_sar_data ||
+          data.structured_for_ui?.opticalSarData ||
+          data.measurements?.optical_sar_data ||
+          data.measurements?.optical_sar_optical_sar_data ||
+          null,
+        attachedScenes: currentScenes.length > 0 ? currentScenes : uploadedScenes,
       }
 
       setMessages((prev) => [...prev, assistantMsg])
+
+      // 3. Automatically save/update this analysis session in Recent Analyses history
+      const historyTitle =
+        data.intent || (q.length > 32 ? q.slice(0, 32) + '...' : q)
+
+      let historyThumb = '/satellite_scene.jpg'
+      if (data.image_evidence && data.image_evidence.length > 0) {
+        const evWithImg = data.image_evidence.find((ev) => ev.url_or_b64)
+        if (evWithImg) historyThumb = evWithImg.url_or_b64
+      } else if (currentScenes.length > 0 && currentScenes[0].preview) {
+        historyThumb = currentScenes[0].preview
+      } else if (currentPreset && samplePresetDatasets[currentPreset]?.scenes[0]?.thumbnail) {
+        historyThumb = samplePresetDatasets[currentPreset].scenes[0].thumbnail
+      }
+
+      const newHistoryItem = {
+        id: `analysis-${Date.now()}`,
+        title: historyTitle,
+        query: q,
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        thumb: historyThumb,
+        presetKey: currentPreset || null,
+        isPinned: false,
+        messages: [...messages, userMsg, assistantMsg],
+        uploadedScenes: currentScenes.length > 0 ? currentScenes : uploadedScenes,
+        intent: data.intent,
+      }
+
+      setAnalysesHistory((prev) => {
+        // Filter out any existing item with same id
+        const filtered = prev.filter((item) => item.id !== newHistoryItem.id)
+        const pinned = filtered.filter((item) => item.isPinned)
+        const unpinned = filtered.filter((item) => !item.isPinned)
+        return [...pinned, newHistoryItem, ...unpinned]
+      })
     } catch (err) {
       console.error('Orchestrator call error:', err)
       const errorMsg = {
@@ -569,14 +718,10 @@ export default function NewAnalysis() {
                     : 'bg-transparent hover:bg-slate-800/50 border-transparent hover:border-cyan-500/20'
                 }`}
               >
-                {/* Clickable thumbnail to load preset */}
+                {/* Clickable thumbnail to load preset or saved chat */}
                 <button
                   type="button"
-                  onClick={() => {
-                    handleSelectPreset(item.presetKey)
-                    handleSendMessage(item.query, item.presetKey)
-                    showToast(`Loaded: ${item.title}`)
-                  }}
+                  onClick={() => handleLoadAnalysis(item)}
                   className="shrink-0 cursor-pointer focus:outline-none"
                   title={`Open ${item.title}`}
                 >
@@ -624,11 +769,7 @@ export default function NewAnalysis() {
                   ) : (
                     <button
                       type="button"
-                      onClick={() => {
-                        handleSelectPreset(item.presetKey)
-                        handleSendMessage(item.query, item.presetKey)
-                        showToast(`Loaded: ${item.title}`)
-                      }}
+                      onClick={() => handleLoadAnalysis(item)}
                       className="w-full text-left focus:outline-none cursor-pointer"
                     >
                       <div className="flex items-center gap-1">
@@ -972,12 +1113,25 @@ export default function NewAnalysis() {
                                   ))}
                               </div>
 
-                              {/* Confidence Badge */}
-                              {msg.confidence && (
-                                <span className="text-[10.5px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-950/60 text-emerald-300 border border-emerald-500/30">
-                                  Conf: {msg.confidence}
-                                </span>
-                              )}
+                              <div className="flex items-center gap-2">
+                                {/* Confidence Badge */}
+                                {msg.confidence && (
+                                  <span className="text-[10.5px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-950/60 text-emerald-300 border border-emerald-500/30">
+                                    Conf: {msg.confidence}
+                                  </span>
+                                )}
+
+                                {/* Fullscreen Output Button */}
+                                <button
+                                  type="button"
+                                  onClick={() => setFullscreenMsgId(fullscreenMsgId === msg.id ? null : msg.id)}
+                                  className="flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-500/30 transition cursor-pointer"
+                                  title="Expand this complete output to full screen"
+                                >
+                                  <Maximize2 size={11} />
+                                  <span>Fullscreen</span>
+                                </button>
+                              </div>
                             </div>
 
                             {/* Main Text Answer */}
@@ -1005,40 +1159,213 @@ export default function NewAnalysis() {
                               </div>
                             )}
 
-                            {/* Visual Evidence (IMAGE_EVIDENCE) */}
-                            {msg.imageEvidence && msg.imageEvidence.length > 0 && (
-                              <div className="space-y-2 pt-2 border-t border-slate-800">
-                                <span className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider block font-sans">
-                                  Visual Evidence (Image Layers)
-                                </span>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                  {msg.imageEvidence.map((ev, i) => (
-                                    <div
-                                      key={i}
-                                      className="rounded-xl border border-slate-800 overflow-hidden bg-slate-950 flex flex-col shadow-lg"
-                                    >
-                                      <div className="px-3 py-1.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between text-[10.5px] text-slate-300 font-mono">
-                                        <span>{ev.title}</span>
-                                        <span className="text-cyan-400">{ev.type}</span>
-                                      </div>
-                                      {ev.url_or_b64 ? (
-                                        <div className="relative aspect-[16/10] bg-slate-900">
-                                          <img
-                                            src={ev.url_or_b64}
-                                            alt={ev.title}
-                                            className="w-full h-full object-cover"
-                                          />
-                                        </div>
-                                      ) : (
-                                        <div className="p-3 text-slate-400 text-xs font-mono">
-                                          Layer generated: {ev.file_path || 'Visual raster ready'}
-                                        </div>
-                                      )}
+                            {/* Interactive Studio (Change or Optical-SAR) or Visual Evidence */}
+                            {(() => {
+                              const isOpticalSarAnalysis = Boolean(
+                                msg.opticalSarData?.evidence_urls ||
+                                msg.opticalSarData?.grounded_boxes ||
+                                (msg.opticalSarData?.category_proportions && Object.keys(msg.opticalSarData.category_proportions).length > 0) ||
+                                msg.intent?.toLowerCase().includes('optical-sar') ||
+                                msg.intent?.toLowerCase().includes('optical_sar') ||
+                                msg.intent?.toLowerCase().includes('multimodal') ||
+                                msg.agentsUsed?.some(
+                                  (a) =>
+                                    a.toLowerCase().includes('optical_sar') ||
+                                    a.toLowerCase().includes('optical-sar') ||
+                                    a.toLowerCase() === 'optical_sar'
+                                ) ||
+                                msg.imageEvidence?.some((ev) => ev.type?.includes('optical_sar'))
+                              )
+
+                              const isChangeAnalysis = !isOpticalSarAnalysis && Boolean(
+                                msg.changeData?.visualizations ||
+                                msg.changeData?.regions ||
+                                (msg.changeData?.categories && Object.keys(msg.changeData.categories).length > 0) ||
+                                msg.intent?.toLowerCase().includes('change') ||
+                                msg.agentsUsed?.some((a) => a.toLowerCase().includes('change')) ||
+                                msg.imageEvidence?.some((ev) => ev.type?.includes('change'))
+                              )
+
+                              return (
+                                <>
+                                  {/* Render Interactive Multimodal Sensor Inspection Studio when Optical-SAR is detected */}
+                                  {isOpticalSarAnalysis && (
+                                    <div className="space-y-2 pt-2 border-t border-slate-800">
+                                      <MultimodalSensorStudio
+                                        opticalSarData={msg.opticalSarData || msg.rawOrchestratorData?.optical_sar_data || {}}
+                                        imageEvidence={msg.imageEvidence || []}
+                                        attachedScenes={msg.attachedScenes || uploadedScenes || []}
+                                        userQuery={msg.query || ''}
+                                        answer={msg.answer || ''}
+                                      />
                                     </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
+                                  )}
+
+                                  {/* Render Interactive Studio when comparison/change is detected */}
+                                  {isChangeAnalysis && (
+                                    <div className="space-y-2 pt-2 border-t border-slate-800">
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider block font-sans">
+                                          Interactive Visualization Studio
+                                        </span>
+                                        <span className="text-[10px] font-mono text-cyan-300/80 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/30">
+                                          Live Layer Switcher
+                                        </span>
+                                      </div>
+                                      <ChangeIntelligenceStudio
+                                        changeData={msg.changeData || {}}
+                                        imageEvidence={msg.imageEvidence || []}
+                                        attachedScenes={msg.attachedScenes || uploadedScenes || []}
+                                      />
+                                    </div>
+                                  )}
+
+                                  {/* For change or optical-sar analyses, hide redundant static cards behind a collapsed details accordion */}
+                                  {(isChangeAnalysis || isOpticalSarAnalysis) && msg.imageEvidence && msg.imageEvidence.length > 0 && (
+                                    <details className="pt-2 text-xs text-slate-400 group">
+                                      <summary className="cursor-pointer text-[11px] text-slate-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5 py-1">
+                                        <ChevronDown size={13} className="transition-transform group-open:rotate-180" />
+                                        <span>View all {msg.imageEvidence.length} exported image files</span>
+                                      </summary>
+                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                                        {msg.imageEvidence.map((ev, i) => (
+                                          <div
+                                            key={i}
+                                            className="rounded-xl border border-slate-800 overflow-hidden bg-slate-950 flex flex-col shadow-lg group relative"
+                                          >
+                                            <div className="px-3 py-1.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between text-[10.5px] text-slate-300 font-mono">
+                                              <span>{ev.title}</span>
+                                              <div className="flex items-center gap-1.5">
+                                                <span className="text-cyan-400">{ev.type}</span>
+                                                {ev.url_or_b64 && (
+                                                  <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                      setFullscreenImage({
+                                                        url: ev.url_or_b64,
+                                                        title: ev.title || 'Layer Raster',
+                                                        type: ev.type,
+                                                      })
+                                                      setImgZoom(1)
+                                                    }}
+                                                    className="p-0.5 rounded hover:bg-slate-800 text-slate-400 hover:text-cyan-300 cursor-pointer"
+                                                    title="Expand to Fullscreen"
+                                                  >
+                                                    <Maximize2 size={12} />
+                                                  </button>
+                                                )}
+                                              </div>
+                                            </div>
+                                            {ev.url_or_b64 ? (
+                                              <div
+                                                onClick={() => {
+                                                  setFullscreenImage({
+                                                    url: ev.url_or_b64,
+                                                    title: ev.title || 'Layer Raster',
+                                                    type: ev.type,
+                                                  })
+                                                  setImgZoom(1)
+                                                }}
+                                                className="relative aspect-[16/10] bg-slate-900 cursor-pointer overflow-hidden group/img"
+                                                title="Click to view full screen"
+                                              >
+                                                <img
+                                                  src={ev.url_or_b64}
+                                                  alt={ev.title}
+                                                  className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-300"
+                                                />
+                                                <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-xs text-white font-medium backdrop-blur-xs">
+                                                  <Maximize2 size={13} className="text-cyan-400" />
+                                                  <span>Fullscreen View</span>
+                                                </div>
+                                              </div>
+                                            ) : (
+                                              <div className="p-3 text-slate-400 text-xs font-mono">
+                                                Layer generated: {ev.file_path || 'Visual raster ready'}
+                                              </div>
+                                            )}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </details>
+                                  )}
+
+                                  {/* Standard Layer Cards for non-change, non-optical-sar analyses (Grounding, Segmentation, etc.) */}
+                                  {!isChangeAnalysis && !isOpticalSarAnalysis && msg.imageEvidence && msg.imageEvidence.length > 0 && (
+                                    <div className="space-y-2 pt-2 border-t border-slate-800">
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider block font-sans">
+                                          Visual Evidence (Image Layers)
+                                        </span>
+                                        <span className="text-[10px] text-slate-400 font-mono">
+                                          Click image for full screen
+                                        </span>
+                                      </div>
+                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        {msg.imageEvidence.map((ev, i) => (
+                                          <div
+                                            key={i}
+                                            className="rounded-xl border border-slate-800 overflow-hidden bg-slate-950 flex flex-col shadow-lg group relative"
+                                          >
+                                            <div className="px-3 py-1.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between text-[10.5px] text-slate-300 font-mono">
+                                              <span>{ev.title}</span>
+                                              <div className="flex items-center gap-1.5">
+                                                <span className="text-cyan-400">{ev.type}</span>
+                                                {ev.url_or_b64 && (
+                                                  <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                      setFullscreenImage({
+                                                        url: ev.url_or_b64,
+                                                        title: ev.title || 'Visual Evidence',
+                                                        type: ev.type,
+                                                      })
+                                                      setImgZoom(1)
+                                                    }}
+                                                    className="p-0.5 rounded hover:bg-slate-800 text-slate-400 hover:text-cyan-300 cursor-pointer"
+                                                    title="Expand to Fullscreen"
+                                                  >
+                                                    <Maximize2 size={12} />
+                                                  </button>
+                                                )}
+                                              </div>
+                                            </div>
+                                            {ev.url_or_b64 ? (
+                                              <div
+                                                onClick={() => {
+                                                  setFullscreenImage({
+                                                    url: ev.url_or_b64,
+                                                    title: ev.title || 'Visual Evidence',
+                                                    type: ev.type,
+                                                  })
+                                                  setImgZoom(1)
+                                                }}
+                                                className="relative aspect-[16/10] bg-slate-900 cursor-pointer overflow-hidden group/img"
+                                                title="Click to view full screen"
+                                              >
+                                                <img
+                                                  src={ev.url_or_b64}
+                                                  alt={ev.title}
+                                                  className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-300"
+                                                />
+                                                <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-xs text-white font-medium backdrop-blur-xs">
+                                                  <Maximize2 size={13} className="text-cyan-400" />
+                                                  <span>Fullscreen View</span>
+                                                </div>
+                                              </div>
+                                            ) : (
+                                              <div className="p-3 text-slate-400 text-xs font-mono">
+                                                Layer generated: {ev.file_path || 'Visual raster ready'}
+                                              </div>
+                                            )}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </>
+                              )
+                            })()}
 
                             {/* Domain Knowledge Evidence (KNOWLEDGE_EVIDENCE) */}
                             {msg.knowledgeEvidence && msg.knowledgeEvidence.length > 0 && (
@@ -1118,6 +1445,16 @@ export default function NewAnalysis() {
                             <div className="flex items-center justify-between pt-2 border-t border-slate-800">
                               <div className="flex items-center gap-2">
                                 <button
+                                  type="button"
+                                  onClick={() => setFullscreenMsgId(fullscreenMsgId === msg.id ? null : msg.id)}
+                                  className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-cyan-300 transition-colors cursor-pointer"
+                                  title="Expand this complete output to full screen"
+                                >
+                                  <Maximize2 size={12} />
+                                  <span>Fullscreen</span>
+                                </button>
+
+                                <button
                                   onClick={() => handleCopy(msg.answer, idx)}
                                   className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400 hover:text-white transition-colors p-1 rounded-md hover:bg-slate-800 cursor-pointer"
                                 >
@@ -1135,10 +1472,20 @@ export default function NewAnalysis() {
                                 </button>
                               </div>
 
-                              {msg.structuredForUi && (
+                              {(msg.structuredForUi || msg.answer) && (
                                 <DownloadReportButton
+                                  reportData={
+                                    msg.structuredForUi || {
+                                      title: `SatQuery Analysis: ${msg.intent || 'Earth Observation'}`,
+                                      analysisType: msg.intent || 'Change Detection Analysis',
+                                      prediction: msg.answer,
+                                      confidence: msg.confidence,
+                                      agentsUsed: msg.agentsUsed,
+                                      imageEvidence: msg.imageEvidence,
+                                    }
+                                  }
                                   analysisData={msg.structuredForUi}
-                                  className="text-[11px] font-medium text-cyan-300 hover:text-white hover:underline"
+                                  className="text-[11px] font-medium text-cyan-300 hover:text-white"
                                 />
                               )}
                             </div>
@@ -1272,6 +1619,278 @@ export default function NewAnalysis() {
           </div>
         )}
       </div>
+
+      {/* ============================================================ */}
+      {/* FULLSCREEN OUTPUT MODAL (Expands complete analysis to fullscreen) */}
+      {/* ============================================================ */}
+      {fullscreenMsgId && (() => {
+        const activeMsg = messages.find((m) => m.id === fullscreenMsgId)
+        if (!activeMsg) return null
+
+        const isChange = Boolean(
+          activeMsg.changeData?.visualizations ||
+          activeMsg.changeData?.regions ||
+          activeMsg.intent?.toLowerCase().includes('change') ||
+          activeMsg.agentsUsed?.some((a) => a.toLowerCase().includes('change'))
+        )
+
+        return (
+          <div className="fixed inset-0 z-[9999] bg-[#050b14]/98 backdrop-blur-2xl flex flex-col p-4 sm:p-6 md:p-8 overflow-y-auto animate-fadeIn">
+            <div className="max-w-6xl w-full mx-auto flex flex-col flex-1 gap-5">
+              {/* Header Navigation Bar */}
+              <div className="flex items-center justify-between pb-4 border-b border-cyan-500/30 shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-cyan-500 text-slate-950 flex items-center justify-center font-bold shadow-[0_0_20px_rgba(6,182,212,0.4)]">
+                    <Sparkles size={20} />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                      <h2 className="text-lg sm:text-xl font-bold text-white font-display">
+                        {activeMsg.intent || 'SatQuery Earth Observation Analysis'}
+                      </h2>
+                      {activeMsg.confidence && (
+                        <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/40">
+                          Conf: {activeMsg.confidence}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-400 font-mono">
+                      Fullscreen Analysis Output · Press ESC to exit
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  {(activeMsg.structuredForUi || activeMsg.answer) && (
+                    <DownloadReportButton
+                      reportData={activeMsg.structuredForUi || {
+                        title: `SatQuery Analysis: ${activeMsg.intent || 'Earth Observation'}`,
+                        analysisType: activeMsg.intent || 'Observation Analysis',
+                        prediction: activeMsg.answer,
+                        confidence: activeMsg.confidence,
+                        agentsUsed: activeMsg.agentsUsed,
+                        imageEvidence: activeMsg.imageEvidence,
+                      }}
+                      analysisData={activeMsg.structuredForUi}
+                      className="text-xs font-medium text-cyan-300 hover:text-white"
+                    />
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setFullscreenMsgId(null)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-500/40 text-xs font-semibold transition cursor-pointer shadow-sm"
+                    title="Exit Fullscreen (Esc)"
+                  >
+                    <Minimize2 size={14} />
+                    <span>Exit Fullscreen</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Main Expanded Container */}
+              <div className="flex-1 bg-[#0b1626]/90 border border-cyan-500/25 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6 text-slate-200">
+                {/* Agent Badges */}
+                {activeMsg.agentsUsed && activeMsg.agentsUsed.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs text-slate-400 font-mono">Agents Used:</span>
+                    {activeMsg.agentsUsed.map((agentName, aIdx) => (
+                      <span
+                        key={aIdx}
+                        className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-900 border border-cyan-500/40 text-cyan-300 font-mono"
+                      >
+                        {agentName}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Natural Language Prediction Answer */}
+                <div className="p-4 sm:p-5 rounded-xl bg-slate-900/80 border border-slate-800 text-sm sm:text-base text-slate-100 leading-relaxed whitespace-pre-line font-body shadow-inner">
+                  {activeMsg.answer}
+                </div>
+
+                {/* Interactive Studio for Change Queries or Evidence Grid for Others */}
+                {isChange ? (
+                  <div className="space-y-2">
+                    <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider block font-sans">
+                      Interactive Visualization Studio (Fullscreen)
+                    </span>
+                    <ChangeIntelligenceStudio
+                      changeData={activeMsg.changeData || {}}
+                      imageEvidence={activeMsg.imageEvidence || []}
+                      attachedScenes={activeMsg.attachedScenes || uploadedScenes || []}
+                    />
+                  </div>
+                ) : (
+                  activeMsg.imageEvidence && activeMsg.imageEvidence.length > 0 && (
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider block font-sans">
+                          Visual Evidence Layers
+                        </span>
+                        <span className="text-xs text-slate-400 font-mono">
+                          Click any image to inspect in full-resolution lightbox
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {activeMsg.imageEvidence.map((ev, i) => (
+                          <div
+                            key={i}
+                            className="rounded-2xl border border-slate-800 overflow-hidden bg-slate-950 flex flex-col shadow-xl group relative"
+                          >
+                            <div className="px-4 py-2.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between text-xs text-slate-300 font-mono">
+                              <span className="font-semibold">{ev.title}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-cyan-400">{ev.type}</span>
+                                {ev.url_or_b64 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setFullscreenImage({
+                                        url: ev.url_or_b64,
+                                        title: ev.title || 'Visual Evidence',
+                                        type: ev.type,
+                                      })
+                                      setImgZoom(1)
+                                    }}
+                                    className="p-1 rounded hover:bg-slate-800 text-cyan-300 hover:text-white transition cursor-pointer"
+                                    title="Open in Lightbox"
+                                  >
+                                    <Maximize2 size={13} />
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                            {ev.url_or_b64 ? (
+                              <div
+                                onClick={() => {
+                                  setFullscreenImage({
+                                    url: ev.url_or_b64,
+                                    title: ev.title || 'Visual Evidence',
+                                    type: ev.type,
+                                  })
+                                  setImgZoom(1)
+                                }}
+                                className="relative aspect-[16/10] bg-slate-900 cursor-pointer overflow-hidden group/img"
+                              >
+                                <img
+                                  src={ev.url_or_b64}
+                                  alt={ev.title}
+                                  className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-300"
+                                />
+                                <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-xs text-white font-medium backdrop-blur-xs">
+                                  <Maximize2 size={15} className="text-cyan-400" />
+                                  <span>Full Resolution Lightbox</span>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="p-4 text-slate-400 text-xs font-mono">
+                                Layer generated: {ev.file_path || 'Visual raster ready'}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                )}
+
+                {/* Literature / RAG Evidence in Fullscreen */}
+                {activeMsg.knowledgeEvidence && activeMsg.knowledgeEvidence.length > 0 && (
+                  <div className="space-y-2 pt-4 border-t border-slate-800">
+                    <span className="text-xs font-bold text-cyan-400 uppercase tracking-wider block font-sans flex items-center gap-1.5">
+                      <FileText size={13} className="text-cyan-400" />
+                      <span>Domain Knowledge & Literature Evidence</span>
+                    </span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {activeMsg.knowledgeEvidence.map((k, i) => (
+                        <div key={i} className="p-3.5 bg-slate-900/80 border border-cyan-500/25 rounded-xl text-xs space-y-1.5">
+                          <p className="font-semibold text-slate-100">{k.text}</p>
+                          <div className="flex items-center gap-2 text-[10.5px] text-cyan-400 font-mono">
+                            <span>Source: {k.source}</span>
+                            {k.section && <span>· Section: {k.section}</span>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )
+      })()}
+
+      {/* ============================================================ */}
+      {/* FULLSCREEN IMAGE LIGHTBOX MODAL                              */}
+      {/* ============================================================ */}
+      {fullscreenImage && (
+        <div className="fixed inset-0 z-[10000] bg-[#03070d]/98 backdrop-blur-2xl flex flex-col p-3 sm:p-5 overflow-hidden animate-fadeIn">
+          {/* Lightbox Top Control Bar */}
+          <div className="flex items-center justify-between pb-3 border-b border-slate-800 text-slate-200 shrink-0">
+            <div className="flex items-center gap-2.5">
+              <span className="text-sm font-bold text-white font-display">{fullscreenImage.title}</span>
+              {fullscreenImage.type && (
+                <span className="text-xs font-mono text-cyan-400 px-2.5 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/30">
+                  {fullscreenImage.type}
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setImgZoom((z) => Math.min(z + 0.25, 4))}
+                className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 cursor-pointer"
+                title="Zoom In"
+              >
+                <ZoomIn size={15} />
+              </button>
+              <button
+                onClick={() => setImgZoom((z) => Math.max(z - 0.25, 0.5))}
+                className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 cursor-pointer"
+                title="Zoom Out"
+              >
+                <ZoomOut size={15} />
+              </button>
+              <button
+                onClick={() => setImgZoom(1)}
+                className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 cursor-pointer"
+                title="Reset Zoom (100%)"
+              >
+                <RotateCcw size={15} />
+              </button>
+              <a
+                href={fullscreenImage.url}
+                download={fullscreenImage.title || 'satellite_evidence.png'}
+                className="p-1.5 rounded-lg bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-500/30 flex items-center gap-1 text-xs font-medium px-2.5 cursor-pointer"
+                title="Save Image"
+              >
+                <Download size={14} />
+                <span>Save</span>
+              </a>
+              <button
+                onClick={() => setFullscreenImage(null)}
+                className="p-1.5 rounded-lg bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-500/40 flex items-center gap-1 text-xs font-semibold px-2.5 cursor-pointer"
+                title="Close Lightbox (Esc)"
+              >
+                <X size={15} />
+                <span>Close</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Lightbox Viewport */}
+          <div className="flex-1 flex items-center justify-center overflow-auto p-4 relative">
+            <img
+              src={fullscreenImage.url}
+              alt={fullscreenImage.title}
+              style={{ transform: `scale(${imgZoom})`, transition: 'transform 0.15s ease' }}
+              className="max-w-full max-h-full object-contain rounded-xl shadow-2xl border border-slate-800 cursor-zoom-in"
+              onClick={() => setImgZoom((z) => (z === 1 ? 1.75 : 1))}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

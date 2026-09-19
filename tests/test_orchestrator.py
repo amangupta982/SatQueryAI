@@ -46,12 +46,35 @@ def test_scenario_2_grounding():
     assert "Object Grounding" in plan.intent
 
 
+def test_user_grounding_variations():
+    """TEST 2b: Natural queries like 'where are building', 'how many buildings are visible?' -> Grounding Agent"""
+    for q in ["where are building", "where is building", "where are the buildings", "how many buildings are visible?", "count vehicles"]:
+        plan = QueryPlanner.plan(q, image_count=1)
+        assert not plan.is_ambiguous, f"Failed for {q}"
+        assert plan.selected_agents == [AgentType.GROUNDING], f"Failed for {q}, got {plan.selected_agents}"
+        assert "Object Grounding" in plan.intent
+
+
 def test_scenario_3_change_detection():
     """TEST 3: 'What changed between 2022 and 2026?' -> Change Detection Agent"""
     plan = QueryPlanner.plan("What changed between 2022 and 2026?", image_count=2, has_temporal_metadata=True)
     assert not plan.is_ambiguous
     assert plan.selected_agents == [AgentType.CHANGE_DETECTION]
     assert "Temporal Change" in plan.intent
+
+
+def test_scenario_3b_user_multi_image_changes():
+    """TEST 3b: 'what are the changes from first and second image' -> Change Detection (never RAG)"""
+    plan = QueryPlanner.plan("what are the changes from first and second image", image_count=2)
+    assert not plan.is_ambiguous
+    assert plan.selected_agents == [AgentType.CHANGE_DETECTION]
+    assert AgentType.RAG not in plan.selected_agents
+    assert "Temporal Change" in plan.intent
+
+    plan2 = QueryPlanner.plan("what are the changes in both image", image_count=2)
+    assert not plan2.is_ambiguous
+    assert plan2.selected_agents == [AgentType.CHANGE_DETECTION]
+    assert AgentType.RAG not in plan2.selected_agents
 
 
 def test_scenario_4_optical_sar():
@@ -61,12 +84,45 @@ def test_scenario_4_optical_sar():
     assert plan.selected_agents == [AgentType.OPTICAL_SAR]
 
 
+def test_scenario_4b_user_optical_sar_insights():
+    """TEST 4b: 'give the insight about bothe the files' with optical + SAR images -> Optical-SAR Agent"""
+    for q in [
+        "give the insight about bothe the files",
+        "give the insight about both the files",
+        "what do both optical and sar images show",
+        "analyze both files",
+    ]:
+        plan = QueryPlanner.plan(q, image_count=2, has_sar_metadata=True)
+        assert not plan.is_ambiguous, f"Failed for {q}"
+        assert plan.selected_agents == [AgentType.OPTICAL_SAR], f"Failed for {q}, got {plan.selected_agents}"
+        assert "Optical-SAR" in plan.intent
+
+
 def test_scenario_5_area_management():
     """TEST 5: 'What percentage of this area is water?' -> Area Management Agent"""
     plan = QueryPlanner.plan("What percentage of this area is water?", image_count=1)
     assert not plan.is_ambiguous
     assert plan.selected_agents == [AgentType.AREA_MANAGEMENT]
     assert "Area" in plan.intent
+
+
+def test_user_area_variations():
+    """TEST 5b: Natural queries like 'What percentage is water?', 'Analyze land cover', 'area measurement' -> Area Management"""
+    for q in ["What percentage is water?", "Analyze land cover", "calculate area of water", "measure area", "area measurement", "how much area is forest"]:
+        plan = QueryPlanner.plan(q, image_count=1)
+        assert not plan.is_ambiguous, f"Failed for {q}"
+        assert plan.selected_agents == [AgentType.AREA_MANAGEMENT], f"Failed for {q}, got {plan.selected_agents}"
+        assert "Area" in plan.intent
+
+
+def test_scenario_grounding_plus_area():
+    """TEST: 'find buildings and calculate their area' -> Grounding + Area Management"""
+    plan = QueryPlanner.plan("find buildings and calculate their area", image_count=1)
+    assert not plan.is_ambiguous
+    assert AgentType.GROUNDING in plan.selected_agents
+    assert AgentType.AREA_MANAGEMENT in plan.selected_agents
+    assert len(plan.selected_agents) == 2
+    assert "Area" in plan.intent or "Grounding" in plan.intent
 
 
 def test_scenario_6_rag():

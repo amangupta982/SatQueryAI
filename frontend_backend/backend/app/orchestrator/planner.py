@@ -31,61 +31,130 @@ AMBIGUOUS_QUERIES = {
 
 RAG_KEYWORDS = [
     r"\bwhat is (sar|sentinel|ndvi|gsd|c-band|polaris|radar|cartosat|modis|landsat|lidar)\b",
-    r"\bwhy is sar useful\b",
-    r"\bexplain the difference\b",
+    r"\bwhy\s+(is\s+)?sar\s+(is\s+)?useful\b",
     r"\bexplain what sar is\b",
     r"\bwhat does sar mean\b",
     r"\bwhat is risat\b",
     r"\bwhat is isro\b",
     r"\bdefinition of\b",
+    r"\bliterature\s+(evidence|review|source|paper)\b",
+    r"\bremote\s+sensing\s+theory\b",
 ]
 
 SAR_MULTIMODAL_KEYWORDS = [
-    r"\boptical\s+(and|\+)\s+sar\b",
+    r"\boptical\s*[-/+]?\s*sar\b",
+    r"\boptical\s+and\s+sar\b",
+    r"\bsar\s+and\s+optical\b",
     r"\bsar\s+show\s+that\s+optical\s+does\s+not\b",
     r"\boptical\s+does\s+not\b",
     r"\bradar\s+vs\s+optical\b",
+    r"\boptical\s+vs\s+radar\b",
+    r"\bradar\s+and\s+optical\b",
+    r"\boptical\s+and\s+radar\b",
     r"\bbackscatter\b",
-    r"\bmicrowave\s+backscatter\b",
+    r"\bmicrowave(\s+backscatter)?\b",
     r"\bflood\s+under\s+clouds\b",
-    r"\bpenetrate\s+clouds\b",
+    r"\bpenetrate\s+(the\s+)?clouds?\b",
+    r"\ball[-\s]?weather\b",
+    r"\bmultimodal\b",
+    r"\bcross[-\s]?modal\b",
+    r"\bco[-\s]?registered\b",
+    r"\bsentinel[-\s]?1\b",
+    r"\bs1\b",
+    r"\bsentinel[-\s]?2\b",
+    r"\bs2\b",
+    r"\bradar\b",
+    r"\bsar\b",
 ]
 
 TEMPORAL_CHANGE_KEYWORDS = [
+    r"\bchange[sd]?\b",
+    r"\bchanging\b",
+    r"\bwhat\s+(is|are|has|have)\s+(the\s+)?change[sd]?\b",
+    r"\bwhat\s+(has\s+)?changed\b",
+    r"\bchanges?\s+(from|between|in|to|across|of)\b",
+    r"\bbetween\s+.*and\s+.*image\b",
+    r"\b(first|1st)\s+(and|to|vs)\s+(second|2nd)\b",
+    r"\b(image|scene|img)\s*1\s*(and|to|vs)\s*(image|scene|img)?\s*2\b",
+    r"\bboth\s+images?\b",
+    r"\btwo\s+images?\b",
+    r"\bbetween\s+the\s+two\b",
+    r"\bcompare\b",
+    r"\bcomparison\b",
+    r"\bdiffer[a-z]*\b",
+    r"\bwhat\s+is\s+the\s+difference\b",
     r"\bbetween\s+\d{4}\s+and\s+\d{4}\b",
-    r"\bwhat\s+changed\b",
     r"\bhas\s+this\s+area\s+(expanded|grown|changed)\b",
-    r"\bchanged\s+regions\b",
-    r"\bnew\s+buildings\b",
-    r"\bnew\s+structures\b",
+    r"\bchanged\s+regions?\b",
+    r"\bnew\s+buildings?\b",
+    r"\bnew\s+structures?\b",
     r"\burban\s+expansion\b",
     r"\bover\s+time\b",
     r"\badded\s+between\b",
     r"\bdifference\s+between\s+\d{4}\b",
+    r"\bbefore\s+and\s+after\b",
+    r"\btemporal\b",
+    r"\bdetect\s+change[sd]?\b",
+    r"\bvegetation\s+loss\b",
+    r"\bflood\s+extent\b",
+    r"\bdeforestation\b",
 ]
 
+OBJECT_TARGETS = (
+    r"(?:buildings?|structures?|houses?|roofs?|roofing|built[-\s]up|infrastructure|"
+    r"runways?|airports?|airstrips?|airfields?|taxiways?|helipads?|terminals?|hangars?|"
+    r"roads?|highways?|streets?|bridges?|flyovers?|interchanges?|railways?|railroads?|tracks?|"
+    r"vehicles?|cars?|trucks?|buses?|automobiles?|trains?|"
+    r"airplanes?|aircrafts?|planes?|jets?|"
+    r"ships?|boats?|vessels?|crafts?|ferries|tankers?|barges?|"
+    r"storage\s+tanks?|fuel\s+tanks?|tanks?|silos?|solar\s+panels?|solar\s+farms?|wind\s+turbines?|"
+    r"water\s+bodies?|waterbody|waterbodies|lakes?|ponds?|rivers?|canals?|reservoirs?|docks?|piers?|harbors?|ports?|"
+    r"stadiums?|fields?|parking(\s+lots?)?|tents?)"
+)
+
 GROUNDING_KEYWORDS = [
-    r"\bfind\s+(all\s+)?(buildings|runways|roads|structures|vehicles|ships|airplanes|tanks|bridges|houses)\b",
-    r"\blocate\s+(the\s+|all\s+)?(runways|buildings|roads|bridges|structures)\b",
-    r"\bshow\s+(all\s+)?(roads|buildings|runways|structures)\b",
-    r"\bhow\s+many\s+(buildings|structures|roads|runways|vehicles|houses)\s+(are\s+there|were|visible|detected)\b",
-    r"\bcount\s+(the\s+|all\s+)?(buildings|structures|vehicles|roads)\b",
-    r"\bdetect\s+(all\s+)?(buildings|structures|roads|runways)\b",
-    r"\bbounding\s+boxes\b",
+    rf"\bwhere\s+(is|are|were|can\s+i\s+find|can\s+we\s+see|located)?\b.*{OBJECT_TARGETS}",
+    rf"\bwhere\s+{OBJECT_TARGETS}\b",
+    rf"\bwhere\b.*{OBJECT_TARGETS}",
+    rf"\b(find|locate|detect|spot|identify|show|highlight|mark|point\s+out|outline|delineate|box|ground|search\s+for)\b.*{OBJECT_TARGETS}",
+    rf"\bhow\s+many\b.*{OBJECT_TARGETS}",
+    rf"\bcount\b.*{OBJECT_TARGETS}",
+    rf"\bnumber\s+of\b.*{OBJECT_TARGETS}",
+    r"\b(object\s+)?grounding\b",
+    r"\b(object\s+)?detection\b",
+    r"\bbounding\s+box(es)?\b",
+    r"\blocalization\b",
+    r"\bdelineat(e|ion)\b",
 ]
 
 AREA_KEYWORDS = [
-    r"\bpercentage\s+of\s+(the\s+area|this\s+area|land|water|vegetation|urban|forest)\b",
-    r"\bhow\s+much\s+area\b",
-    r"\bhow\s+much\s+land\b",
-    r"\bcalculate\s+.*area\b",
+    r"\barea\s+measurement\b",
+    r"\bmeasur(e|ing|ement)\s+(the\s+)?(area|coverage|surface|percentage|land)\b",
+    r"\bmeasur(e|ing|ement)\s+area\b",
+    r"\bcalculat(e|ing|ion)\s+.*(area|coverage|percentage|hectare|acres?|extent)\b",
+    r"\bestimat(e|ing|ion)\s+.*(area|coverage|percentage|extent)\b",
+    r"\bquantif(y|ication)\s+.*(area|coverage|extent)\b",
+    r"\bpercentage\s+(is|are|of)\b",
+    r"\bwhat\s+percentage\b",
+    r"\bwhat\s+(proportion|fraction|ratio)\s+(is|of)\b",
+    r"\bpercent\b",
+    r"\bhow\s+much\s+(area|land|water|vegetation|forest|surface|canopy|fabric|space)\b",
+    r"\bhow\s+(big|large)\s+is\b.*(area|lake|forest|water|region|zone)",
+    r"\bcovered\s+by\s+(water|buildings?|vegetation|forest|urban|trees?|grass)\b",
+    r"\bcoverage\s+of\b",
+    r"\bcoverage\s+percent(age)?\b",
+    r"\barea\s+of\s+(the\s+)?(changed\s+region|water|vegetation|buildings?|structures?|forest|land|lake)\b",
     r"\baffected\s+area\b",
     r"\bchanged\s+area\b",
-    r"\bestimate\s+(the\s+)?area\b",
-    r"\bcovered\s+by\s+(water|buildings|vegetation|forest|urban)\b",
-    r"\barea\s+of\s+(the\s+changed\s+region|water|vegetation|buildings|structures)\b",
-    r"\bland[-\s]cover\b",
-    r"\bhectares\b",
+    r"\bsurface\s+area\b",
+    r"\bland[-\s]?cover\b",
+    r"\bland[-\s]?use\b",
+    r"\blanduse\b",
+    r"\bhectares?\b",
+    r"\bacres?\b",
+    r"\bsq(uare)?\s*(km|kilometers?|m|meters?)\b",
+    r"\bkm2\b",
+    r"\bm2\b",
 ]
 
 
@@ -104,23 +173,7 @@ class QueryPlanner:
         """
         q_clean = query.strip().lower()
 
-        # ── 1. Check for Ambiguous Query ──
-        # If the query is an ultra-short generic inquiry ("analyze this")
-        normalized_q = re.sub(r"[^\w\s]", "", q_clean).strip()
-        if normalized_q in AMBIGUOUS_QUERIES or (
-            normalized_q.startswith("analyze") and len(normalized_q.split()) <= 3 and not any(k in normalized_q for k in ["sar", "change", "building", "area", "water", "road", "between"])
-        ):
-            return OrchestrationPlan(
-                intent="Ambiguous / General Analysis Request",
-                primary_goal="Provide interactive analysis options",
-                is_ambiguous=True,
-                clarification_message=CLARIFICATION_AMBIGUOUS_QUERY,
-                selected_agents=[],
-                execution_order=[],
-                selection_reasoning="The query is broad and ambiguous. Asking user for the intended analysis focus.",
-            )
-
-        # ── 2. Detect Component Intents ──
+        # ── 1. Detect Component Intents ──
         requires_temporal = False
         requires_grounding = False
         requires_change = False
@@ -150,27 +203,86 @@ class QueryPlanner:
                 break
 
         # SAR check
-        for pattern in SAR_MULTIMODAL_KEYWORDS:
-            if re.search(pattern, q_clean):
-                requires_sar = True
-                break
+        if has_sar_metadata:
+            requires_sar = True
+        else:
+            for pattern in SAR_MULTIMODAL_KEYWORDS:
+                if re.search(pattern, q_clean):
+                    requires_sar = True
+                    break
 
-        # RAG check
+        # RAG check (strict domain definitions or literature queries)
         for pattern in RAG_KEYWORDS:
             if re.search(pattern, q_clean):
                 requires_rag = True
                 break
 
-        # Additional RAG heuristics (conceptual domain explanations)
-        if "explain why" in q_clean or "why is" in q_clean or "what is sar" in q_clean or "tell me about sentinel" in q_clean:
+        # Additional RAG heuristics (only purely conceptual queries)
+        if "what is sar" in q_clean or "tell me about sentinel" in q_clean or "literature on" in q_clean:
             requires_rag = True
 
-        # Pure RAG check: query is asking conceptual domain knowledge without referring to an uploaded image
-        is_pure_concept = any(q_clean.startswith(prefix) for prefix in ["what is ", "what are ", "explain ", "why is ", "difference between "])
-        has_image_ref = any(term in q_clean for term in ["this image", "in this", "these images", "uploaded", "here", "scene"])
-        if is_pure_concept and not has_image_ref and not (requires_change or requires_grounding or requires_area):
+        # Check if query references imagery or if images are attached
+        has_image_ref = any(term in q_clean for term in [
+            "image", "images", "img", "imgs", "picture", "pictures", "photo", "photos",
+            "scene", "scenes", "first", "second", "both", "two", "here", "uploaded",
+            "attached", "satellite", "tile", "patch", "this", "these", "region"
+        ]) or (image_count > 0)
+
+        # Multi-image context: if 2+ images are attached or temporal metadata present
+        if image_count >= 2 or has_temporal_metadata:
+            has_explicit_temporal_text = any(re.search(p, q_clean) for p in [
+                r"\bbetween\s+\d{4}\s+and\s+\d{4}\b",
+                r"\bbefore\s+and\s+after\b",
+                r"\bover\s+time\b",
+                r"\b(first|1st)\s+and\s+(second|2nd)\s+date\b",
+                r"\byears?\s+apart\b",
+            ])
+
+            # If SAR is present, any comparison or insight is Multimodal Optical-SAR Fusion, NOT temporal change!
+            if requires_sar:
+                if has_explicit_temporal_text:
+                    requires_change = True
+                    requires_temporal = True
+                else:
+                    requires_change = False
+                    requires_temporal = False
+            else:
+                change_indicators = [
+                    "change", "changes", "changed", "difference", "differences", "compare", "comparison",
+                    "first", "second", "both", "between", "versus", "vs", "before", "after", "two images",
+                    "two scenes", "new", "appeared", "disappeared", "expansion", "contrast"
+                ]
+                if any(term in q_clean for term in change_indicators) or has_temporal_metadata or (not requires_grounding and not requires_area):
+                    requires_change = True
+                    requires_temporal = True
+
+        # When change detection or imagery analysis is requested, NEVER let RAG hijack it
+        if requires_change:
+            requires_rag = False
+
+        # Pure RAG check: query is ONLY for domain concepts when NO images are attached/referenced
+        is_pure_concept = (image_count == 0) and (not has_image_ref) and any(
+            q_clean.startswith(prefix) for prefix in ["what is ", "what are ", "explain ", "why is ", "definition of "]
+        )
+        if is_pure_concept and not (requires_change or requires_grounding or requires_area):
             requires_rag = True
             requires_sar = False
+
+        # ── 2. Check for Ambiguous Query (Only when no specific task intent is identified) ──
+        if not (requires_temporal or requires_grounding or requires_change or requires_sar or requires_area or requires_rag):
+            normalized_q = re.sub(r"[^\w\s]", "", q_clean).strip()
+            if normalized_q in AMBIGUOUS_QUERIES or (
+                normalized_q.startswith("analyze") and len(normalized_q.split()) <= 3
+            ):
+                return OrchestrationPlan(
+                    intent="Ambiguous / General Analysis Request",
+                    primary_goal="Provide interactive analysis options",
+                    is_ambiguous=True,
+                    clarification_message=CLARIFICATION_AMBIGUOUS_QUERY,
+                    selected_agents=[],
+                    execution_order=[],
+                    selection_reasoning="The query is broad and ambiguous. Asking user for the intended analysis focus.",
+                )
 
         # ── 3. Combine Intents and Select Agents ──
         selected_agents: List[AgentType] = []
@@ -218,6 +330,18 @@ class QueryPlanner:
                 "Area quantification requested -> Area Management AI",
             ]
 
+        # Multi-Agent: Grounding + Area (Single scene or no temporal change)
+        elif requires_grounding and requires_area:
+            intent = "Object Grounding & Area Measurement"
+            selected_agents = [AgentType.GROUNDING, AgentType.AREA_MANAGEMENT]
+            execution_order = [
+                [AgentType.GROUNDING, AgentType.AREA_MANAGEMENT],
+            ]
+            reasoning_parts = [
+                "Object localization requested -> Object Grounding Agent",
+                "Area measurement or coverage percentage requested -> Area Management AI",
+            ]
+
         # Multi-Agent: Optical-SAR + RAG
         elif requires_sar and requires_rag:
             intent = "Optical-SAR Multimodal Analysis & Domain Explanation"
@@ -227,8 +351,14 @@ class QueryPlanner:
             ]
             reasoning_parts = [
                 "Multimodal Optical and SAR imagery analysis requested -> Optical-SAR Agent",
-                "Domain knowledge explanation requested -> RAG Knowledge Agent",
             ]
+
+        # Single Agent: Optical-SAR Multimodal Fusion
+        elif requires_sar:
+            intent = "Optical-SAR Multimodal Fusion Analysis"
+            selected_agents = [AgentType.OPTICAL_SAR]
+            execution_order = [[AgentType.OPTICAL_SAR]]
+            reasoning_parts = ["SAR microwave vs optical reflectance multimodal inquiry detected -> Optical-SAR Agent"]
 
         # Single Agent: Change Detection
         elif requires_change:
@@ -250,13 +380,6 @@ class QueryPlanner:
             selected_agents = [AgentType.AREA_MANAGEMENT]
             execution_order = [[AgentType.AREA_MANAGEMENT]]
             reasoning_parts = ["Area measurement or coverage percentage query detected -> Area Management AI"]
-
-        # Single Agent: Optical-SAR
-        elif requires_sar:
-            intent = "Optical-SAR Multimodal Fusion Analysis"
-            selected_agents = [AgentType.OPTICAL_SAR]
-            execution_order = [[AgentType.OPTICAL_SAR]]
-            reasoning_parts = ["SAR microwave vs optical reflectance inquiry detected -> Optical-SAR Agent"]
 
         # Single Agent: RAG Domain Knowledge
         elif requires_rag:
