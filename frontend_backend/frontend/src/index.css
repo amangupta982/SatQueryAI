@@ -61,10 +61,82 @@ body {
   background-size: 28px 28px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+/* =======================================================
+   EARTH ROTATING & SATELLITE ORBITAL ANIMATIONS
+   ======================================================= */
+@keyframes earthRotatingSurface {
+  0% {
+    background-position-x: 0px;
+  }
+  100% {
+    background-position-x: -2560px;
   }
 }
+
+@keyframes satelliteOrbitFloat {
+  0% {
+    transform: translate3d(0px, 0px, 0px) rotate(-8deg) scale(0.96);
+  }
+  25% {
+    transform: translate3d(-35px, -18px, 0px) rotate(-5deg) scale(1.0);
+  }
+  50% {
+    transform: translate3d(-80px, -5px, 0px) rotate(-2deg) scale(1.03);
+  }
+  75% {
+    transform: translate3d(-40px, 15px, 0px) rotate(-6deg) scale(0.98);
+  }
+  100% {
+    transform: translate3d(0px, 0px, 0px) rotate(-8deg) scale(0.96);
+  }
+}
+
+@keyframes atmosphericPulse {
+  0%, 100% {
+    opacity: 0.88;
+    filter: drop-shadow(0 0 35px rgba(56, 189, 248, 0.4));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 55px rgba(56, 189, 248, 0.65));
+  }
+}
+
+@keyframes beaconPing {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+
+@keyframes orbitTrailDash {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 120;
+  }
+}
+
+.animate-earth-rotate {
+  animation: earthRotatingSurface 75s linear infinite;
+  will-change: background-position;
+}
+
+.animate-satellite-orbit {
+  animation: satelliteOrbitFloat 24s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-atmosphere-glow {
+  animation: atmosphericPulse 8s ease-in-out infinite;
+}
+
+.animate-beacon-blink {
+  animation: beaconPing 2s ease-in-out infinite;
+}
+

@@ -226,6 +226,22 @@ export default function AnalysisResults() {
               &ldquo;{activeResult.query}&rdquo;
             </p>
           </div>
+
+          {/* Orchestrator Engaged Agents Bar */}
+          {location.state?.orchestratorResponse?.agents_used && location.state.orchestratorResponse.agents_used.length > 0 && (
+            <div className="flex items-center gap-2 flex-wrap text-xs pt-0.5">
+              <span className="text-slate-500 font-medium">Orchestrated Agents:</span>
+              {location.state.orchestratorResponse.agents_used.map((agName, idx) => (
+                <span
+                  key={idx}
+                  className="px-2.5 py-0.5 rounded-full bg-[#234238]/10 text-[#234238] font-semibold text-[11px] border border-[#234238]/20 flex items-center gap-1.5"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#234238]" />
+                  <span>{agName}</span>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* ============================================================ */}
@@ -795,7 +811,7 @@ export default function AnalysisResults() {
           {activeResult.supportingEvidence && (
             <div className="pt-2">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                Observational Evidence & Spectral Markers
+                Observational Evidence & Spectral Markers (Image Evidence)
               </h4>
               <ul className="space-y-1.5 text-xs text-slate-700">
                 {activeResult.supportingEvidence.map((ev, i) => (
@@ -805,6 +821,26 @@ export default function AnalysisResults() {
                   </li>
                 ))}
               </ul>
+            </div>
+          )}
+
+          {/* Domain Knowledge Evidence (RAG) strictly partitioned from Image Evidence */}
+          {location.state?.orchestratorResponse?.knowledge_evidence && location.state.orchestratorResponse.knowledge_evidence.length > 0 && (
+            <div className="pt-3 border-t border-slate-100">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-sky-800 mb-2 flex items-center gap-1.5">
+                <span>Domain Knowledge & Literature Evidence (RAG)</span>
+              </h4>
+              <div className="space-y-2">
+                {location.state.orchestratorResponse.knowledge_evidence.map((k, i) => (
+                  <div key={i} className="p-3 bg-sky-50/60 border border-sky-200/70 rounded-lg text-xs">
+                    <div className="flex items-center justify-between font-mono text-[10.5px] text-sky-900 font-bold mb-1">
+                      <span>Source: {k.source}</span>
+                      {k.section && <span>Topic: {k.section}</span>}
+                    </div>
+                    <p className="text-slate-700 leading-relaxed font-body">{k.text}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 

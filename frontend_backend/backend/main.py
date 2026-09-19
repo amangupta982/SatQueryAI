@@ -61,6 +61,16 @@ try:
 except Exception as e:
     logger.warning(f"[Backend] RAG router not available: {e}")
 
+# Register Central SatQuery Orchestrator router
+try:
+    from frontend_backend.backend.app.orchestrator.router import router as orchestrator_router, alias_router as orchestrator_alias_router
+    app.include_router(orchestrator_router)
+    app.include_router(orchestrator_alias_router)
+    logger.info("[Backend] Central SatQuery Orchestrator router registered.")
+except Exception as e:
+    logger.warning(f"[Backend] Central Orchestrator router not available: {e}")
+
+
 
 @app.get("/health")
 def health_check():
