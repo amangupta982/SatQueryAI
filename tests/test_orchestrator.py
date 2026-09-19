@@ -84,6 +84,20 @@ def test_scenario_4_optical_sar():
     assert plan.selected_agents == [AgentType.OPTICAL_SAR]
 
 
+def test_scenario_4b_user_optical_sar_insights():
+    """TEST 4b: 'give the insight about bothe the files' with optical + SAR images -> Optical-SAR Agent"""
+    for q in [
+        "give the insight about bothe the files",
+        "give the insight about both the files",
+        "what do both optical and sar images show",
+        "analyze both files",
+    ]:
+        plan = QueryPlanner.plan(q, image_count=2, has_sar_metadata=True)
+        assert not plan.is_ambiguous, f"Failed for {q}"
+        assert plan.selected_agents == [AgentType.OPTICAL_SAR], f"Failed for {q}, got {plan.selected_agents}"
+        assert "Optical-SAR" in plan.intent
+
+
 def test_scenario_5_area_management():
     """TEST 5: 'What percentage of this area is water?' -> Area Management Agent"""
     plan = QueryPlanner.plan("What percentage of this area is water?", image_count=1)

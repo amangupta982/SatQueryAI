@@ -49,6 +49,7 @@ import { samplePresetDatasets } from '../data/mockData'
 import DownloadReportButton from '../components/DownloadReportButton'
 import EarthScene from '../components/EarthScene'
 import ChangeIntelligenceStudio from '../components/ChangeIntelligenceStudio'
+import MultimodalSensorStudio from '../components/MultimodalSensorStudio'
 
 // Suggested analysis cards on hero landing (Dark Glassmorphic Edition)
 const suggestedCards = [
@@ -521,7 +522,7 @@ export default function NewAnalysis() {
       // Gather image identifiers and representations
       let finalImageIds = []
       if (currentScenes.length > 0) {
-        finalImageIds = currentScenes.map((s) => s.id || s.name)
+        finalImageIds = currentScenes.map((s) => s.fileObj?.name || s.name || s.id)
       } else if (currentPreset && samplePresetDatasets[currentPreset]) {
         finalImageIds = samplePresetDatasets[currentPreset].scenes.map((s) => s.id)
       } else if (currentPreset) {
@@ -530,8 +531,15 @@ export default function NewAnalysis() {
         finalImageIds = ['bengaluru']
       }
 
-      const timestamps = currentScenes.map((s) => s.date).filter(Boolean)
-      const hasSAR = currentScenes.some((s) => s.modality === 'SAR')
+      const hasSAR = currentScenes.some(
+        (s) =>
+          s.modality === 'SAR' ||
+          (s.name && (s.name.toLowerCase().includes('sar') || s.name.toLowerCase().includes('radar') || s.name.toLowerCase().includes('s1'))) ||
+          (s.fileObj && (s.fileObj.name.toLowerCase().includes('sar') || s.fileObj.name.toLowerCase().includes('radar') || s.fileObj.name.toLowerCase().includes('s1')))
+      )
+
+      const distinctDates = Array.from(new Set(currentScenes.map((s) => s.date).filter(Boolean)))
+      const timestamps = (!hasSAR && distinctDates.length >= 2) ? distinctDates : undefined
 
       // Extract Base64 or Data URLs from attached scenes
       const imageB64s = currentScenes
@@ -546,7 +554,7 @@ export default function NewAnalysis() {
         query: q,
         image_ids: finalImageIds,
         image_b64s: imageB64s.length > 0 ? imageB64s : undefined,
-        timestamps: timestamps.length >= 2 ? timestamps : undefined,
+        timestamps: timestamps,
         modality: hasSAR ? 'SAR' : 'Optical',
       }
 
@@ -585,6 +593,12 @@ export default function NewAnalysis() {
           data.structured_for_ui?.changeData ||
           data.measurements?.change_data ||
           data.measurements?.change_detection_change_data ||
+          null,
+        opticalSarData:
+          data.optical_sar_data ||
+          data.structured_for_ui?.opticalSarData ||
+          data.measurements?.optical_sar_data ||
+          data.measurements?.optical_sar_optical_sar_data ||
           null,
         attachedScenes: currentScenes.length > 0 ? currentScenes : uploadedScenes,
       }
@@ -1145,9 +1159,25 @@ export default function NewAnalysis() {
                               </div>
                             )}
 
-                            {/* Interactive Change Intelligence Studio or Visual Evidence */}
+                            {/* Interactive Studio (Change or Optical-SAR) or Visual Evidence */}
                             {(() => {
-                              const isChangeAnalysis = Boolean(
+                              const isOpticalSarAnalysis = Boolean(
+                                msg.opticalSarData?.evidence_urls ||
+                                msg.opticalSarData?.grounded_boxes ||
+                                (msg.opticalSarData?.category_proportions && Object.keys(msg.opticalSarData.category_proportions).length > 0) ||
+                                msg.intent?.toLowerCase().includes('optical-sar') ||
+                                msg.intent?.toLowerCase().includes('optical_sar') ||
+                                msg.intent?.toLowerCase().includes('multimodal') ||
+                                msg.agentsUsed?.some(
+                                  (a) =>
+                                    a.toLowerCase().includes('optical_sar') ||
+                                    a.toLowerCase().includes('optical-sar') ||
+                                    a.toLowerCase() === 'optical_sar'
+                                ) ||
+                                msg.imageEvidence?.some((ev) => ev.type?.includes('optical_sar'))
+                              )
+
+                              const isChangeAnalysis = !isOpticalSarAnalysis && Boolean(
                                 msg.changeData?.visualizations ||
                                 msg.changeData?.regions ||
                                 (msg.changeData?.categories && Object.keys(msg.changeData.categories).length > 0) ||
@@ -1158,6 +1188,19 @@ export default function NewAnalysis() {
 
                               return (
                                 <>
+                                  {/* Render Interactive Multimodal Sensor Inspection Studio when Optical-SAR is detected */}
+                                  {isOpticalSarAnalysis && (
+                                    <div className="space-y-2 pt-2 border-t border-slate-800">
+                                      <MultimodalSensorStudio
+                                        opticalSarData={msg.opticalSarData || msg.rawOrchestratorData?.optical_sar_data || {}}
+                                        imageEvidence={msg.imageEvidence || []}
+                                        attachedScenes={msg.attachedScenes || uploadedScenes || []}
+                                        userQuery={msg.query || ''}
+                                        answer={msg.answer || ''}
+                                      />
+                                    </div>
+                                  )}
+
                                   {/* Render Interactive Studio when comparison/change is detected */}
                                   {isChangeAnalysis && (
                                     <div className="space-y-2 pt-2 border-t border-slate-800">
@@ -1177,8 +1220,8 @@ export default function NewAnalysis() {
                                     </div>
                                   )}
 
-                                  {/* For change analysis, hide redundant static cards behind a collapsed details accordion */}
-                                  {isChangeAnalysis && msg.imageEvidence && msg.imageEvidence.length > 0 && (
+                                  {/* For change or optical-sar analyses, hide redundant static cards behind a collapsed details accordion */}
+                                  {(isChangeAnalysis || isOpticalSarAnalysis) && msg.imageEvidence && msg.imageEvidence.length > 0 && (
                                     <details className="pt-2 text-xs text-slate-400 group">
                                       <summary className="cursor-pointer text-[11px] text-slate-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5 py-1">
                                         <ChevronDown size={13} className="transition-transform group-open:rotate-180" />
@@ -1247,8 +1290,8 @@ export default function NewAnalysis() {
                                     </details>
                                   )}
 
-                                  {/* Standard Layer Cards for non-change analyses (Grounding, Segmentation, etc.) */}
-                                  {!isChangeAnalysis && msg.imageEvidence && msg.imageEvidence.length > 0 && (
+                                  {/* Standard Layer Cards for non-change, non-optical-sar analyses (Grounding, Segmentation, etc.) */}
+                                  {!isChangeAnalysis && !isOpticalSarAnalysis && msg.imageEvidence && msg.imageEvidence.length > 0 && (
                                     <div className="space-y-2 pt-2 border-t border-slate-800">
                                       <div className="flex items-center justify-between">
                                         <span className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider block font-sans">

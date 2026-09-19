@@ -42,14 +42,29 @@ RAG_KEYWORDS = [
 ]
 
 SAR_MULTIMODAL_KEYWORDS = [
-    r"\boptical\s+(and|\+)\s+sar\b",
+    r"\boptical\s*[-/+]?\s*sar\b",
+    r"\boptical\s+and\s+sar\b",
+    r"\bsar\s+and\s+optical\b",
     r"\bsar\s+show\s+that\s+optical\s+does\s+not\b",
     r"\boptical\s+does\s+not\b",
     r"\bradar\s+vs\s+optical\b",
+    r"\boptical\s+vs\s+radar\b",
+    r"\bradar\s+and\s+optical\b",
+    r"\boptical\s+and\s+radar\b",
     r"\bbackscatter\b",
-    r"\bmicrowave\s+backscatter\b",
+    r"\bmicrowave(\s+backscatter)?\b",
     r"\bflood\s+under\s+clouds\b",
-    r"\bpenetrate\s+clouds\b",
+    r"\bpenetrate\s+(the\s+)?clouds?\b",
+    r"\ball[-\s]?weather\b",
+    r"\bmultimodal\b",
+    r"\bcross[-\s]?modal\b",
+    r"\bco[-\s]?registered\b",
+    r"\bsentinel[-\s]?1\b",
+    r"\bs1\b",
+    r"\bsentinel[-\s]?2\b",
+    r"\bs2\b",
+    r"\bradar\b",
+    r"\bsar\b",
 ]
 
 TEMPORAL_CHANGE_KEYWORDS = [
@@ -188,10 +203,13 @@ class QueryPlanner:
                 break
 
         # SAR check
-        for pattern in SAR_MULTIMODAL_KEYWORDS:
-            if re.search(pattern, q_clean):
-                requires_sar = True
-                break
+        if has_sar_metadata:
+            requires_sar = True
+        else:
+            for pattern in SAR_MULTIMODAL_KEYWORDS:
+                if re.search(pattern, q_clean):
+                    requires_sar = True
+                    break
 
         # RAG check (strict domain definitions or literature queries)
         for pattern in RAG_KEYWORDS:
@@ -210,17 +228,33 @@ class QueryPlanner:
             "attached", "satellite", "tile", "patch", "this", "these", "region"
         ]) or (image_count > 0)
 
-        # Multi-image context: if 2+ images are attached or temporal metadata present,
-        # comparative and change inquiries must ALWAYS trigger Change Detection, NEVER RAG!
+        # Multi-image context: if 2+ images are attached or temporal metadata present
         if image_count >= 2 or has_temporal_metadata:
-            change_indicators = [
-                "change", "changes", "changed", "difference", "differences", "compare", "comparison",
-                "first", "second", "both", "between", "versus", "vs", "before", "after", "two images",
-                "two scenes", "new", "appeared", "disappeared", "expansion", "contrast"
-            ]
-            if any(term in q_clean for term in change_indicators) or (not requires_grounding and not requires_area and not requires_sar):
-                requires_change = True
-                requires_temporal = True
+            has_explicit_temporal_text = any(re.search(p, q_clean) for p in [
+                r"\bbetween\s+\d{4}\s+and\s+\d{4}\b",
+                r"\bbefore\s+and\s+after\b",
+                r"\bover\s+time\b",
+                r"\b(first|1st)\s+and\s+(second|2nd)\s+date\b",
+                r"\byears?\s+apart\b",
+            ])
+
+            # If SAR is present, any comparison or insight is Multimodal Optical-SAR Fusion, NOT temporal change!
+            if requires_sar:
+                if has_explicit_temporal_text:
+                    requires_change = True
+                    requires_temporal = True
+                else:
+                    requires_change = False
+                    requires_temporal = False
+            else:
+                change_indicators = [
+                    "change", "changes", "changed", "difference", "differences", "compare", "comparison",
+                    "first", "second", "both", "between", "versus", "vs", "before", "after", "two images",
+                    "two scenes", "new", "appeared", "disappeared", "expansion", "contrast"
+                ]
+                if any(term in q_clean for term in change_indicators) or has_temporal_metadata or (not requires_grounding and not requires_area):
+                    requires_change = True
+                    requires_temporal = True
 
         # When change detection or imagery analysis is requested, NEVER let RAG hijack it
         if requires_change:
@@ -230,7 +264,7 @@ class QueryPlanner:
         is_pure_concept = (image_count == 0) and (not has_image_ref) and any(
             q_clean.startswith(prefix) for prefix in ["what is ", "what are ", "explain ", "why is ", "definition of "]
         )
-        if is_pure_concept and not (requires_change or requires_grounding or requires_area or requires_sar):
+        if is_pure_concept and not (requires_change or requires_grounding or requires_area):
             requires_rag = True
             requires_sar = False
 
@@ -319,6 +353,13 @@ class QueryPlanner:
                 "Multimodal Optical and SAR imagery analysis requested -> Optical-SAR Agent",
             ]
 
+        # Single Agent: Optical-SAR Multimodal Fusion
+        elif requires_sar:
+            intent = "Optical-SAR Multimodal Fusion Analysis"
+            selected_agents = [AgentType.OPTICAL_SAR]
+            execution_order = [[AgentType.OPTICAL_SAR]]
+            reasoning_parts = ["SAR microwave vs optical reflectance multimodal inquiry detected -> Optical-SAR Agent"]
+
         # Single Agent: Change Detection
         elif requires_change:
             intent = "Temporal Change Detection"
@@ -339,13 +380,6 @@ class QueryPlanner:
             selected_agents = [AgentType.AREA_MANAGEMENT]
             execution_order = [[AgentType.AREA_MANAGEMENT]]
             reasoning_parts = ["Area measurement or coverage percentage query detected -> Area Management AI"]
-
-        # Single Agent: Optical-SAR
-        elif requires_sar:
-            intent = "Optical-SAR Multimodal Fusion Analysis"
-            selected_agents = [AgentType.OPTICAL_SAR]
-            execution_order = [[AgentType.OPTICAL_SAR]]
-            reasoning_parts = ["SAR microwave vs optical reflectance inquiry detected -> Optical-SAR Agent"]
 
         # Single Agent: RAG Domain Knowledge
         elif requires_rag:

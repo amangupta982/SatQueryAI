@@ -105,6 +105,20 @@ class ResultAggregator:
         if change_data and structured_for_ui:
             structured_for_ui["changeData"] = change_data
 
+        # Extract optical_sar_data if available
+        optical_sar_data = None
+        for s in succeeded_outputs:
+            if s.agent == AgentType.OPTICAL_SAR and s.raw_output:
+                optical_sar_data = s.raw_output.get("optical_sar_data")
+                break
+        if not optical_sar_data and measurements.get("optical_sar_optical_sar_data"):
+            optical_sar_data = measurements.get("optical_sar_optical_sar_data")
+        elif not optical_sar_data and measurements.get("optical_sar_data"):
+            optical_sar_data = measurements.get("optical_sar_data")
+
+        if optical_sar_data and structured_for_ui:
+            structured_for_ui["opticalSarData"] = optical_sar_data
+
         return {
             "query": query,
             "intent": plan.intent,
@@ -118,6 +132,7 @@ class ResultAggregator:
             "bounding_boxes": bounding_boxes,
             "structured_for_ui": structured_for_ui,
             "change_data": change_data,
+            "optical_sar_data": optical_sar_data,
         }
 
     @staticmethod

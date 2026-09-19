@@ -47,8 +47,19 @@ def _run_orchestration(
 
     # 1. Step: Query Understanding & Task Planning
     t0 = time.time()
-    has_temporal = timestamps is not None and len(timestamps) >= 2
     has_sar = (modality or "").lower() == "sar"
+    if not has_sar and image_ids:
+        has_sar = any("sar" in str(i_id).lower() or "radar" in str(i_id).lower() for i_id in image_ids)
+    if not has_sar:
+        sar_keywords = ["sar", "radar", "sentinel-1", "s1", "optical-sar", "optical_sar", "multimodal", "cross-modal", "backscatter"]
+        has_sar = any(re.search(rf"\b{re.escape(k)}\b", query.lower()) for k in sar_keywords)
+
+    has_temporal = (
+        timestamps is not None
+        and len(timestamps) >= 2
+        and len(set(timestamps)) >= 2
+        and not has_sar
+    )
 
     # Multi-scene preset expansion mapping
     PRESET_EXPANSIONS = {
@@ -194,6 +205,7 @@ def _run_orchestration(
         trace=final_trace,
         structured_for_ui=aggregated.get("structured_for_ui"),
         change_data=aggregated.get("change_data"),
+        optical_sar_data=aggregated.get("optical_sar_data"),
     )
 
 

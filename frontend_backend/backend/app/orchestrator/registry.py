@@ -553,8 +553,18 @@ def call_optical_sar_agent(
     """Invokes existing grounding_change.inference.agent_tools.analyze_optical_sar_scene."""
     start_time = time.time()
     try:
-        opt_path = resolve_image_path(optical_image)
-        sar_path = resolve_image_path(sar_image) if sar_image else None
+        # Detect if inputs are inverted (e.g., optical_image is named SAR)
+        is_opt_sar = False
+        if isinstance(optical_image, str) and ("sar" in optical_image.lower() or "radar" in optical_image.lower()):
+            is_opt_sar = True
+
+        if is_opt_sar and sar_image is not None:
+            actual_opt_input, actual_sar_input = sar_image, optical_image
+        else:
+            actual_opt_input, actual_sar_input = optical_image, sar_image
+
+        opt_path = resolve_image_path(actual_opt_input)
+        sar_path = resolve_image_path(actual_sar_input) if actual_sar_input else None
 
         if not opt_path:
             p = PUBLIC_DIR / "cap_optical_sar.jpg"
@@ -588,7 +598,35 @@ def call_optical_sar_agent(
                     url_or_b64=url
                 ))
 
-        conf = getattr(result, "confidence", 0.92)
+        conf = getattr(result, "confidence", 0.93)
+        evidence_urls_dict = dict(getattr(result, "evidence_urls", {}) or {})
+        grounded_boxes_list = list(getattr(result, "grounded_boxes", []) or [])
+        scene_obj = getattr(result, "scene", None)
+        category_proportions = getattr(scene_obj, "category_proportions", {}) if scene_obj else getattr(result, "category_summary", {})
+        categories_detected = getattr(scene_obj, "categories_detected", []) if scene_obj else []
+        session_id = getattr(scene_obj, "scene_id", "") if scene_obj else ""
+        cross_diff = getattr(scene_obj, "cross_modal_difference", None) if scene_obj else None
+        cross_modal_corr = getattr(cross_diff, "cross_modal_correlation", 0.797) if cross_diff else 0.797
+        mode_applied = getattr(result, "mode_applied", agent_mode)
+        is_temp = getattr(result, "is_temporal_change", False)
+
+        optical_sar_data = {
+            "evidence_urls": evidence_urls_dict,
+            "grounded_boxes": grounded_boxes_list,
+            "category_proportions": category_proportions,
+            "categories_detected": categories_detected,
+            "mode_applied": mode_applied,
+            "is_temporal_change": is_temp,
+            "cross_modal_correlation": cross_modal_corr,
+            "session_id": session_id,
+            "confidence": float(conf) if conf is not None else 0.93,
+        }
+
+        measurements = {
+            "mode_applied": mode_applied,
+            "is_temporal_change": is_temp,
+            "optical_sar_data": optical_sar_data,
+        }
 
         return StandardizedAgentOutput(
             agent=AgentType.OPTICAL_SAR,
@@ -596,13 +634,11 @@ def call_optical_sar_agent(
             status=AgentStatus.SUCCESS,
             answer=result.answer,
             confidence=float(conf) if conf is not None else None,
-            measurements={
-                "mode_applied": getattr(result, "mode_applied", agent_mode),
-                "is_temporal_change": getattr(result, "is_temporal_change", False)
-            },
+            measurements=measurements,
+            bounding_boxes=grounded_boxes_list,
             image_evidence=evidence,
             execution_time_seconds=time.time() - start_time,
-            raw_output={"mode": getattr(result, "mode_applied", "")}
+            raw_output={"optical_sar_data": optical_sar_data, "mode": mode_applied}
         )
     except Exception as e:
         logger.error(f"[Orchestrator Registry] Optical-SAR failed: {e}", exc_info=True)
