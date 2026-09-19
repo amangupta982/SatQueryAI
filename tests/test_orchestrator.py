@@ -54,6 +54,20 @@ def test_scenario_3_change_detection():
     assert "Temporal Change" in plan.intent
 
 
+def test_scenario_3b_user_multi_image_changes():
+    """TEST 3b: 'what are the changes from first and second image' -> Change Detection (never RAG)"""
+    plan = QueryPlanner.plan("what are the changes from first and second image", image_count=2)
+    assert not plan.is_ambiguous
+    assert plan.selected_agents == [AgentType.CHANGE_DETECTION]
+    assert AgentType.RAG not in plan.selected_agents
+    assert "Temporal Change" in plan.intent
+
+    plan2 = QueryPlanner.plan("what are the changes in both image", image_count=2)
+    assert not plan2.is_ambiguous
+    assert plan2.selected_agents == [AgentType.CHANGE_DETECTION]
+    assert AgentType.RAG not in plan2.selected_agents
+
+
 def test_scenario_4_optical_sar():
     """TEST 4: 'What does SAR show that optical does not?' -> Optical-SAR Agent"""
     plan = QueryPlanner.plan("What does SAR show that optical does not?", image_count=2, has_sar_metadata=True)

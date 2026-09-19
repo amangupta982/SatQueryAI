@@ -193,6 +193,7 @@ def _run_orchestration(
         bounding_boxes=aggregated["bounding_boxes"],
         trace=final_trace,
         structured_for_ui=aggregated.get("structured_for_ui"),
+        change_data=aggregated.get("change_data"),
     )
 
 

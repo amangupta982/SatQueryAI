@@ -42,10 +42,16 @@ export default function ChangeViewer({
     setPan({ x: 0, y: 0 })
   }
 
+  const [isSliding, setIsSliding] = useState(false)
+
+  const effectiveT1 = t1Url || evidenceUrls.t1_image || '/satellite_scene.jpg'
+  const effectiveT2 = t2Url || evidenceUrls.t2_image || '/hero_brahmaputra_exact_seamless.jpg'
+
   // Filter visible regions by active categories
-  const visibleRegions = regions.filter((r) => {
+  const visibleRegions = (regions || []).filter((r) => {
+    if (!activeCategories || (activeCategories.size === 0 && !(activeCategories instanceof Set))) return true
     if (activeCategories.size === 0) return true
-    return activeCategories.has(r.category)
+    return activeCategories.has ? activeCategories.has(r.category) : true
   })
 
   // Determine which image to show on the "After/T2" side based on active layer
@@ -54,7 +60,9 @@ export default function ChangeViewer({
     if (activeLayer === 'mask' && evidenceUrls.change_mask) return evidenceUrls.change_mask
     if (activeLayer === 'diff' && evidenceUrls.difference_image) return evidenceUrls.difference_image
     if (activeLayer === 'overlay' && evidenceUrls.complete_overlay) return evidenceUrls.complete_overlay
-    return t2Url
+    if (activeLayer === 't2_only') return effectiveT2
+    if (evidenceUrls[activeLayer]) return evidenceUrls[activeLayer]
+    return evidenceUrls.complete_overlay || effectiveT2
   }
 
   return (
@@ -113,8 +121,8 @@ export default function ChangeViewer({
                 }}
                 className="relative max-w-full max-h-full"
               >
-                {t1Url ? (
-                  <img src={t1Url} alt="T1 Reference" className="max-w-none w-[512px] h-[512px] object-contain pointer-events-none" />
+                {effectiveT1 ? (
+                  <img src={effectiveT1} alt="T1 Reference" className="max-w-none w-[512px] h-[512px] object-contain pointer-events-none" />
                 ) : (
                   <div className="w-[400px] h-[400px] flex items-center justify-center text-[#527163] border border-dashed border-[#2a3d34] rounded">
                     No T1 image uploaded
@@ -206,14 +214,14 @@ export default function ChangeViewer({
               className="relative w-[512px] h-[512px]"
             >
               {/* Underneath: T2 image */}
-              <img src={getRightImageSrc() || t2Url} alt="T2" className="absolute inset-0 w-full h-full object-contain pointer-events-none" />
+              <img src={getRightImageSrc() || effectiveT2} alt="T2" className="absolute inset-0 w-full h-full object-contain pointer-events-none" />
 
               {/* On top: T1 image with clip path */}
               <div
                 className="absolute inset-0 overflow-hidden"
                 style={{ clipPath: `polygon(0 0, ${splitPos}% 0, ${splitPos}% 100%, 0 100%)` }}
               >
-                <img src={t1Url} alt="T1" className="absolute inset-0 w-full h-full object-contain pointer-events-none" />
+                <img src={effectiveT1} alt="T1" className="absolute inset-0 w-full h-full object-contain pointer-events-none" />
               </div>
 
               {/* Slider bar */}

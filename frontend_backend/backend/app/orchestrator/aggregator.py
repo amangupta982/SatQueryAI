@@ -93,6 +93,18 @@ class ResultAggregator:
             measurements=measurements
         )
 
+        # Extract change_data if available
+        change_data = None
+        for s in succeeded_outputs:
+            if s.agent == AgentType.CHANGE_DETECTION and s.raw_output:
+                change_data = s.raw_output.get("change_data")
+                break
+        if not change_data and measurements.get("change_detection_change_data"):
+            change_data = measurements.get("change_detection_change_data")
+
+        if change_data and structured_for_ui:
+            structured_for_ui["changeData"] = change_data
+
         return {
             "query": query,
             "intent": plan.intent,
@@ -105,6 +117,7 @@ class ResultAggregator:
             "measurements": measurements,
             "bounding_boxes": bounding_boxes,
             "structured_for_ui": structured_for_ui,
+            "change_data": change_data,
         }
 
     @staticmethod

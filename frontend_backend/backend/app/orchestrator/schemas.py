@@ -153,3 +153,4 @@ class OrchestratorQueryResponse(BaseModel):
     requires_clarification: bool = False
     clarification_options: Optional[List[str]] = None
     structured_for_ui: Optional[Dict[str, Any]] = Field(default=None, description="Pre-formatted object for AnalysisResults.jsx")
+    change_data: Optional[Dict[str, Any]] = Field(default=None, description="Structured change intelligence layers, categories, and regions")

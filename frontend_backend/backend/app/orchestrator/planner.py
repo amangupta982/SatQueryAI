@@ -32,12 +32,13 @@ AMBIGUOUS_QUERIES = {
 RAG_KEYWORDS = [
     r"\bwhat is (sar|sentinel|ndvi|gsd|c-band|polaris|radar|cartosat|modis|landsat|lidar)\b",
     r"\bwhy is sar useful\b",
-    r"\bexplain the difference\b",
     r"\bexplain what sar is\b",
     r"\bwhat does sar mean\b",
     r"\bwhat is risat\b",
     r"\bwhat is isro\b",
     r"\bdefinition of\b",
+    r"\bliterature\s+(evidence|review|source|paper)\b",
+    r"\bremote\s+sensing\s+theory\b",
 ]
 
 SAR_MULTIMODAL_KEYWORDS = [
@@ -52,16 +53,36 @@ SAR_MULTIMODAL_KEYWORDS = [
 ]
 
 TEMPORAL_CHANGE_KEYWORDS = [
+    r"\bchange[sd]?\b",
+    r"\bchanging\b",
+    r"\bwhat\s+(is|are|has|have)\s+(the\s+)?change[sd]?\b",
+    r"\bwhat\s+(has\s+)?changed\b",
+    r"\bchanges?\s+(from|between|in|to|across|of)\b",
+    r"\bbetween\s+.*and\s+.*image\b",
+    r"\b(first|1st)\s+(and|to|vs)\s+(second|2nd)\b",
+    r"\b(image|scene|img)\s*1\s*(and|to|vs)\s*(image|scene|img)?\s*2\b",
+    r"\bboth\s+images?\b",
+    r"\btwo\s+images?\b",
+    r"\bbetween\s+the\s+two\b",
+    r"\bcompare\b",
+    r"\bcomparison\b",
+    r"\bdiffer[a-z]*\b",
+    r"\bwhat\s+is\s+the\s+difference\b",
     r"\bbetween\s+\d{4}\s+and\s+\d{4}\b",
-    r"\bwhat\s+changed\b",
     r"\bhas\s+this\s+area\s+(expanded|grown|changed)\b",
-    r"\bchanged\s+regions\b",
-    r"\bnew\s+buildings\b",
-    r"\bnew\s+structures\b",
+    r"\bchanged\s+regions?\b",
+    r"\bnew\s+buildings?\b",
+    r"\bnew\s+structures?\b",
     r"\burban\s+expansion\b",
     r"\bover\s+time\b",
     r"\badded\s+between\b",
     r"\bdifference\s+between\s+\d{4}\b",
+    r"\bbefore\s+and\s+after\b",
+    r"\btemporal\b",
+    r"\bdetect\s+change[sd]?\b",
+    r"\bvegetation\s+loss\b",
+    r"\bflood\s+extent\b",
+    r"\bdeforestation\b",
 ]
 
 GROUNDING_KEYWORDS = [
@@ -155,20 +176,44 @@ class QueryPlanner:
                 requires_sar = True
                 break
 
-        # RAG check
+        # RAG check (strict domain definitions or literature queries)
         for pattern in RAG_KEYWORDS:
             if re.search(pattern, q_clean):
                 requires_rag = True
                 break
 
-        # Additional RAG heuristics (conceptual domain explanations)
-        if "explain why" in q_clean or "why is" in q_clean or "what is sar" in q_clean or "tell me about sentinel" in q_clean:
+        # Additional RAG heuristics (only purely conceptual queries)
+        if "what is sar" in q_clean or "tell me about sentinel" in q_clean or "literature on" in q_clean:
             requires_rag = True
 
-        # Pure RAG check: query is asking conceptual domain knowledge without referring to an uploaded image
-        is_pure_concept = any(q_clean.startswith(prefix) for prefix in ["what is ", "what are ", "explain ", "why is ", "difference between "])
-        has_image_ref = any(term in q_clean for term in ["this image", "in this", "these images", "uploaded", "here", "scene"])
-        if is_pure_concept and not has_image_ref and not (requires_change or requires_grounding or requires_area):
+        # Check if query references imagery or if images are attached
+        has_image_ref = any(term in q_clean for term in [
+            "image", "images", "img", "imgs", "picture", "pictures", "photo", "photos",
+            "scene", "scenes", "first", "second", "both", "two", "here", "uploaded",
+            "attached", "satellite", "tile", "patch", "this", "these", "region"
+        ]) or (image_count > 0)
+
+        # Multi-image context: if 2+ images are attached or temporal metadata present,
+        # comparative and change inquiries must ALWAYS trigger Change Detection, NEVER RAG!
+        if image_count >= 2 or has_temporal_metadata:
+            change_indicators = [
+                "change", "changes", "changed", "difference", "differences", "compare", "comparison",
+                "first", "second", "both", "between", "versus", "vs", "before", "after", "two images",
+                "two scenes", "new", "appeared", "disappeared", "expansion", "contrast"
+            ]
+            if any(term in q_clean for term in change_indicators) or (not requires_grounding and not requires_area and not requires_sar):
+                requires_change = True
+                requires_temporal = True
+
+        # When change detection or imagery analysis is requested, NEVER let RAG hijack it
+        if requires_change:
+            requires_rag = False
+
+        # Pure RAG check: query is ONLY for domain concepts when NO images are attached/referenced
+        is_pure_concept = (image_count == 0) and (not has_image_ref) and any(
+            q_clean.startswith(prefix) for prefix in ["what is ", "what are ", "explain ", "why is ", "definition of "]
+        )
+        if is_pure_concept and not (requires_change or requires_grounding or requires_area or requires_sar):
             requires_rag = True
             requires_sar = False
 

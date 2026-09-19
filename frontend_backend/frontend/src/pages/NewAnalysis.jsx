@@ -45,6 +45,7 @@ import {
 import { samplePresetDatasets } from '../data/mockData'
 import DownloadReportButton from '../components/DownloadReportButton'
 import EarthScene from '../components/EarthScene'
+import ChangeIntelligenceStudio from '../components/ChangeIntelligenceStudio'
 
 // Suggested analysis cards on hero landing (Dark Glassmorphic Edition)
 const suggestedCards = [
@@ -487,6 +488,13 @@ export default function NewAnalysis() {
         clarificationOptions: data.clarification_options,
         rawOrchestratorData: data,
         structuredForUi: data.structured_for_ui,
+        changeData:
+          data.change_data ||
+          data.structured_for_ui?.changeData ||
+          data.measurements?.change_data ||
+          data.measurements?.change_detection_change_data ||
+          null,
+        attachedScenes: currentScenes.length > 0 ? currentScenes : uploadedScenes,
       }
 
       setMessages((prev) => [...prev, assistantMsg])
@@ -1005,40 +1013,75 @@ export default function NewAnalysis() {
                               </div>
                             )}
 
-                            {/* Visual Evidence (IMAGE_EVIDENCE) */}
-                            {msg.imageEvidence && msg.imageEvidence.length > 0 && (
-                              <div className="space-y-2 pt-2 border-t border-slate-800">
-                                <span className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider block font-sans">
-                                  Visual Evidence (Image Layers)
-                                </span>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                  {msg.imageEvidence.map((ev, i) => (
-                                    <div
-                                      key={i}
-                                      className="rounded-xl border border-slate-800 overflow-hidden bg-slate-950 flex flex-col shadow-lg"
-                                    >
-                                      <div className="px-3 py-1.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between text-[10.5px] text-slate-300 font-mono">
-                                        <span>{ev.title}</span>
-                                        <span className="text-cyan-400">{ev.type}</span>
+                            {/* Interactive Change Intelligence Studio or Visual Evidence */}
+                            {(() => {
+                              const isChangeAnalysis = Boolean(
+                                msg.changeData?.visualizations ||
+                                msg.changeData?.regions ||
+                                (msg.changeData?.categories && Object.keys(msg.changeData.categories).length > 0) ||
+                                msg.intent?.toLowerCase().includes('change') ||
+                                msg.agentsUsed?.some((a) => a.toLowerCase().includes('change')) ||
+                                msg.imageEvidence?.some((ev) => ev.type?.includes('change'))
+                              )
+
+                              return (
+                                <>
+                                  {/* Render Interactive Studio when comparison/change is detected */}
+                                  {isChangeAnalysis && (
+                                    <div className="space-y-2 pt-2 border-t border-slate-800">
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider block font-sans">
+                                          Interactive Visualization Studio
+                                        </span>
+                                        <span className="text-[10px] font-mono text-cyan-300/80 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/30">
+                                          Live Layer Switcher
+                                        </span>
                                       </div>
-                                      {ev.url_or_b64 ? (
-                                        <div className="relative aspect-[16/10] bg-slate-900">
-                                          <img
-                                            src={ev.url_or_b64}
-                                            alt={ev.title}
-                                            className="w-full h-full object-cover"
-                                          />
-                                        </div>
-                                      ) : (
-                                        <div className="p-3 text-slate-400 text-xs font-mono">
-                                          Layer generated: {ev.file_path || 'Visual raster ready'}
-                                        </div>
-                                      )}
+                                      <ChangeIntelligenceStudio
+                                        changeData={msg.changeData || {}}
+                                        imageEvidence={msg.imageEvidence || []}
+                                        attachedScenes={msg.attachedScenes || uploadedScenes || []}
+                                      />
                                     </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
+                                  )}
+
+                                  {/* Standard or Exported Layer Cards */}
+                                  {msg.imageEvidence && msg.imageEvidence.length > 0 && (
+                                    <div className="space-y-2 pt-2 border-t border-slate-800">
+                                      <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block font-sans">
+                                        {isChangeAnalysis ? 'Exported Image Layers' : 'Visual Evidence (Image Layers)'}
+                                      </span>
+                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        {msg.imageEvidence.map((ev, i) => (
+                                          <div
+                                            key={i}
+                                            className="rounded-xl border border-slate-800 overflow-hidden bg-slate-950 flex flex-col shadow-lg"
+                                          >
+                                            <div className="px-3 py-1.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between text-[10.5px] text-slate-300 font-mono">
+                                              <span>{ev.title}</span>
+                                              <span className="text-cyan-400">{ev.type}</span>
+                                            </div>
+                                            {ev.url_or_b64 ? (
+                                              <div className="relative aspect-[16/10] bg-slate-900">
+                                                <img
+                                                  src={ev.url_or_b64}
+                                                  alt={ev.title}
+                                                  className="w-full h-full object-cover"
+                                                />
+                                              </div>
+                                            ) : (
+                                              <div className="p-3 text-slate-400 text-xs font-mono">
+                                                Layer generated: {ev.file_path || 'Visual raster ready'}
+                                              </div>
+                                            )}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </>
+                              )
+                            })()}
 
                             {/* Domain Knowledge Evidence (KNOWLEDGE_EVIDENCE) */}
                             {msg.knowledgeEvidence && msg.knowledgeEvidence.length > 0 && (
@@ -1135,10 +1178,20 @@ export default function NewAnalysis() {
                                 </button>
                               </div>
 
-                              {msg.structuredForUi && (
+                              {(msg.structuredForUi || msg.answer) && (
                                 <DownloadReportButton
+                                  reportData={
+                                    msg.structuredForUi || {
+                                      title: `SatQuery Analysis: ${msg.intent || 'Earth Observation'}`,
+                                      analysisType: msg.intent || 'Change Detection Analysis',
+                                      prediction: msg.answer,
+                                      confidence: msg.confidence,
+                                      agentsUsed: msg.agentsUsed,
+                                      imageEvidence: msg.imageEvidence,
+                                    }
+                                  }
                                   analysisData={msg.structuredForUi}
-                                  className="text-[11px] font-medium text-cyan-300 hover:text-white hover:underline"
+                                  className="text-[11px] font-medium text-cyan-300 hover:text-white"
                                 />
                               )}
                             </div>
