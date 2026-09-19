@@ -1045,11 +1045,47 @@ export default function NewAnalysis() {
                                     </div>
                                   )}
 
-                                  {/* Standard or Exported Layer Cards */}
-                                  {msg.imageEvidence && msg.imageEvidence.length > 0 && (
+                                  {/* For change analysis, hide redundant static cards behind a collapsed details accordion */}
+                                  {isChangeAnalysis && msg.imageEvidence && msg.imageEvidence.length > 0 && (
+                                    <details className="pt-2 text-xs text-slate-400 group">
+                                      <summary className="cursor-pointer text-[11px] text-slate-400 hover:text-cyan-300 transition-colors flex items-center gap-1.5 py-1">
+                                        <ChevronDown size={13} className="transition-transform group-open:rotate-180" />
+                                        <span>View all {msg.imageEvidence.length} exported image files</span>
+                                      </summary>
+                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                                        {msg.imageEvidence.map((ev, i) => (
+                                          <div
+                                            key={i}
+                                            className="rounded-xl border border-slate-800 overflow-hidden bg-slate-950 flex flex-col shadow-lg"
+                                          >
+                                            <div className="px-3 py-1.5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between text-[10.5px] text-slate-300 font-mono">
+                                              <span>{ev.title}</span>
+                                              <span className="text-cyan-400">{ev.type}</span>
+                                            </div>
+                                            {ev.url_or_b64 ? (
+                                              <div className="relative aspect-[16/10] bg-slate-900">
+                                                <img
+                                                  src={ev.url_or_b64}
+                                                  alt={ev.title}
+                                                  className="w-full h-full object-cover"
+                                                />
+                                              </div>
+                                            ) : (
+                                              <div className="p-3 text-slate-400 text-xs font-mono">
+                                                Layer generated: {ev.file_path || 'Visual raster ready'}
+                                              </div>
+                                            )}
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </details>
+                                  )}
+
+                                  {/* Standard Layer Cards for non-change analyses (Grounding, Segmentation, etc.) */}
+                                  {!isChangeAnalysis && msg.imageEvidence && msg.imageEvidence.length > 0 && (
                                     <div className="space-y-2 pt-2 border-t border-slate-800">
-                                      <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block font-sans">
-                                        {isChangeAnalysis ? 'Exported Image Layers' : 'Visual Evidence (Image Layers)'}
+                                      <span className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider block font-sans">
+                                        Visual Evidence (Image Layers)
                                       </span>
                                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         {msg.imageEvidence.map((ev, i) => (

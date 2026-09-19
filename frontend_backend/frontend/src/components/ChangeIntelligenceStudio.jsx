@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import ChangeViewer from './ChangeViewer'
 import ChangeLayerControls from './ChangeLayerControls'
-import { Layers, Sliders, ChevronDown, ChevronUp, Sparkles, CheckCircle2 } from 'lucide-react'
+import { Layers, Sliders, ChevronDown, ChevronUp, Sun, Moon } from 'lucide-react'
 
 const PALETTE = {
   building: '#ff4d4d',
@@ -19,6 +19,8 @@ export default function ChangeIntelligenceStudio({
 }) {
   const [activeLayer, setActiveLayer] = useState('overlay')
   const [selectedRegion, setSelectedRegion] = useState(null)
+  const [isControlsOpen, setIsControlsOpen] = useState(true)
+  const [isDarkCard, setIsDarkCard] = useState(false) // Default to clean light card matching second image
 
   const defaultCategories = {
     building: { change_percent: -0.77, count: 3 },
@@ -37,7 +39,6 @@ export default function ChangeIntelligenceStudio({
   const [activeCategories, setActiveCategories] = useState(
     new Set(Object.keys(effectiveCategories))
   )
-  const [isControlsOpen, setIsControlsOpen] = useState(true)
 
   // Build evidence URLs map
   const evidenceUrls = { ...(changeData.visualizations || {}) }
@@ -98,7 +99,7 @@ export default function ChangeIntelligenceStudio({
   return (
     <div className="w-full my-3 rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 shadow-2xl flex flex-col transition-all">
       {/* Studio Header Bar */}
-      <div className="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+      <div className="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
             <Layers size={15} />
@@ -106,35 +107,50 @@ export default function ChangeIntelligenceStudio({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-semibold text-slate-100 tracking-wide">
-                Interactive Change Intelligence Studio
+                Interactive Visualization Layers Studio
               </span>
               <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-cyan-950/80 border border-cyan-500/40 text-cyan-300">
                 Live Studio
               </span>
             </div>
             <p className="text-[10.5px] text-slate-400">
-              Switch layer modes, toggle category overlays, and inspect dual-temporal differences
+              Select any layer mode or toggle category overlays to change output in real time
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Theme switcher between Light card (2nd image match) and Dark card */}
+          <button
+            type="button"
+            onClick={() => setIsDarkCard(!isDarkCard)}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition cursor-pointer"
+            title={isDarkCard ? 'Switch to Light Card Theme' : 'Switch to Dark Card Theme'}
+          >
+            {isDarkCard ? <Sun size={12} className="text-amber-400" /> : <Moon size={12} className="text-cyan-400" />}
+            <span className="hidden sm:inline">{isDarkCard ? 'Light Card' : 'Dark Card'}</span>
+          </button>
+
           <button
             type="button"
             onClick={() => setIsControlsOpen(!isControlsOpen)}
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer"
           >
             <Sliders size={13} className="text-cyan-400" />
-            <span>{isControlsOpen ? 'Hide Controls' : 'Show Controls'}</span>
+            <span>{isControlsOpen ? 'Hide Options' : 'Show Options'}</span>
             {isControlsOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
           </button>
         </div>
       </div>
 
-      {/* Main Studio Body: Viewer on Left, Layer Controls on Right */}
-      <div className="flex flex-col lg:flex-row h-[520px] w-full overflow-hidden bg-[#0a0f12]">
-        {/* Left: Synchronized Dual-Temporal Viewer */}
-        <div className="flex-1 h-full min-h-[320px] p-2 relative">
+      {/* Main Studio Body: Responsive Grid layout with zero clipping */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-3 p-3 bg-[#0a0f12]">
+        {/* Left: Dual-Temporal Viewer with embedded Quick Layer Switcher */}
+        <div
+          className={`flex flex-col ${
+            isControlsOpen ? 'md:col-span-7 lg:col-span-7 xl:col-span-7' : 'md:col-span-12'
+          } h-[460px] min-h-[380px]`}
+        >
           <ChangeViewer
             t1Url={t1Url}
             t2Url={t2Url}
@@ -143,14 +159,15 @@ export default function ChangeIntelligenceStudio({
             onSelectRegion={setSelectedRegion}
             activeCategories={activeCategories}
             activeLayer={activeLayer}
+            onChangeLayer={setActiveLayer}
             evidenceUrls={evidenceUrls}
             palette={PALETTE}
           />
         </div>
 
-        {/* Right: Visualization Layers & Category Overlays Panel */}
+        {/* Right: Visualization Layers & Category Overlays Panel (Matches 2nd Image) */}
         {isControlsOpen && (
-          <div className="w-full lg:w-[320px] shrink-0 h-full border-t lg:border-t-0 lg:border-l border-slate-800 overflow-y-auto p-3 animate-fadeIn custom-scrollbar">
+          <div className="md:col-span-5 lg:col-span-5 xl:col-span-5 h-[460px] overflow-y-auto custom-scrollbar">
             <ChangeLayerControls
               activeLayer={activeLayer}
               onChangeLayer={setActiveLayer}
@@ -159,20 +176,20 @@ export default function ChangeIntelligenceStudio({
               onToggleCategory={handleToggleCategory}
               onSelectAllCategories={handleSelectAllCategories}
               palette={PALETTE}
-              dark={true}
+              dark={isDarkCard}
             />
           </div>
         )}
       </div>
 
-      {/* Studio Footer with quick tips */}
+      {/* Studio Footer with active indicator */}
       <div className="px-4 py-2 bg-slate-900/60 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>Click any layer mode above to switch the viewer in real time</span>
+          <span>Click any layer mode above to change your output view</span>
         </div>
         <div className="font-mono text-cyan-400 text-[10px]">
-          Active Mode: <span className="capitalize font-bold text-slate-100">{activeLayer.replace('_', ' ')}</span>
+          Active Layer: <span className="capitalize font-bold text-slate-100">{activeLayer.replace('_', ' ')}</span>
         </div>
       </div>
     </div>
